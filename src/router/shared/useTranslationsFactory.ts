@@ -2,7 +2,6 @@ import IntlMessageFormat from "intl-messageformat";
 import type {
   Message,
   MessageArguments,
-  MessageKey,
   Messages,
   Namespace,
   NamespaceKey,
@@ -11,13 +10,12 @@ import type { Locale } from "next-globe-gen/schema";
 
 export function useTranslationsFactory(
   useLocale: () => Locale,
-  useMessages: () => Messages
+  useMessages: () => Messages[Locale] | undefined
 ) {
   return function useTranslations<N extends Namespace>(opts?: {
     namespace?: N;
-    locale?: Locale;
   }) {
-    const locale = opts?.locale ?? useLocale();
+    const locale = useLocale();
     const namespace = opts?.namespace;
     return function t<
       K extends NamespaceKey<N>,
@@ -31,8 +29,8 @@ export function useTranslationsFactory(
     ) {
       const [key, args] = params;
       const messages = useMessages();
-      const fullKey = (namespace ? `${namespace}.${key}` : key) as MessageKey;
-      const message = messages[locale]?.[fullKey];
+      const fullKey = namespace ? `${namespace}.${key}` : key;
+      const message = messages?.[fullKey];
       if (!message) return fullKey;
       const msgFormat = new IntlMessageFormat(message, locale);
       return msgFormat.format(args) as string;

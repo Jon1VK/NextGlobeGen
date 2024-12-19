@@ -6,8 +6,8 @@ import { isDirectory, isFile, rmDirectory } from "~/cli/utils/fs-utils";
 import { compile, removeCompiledFiles } from "~/cli/utils/ts-utils";
 import { configNotFoundError, originDirNotFoundError } from "./errors";
 import {
-  generateDeclarationFile,
   generateMessagesFile,
+  generateOutdirs,
   generateSchemaFile,
 } from "./generateDistFiles";
 import { generateLocalizedRoutes } from "./generateLocalizedRoutes";
@@ -42,10 +42,10 @@ async function generateAction(args: { config: string; watch: boolean }) {
   const userConfig = await compile<{ default: UserConfig }>(args.config);
   const config: Config = { ...DEFAULT_CONFIG, ...userConfig.default };
   if (!isDirectory(config.originDir)) throw originDirNotFoundError(config);
-  generateDeclarationFile();
   rmDirectory(config.localizedDir);
-  await generateRoutes(config);
+  generateOutdirs(config.localizedDir);
   await generateMessages(config);
+  await generateRoutes(config);
   if (args.watch) {
     watch(config.originDir, { recursive: true }, (_, fileName) => {
       if (!fileName) return;

@@ -9,46 +9,40 @@ const PATTERNS = Object.fromEntries(
   PATTERN_KEYS.map((key) => [key, `{{${key}}}`])
 ) as Record<PatternKey, string>;
 
-const baseTemplate = ""
-  .concat(
-    "/* eslint-disable */\n",
-    "// @ts-nocheck\n\n",
-    'import { setLocale } from "next-globe-gen";\n',
-    `import Origin${PATTERNS.routeType} from "${PATTERNS.relativePath}";\n\n`,
-    `export default function ${PATTERNS.routeType}(props) {\n`,
-    `\tsetLocale("${PATTERNS.locale}");\n`,
-    `\treturn <Origin${PATTERNS.routeType} {...props} />;\n}`
-  )
-  .trim();
+const baseTemplate = "".concat(
+  "/* eslint-disable */\n",
+  "// @ts-nocheck\n\n",
+  'import { setLocale } from "next-globe-gen";\n',
+  `import Origin${PATTERNS.routeType} from "${PATTERNS.relativePath}";\n\n`,
+  `export default function ${PATTERNS.routeType}(props) {\n`,
+  `\tsetLocale("${PATTERNS.locale}");\n`,
+  `\treturn <Origin${PATTERNS.routeType} {...props} />;\n}`
+);
 
-const rootLayoutTemplate = ""
-  .concat(
-    "/* eslint-disable */\n",
-    "// @ts-nocheck\n\n",
-    'import { IntlProvider } from "next-globe-gen/client";\n',
-    'import { useMessages, setLocale } from "next-globe-gen";\n',
-    `import Origin${PATTERNS.routeType} from "${PATTERNS.relativePath}";\n\n`,
-    `export default async function ${PATTERNS.routeType}(props) {\n`,
-    "\tconst messages = useMessages();\n",
-    `\tsetLocale("${PATTERNS.locale}");\n`,
-    "\treturn (\n",
-    `\t\t<IntlProvider locale="${PATTERNS.locale}" messages={messages}>\n`,
-    `\t\t\t<Origin${PATTERNS.routeType} {...props} />\n`,
-    "\t\t</IntlProvider>\n",
-    "\t);\n}"
-  )
-  .trim();
+const rootLayoutTemplate = "".concat(
+  "/* eslint-disable */\n",
+  "// @ts-nocheck\n\n",
+  'import { setLocale } from "next-globe-gen";\n',
+  'import { IntlProvider } from "next-globe-gen/client";\n',
+  'import { messages } from "next-globe-gen/messages";\n',
+  `import Origin${PATTERNS.routeType} from "${PATTERNS.relativePath}";\n\n`,
+  `export default async function ${PATTERNS.routeType}(props) {\n`,
+  `\tsetLocale("${PATTERNS.locale}");\n`,
+  "\treturn (\n",
+  `\t\t<IntlProvider locale="${PATTERNS.locale}" messages={messages["${PATTERNS.locale}"]}>\n`,
+  `\t\t\t<Origin${PATTERNS.routeType} {...props} />\n`,
+  "\t\t</IntlProvider>\n",
+  "\t);\n}"
+);
 
-const errorTemplate = ""
-  .concat(
-    "/* eslint-disable */\n",
-    "// @ts-nocheck\n\n",
-    '"use client"\n\n',
-    `import Origin${PATTERNS.routeType} from "${PATTERNS.relativePath}";\n\n`,
-    `export default function ${PATTERNS.routeType}(props) {\n`,
-    `\treturn <Origin${PATTERNS.routeType} {...props} />;\n}`
-  )
-  .trim();
+const errorTemplate = "".concat(
+  "/* eslint-disable */\n",
+  "// @ts-nocheck\n\n",
+  '"use client"\n\n',
+  `import Origin${PATTERNS.routeType} from "${PATTERNS.relativePath}";\n\n`,
+  `export default function ${PATTERNS.routeType}(props) {\n`,
+  `\treturn <Origin${PATTERNS.routeType} {...props} />;\n}`
+);
 
 const routeTypeTemplates: Record<Exclude<RouteType, "copy">, string> = {
   layout: baseTemplate,

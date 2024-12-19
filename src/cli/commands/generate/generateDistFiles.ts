@@ -16,7 +16,17 @@ const template = (type: "schema" | "messages") => {
   );
 };
 
-export function generateDeclarationFile() {
+export function generateOutdirs(localizedDir: string) {
+  makeDirectory(OUT_DIR);
+  writeFileSync(path.join(OUT_DIR, ".gitignore"), "*");
+  writeFileSync(path.join(OUT_DIR, ".prettierignore"), "*");
+  makeDirectory(localizedDir);
+  writeFileSync(path.join(localizedDir, ".gitignore"), "*");
+  writeFileSync(path.join(localizedDir, ".prettierignore"), "*");
+  generateDeclarationFile();
+}
+
+function generateDeclarationFile() {
   const declarationFileContent = "".concat(
     "/* eslint-disable @typescript-eslint/triple-slash-reference */\n",
     '/// <reference path="./.next-globe-gen/schema.ts" />\n',
@@ -51,7 +61,6 @@ export function generateSchemaFile(
   const JSONSchema = JSON.stringify(schema);
   const schemaFile = template("schema").replace("{schema}", JSONSchema);
   const schemaFilePath = path.join(OUT_DIR, "schema.ts");
-  makeDirectory(OUT_DIR);
   writeFileSync(schemaFilePath, schemaFile);
 }
 
@@ -60,7 +69,6 @@ export async function generateMessagesFile(config: Config) {
   const JSONMessages = JSON.stringify(messages);
   const messagesFile = template("messages").replace("{messages}", JSONMessages);
   const messagesFilePath = path.join(OUT_DIR, "messages.ts");
-  makeDirectory(OUT_DIR);
   writeFileSync(messagesFilePath, messagesFile);
 }
 

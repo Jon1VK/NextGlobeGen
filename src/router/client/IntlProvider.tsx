@@ -6,7 +6,7 @@ import { createContext, use, type ReactNode } from "react";
 
 const IntlContext = createContext<{
   locale: Locale;
-  messages: Messages;
+  messages: Messages[Locale];
 }>({
   locale: "",
   messages: {},
@@ -15,7 +15,7 @@ const IntlContext = createContext<{
 type IntlProviderProps = {
   children: ReactNode;
   locale: Locale;
-  messages: Messages;
+  messages: Messages[Locale];
 };
 
 export function IntlProvider({
@@ -31,4 +31,4 @@ export function IntlProvider({
 }
 
 export const useLocale = (): Locale => use(IntlContext).locale;
-export const useMessages = (): Messages => use(IntlContext).messages;
+export const useMessages = (): Messages[Locale] => use(IntlContext).messages;

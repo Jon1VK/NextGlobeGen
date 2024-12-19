@@ -9,7 +9,7 @@ export * from "./redirect";
 
 export const useHref = useHrefFactory(useLocale);
 export const Link = LinkFactory(useHref);
-export const useMessages = () => messages;
+export const useMessages = () => messages[useLocale()];
 export const useTranslations = useTranslationsFactory(useLocale, useMessages);
 
 // Export get versions of functions for async server usage
