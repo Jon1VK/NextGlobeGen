@@ -3,7 +3,7 @@ import { defineConfig } from "tsup";
 export default defineConfig([
   {
     clean: true,
-    minify: true,
+    format: ["cjs", "esm"],
     external: ["next-globe-gen"],
     entry: {
       cli: "src/cli/index.ts",
@@ -20,7 +20,7 @@ export default defineConfig([
   },
   {
     clean: true,
-    minify: true,
+    format: ["cjs", "esm"],
     external: ["next-globe-gen"],
     esbuildOptions(options) {
       options.banner = { js: '"use client"' };
