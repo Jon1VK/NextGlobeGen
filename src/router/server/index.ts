@@ -1,4 +1,5 @@
 import { messages } from "next-globe-gen/messages";
+import { FormFactory } from "../shared/FormFactory";
 import { LinkFactory } from "../shared/LinkFactory";
 import { useHrefFactory } from "../shared/useHrefFactory";
 import { useTranslationsFactory } from "../shared/useTranslationsFactory";
@@ -9,6 +10,7 @@ export * from "./redirect";
 
 export const useHref = useHrefFactory(useLocale);
 export const Link = LinkFactory(useHref);
+export const Form = FormFactory(useHref);
 export const useMessages = () => messages[useLocale()];
 export const useTranslations = useTranslationsFactory(useLocale, useMessages);
 

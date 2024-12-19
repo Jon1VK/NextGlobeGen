@@ -2,6 +2,7 @@ import type {
   permanentRedirect as $permanentRedirect,
   redirect as $redirect,
 } from "../server";
+import { FormFactory } from "../shared/FormFactory";
 import { LinkFactory } from "../shared/LinkFactory";
 import { useHrefFactory } from "../shared/useHrefFactory";
 import { useTranslationsFactory } from "../shared/useTranslationsFactory";
@@ -16,6 +17,7 @@ export * from "./useRouter";
 
 export const useHref = useHrefFactory(useLocale);
 export const Link = LinkFactory(useHref);
+export const Form = FormFactory(useHref);
 export const useTranslations = useTranslationsFactory(useLocale, useMessages);
 
 // Server functions that are not supported on client
