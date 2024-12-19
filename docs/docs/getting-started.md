@@ -149,12 +149,6 @@ npm run dev
 
 The NextGlobeGen plugin generates the required files for the app so that the routes can be served in the configured locales.
 
-:::info
-
-The files that this package generates should be added to `.gitignore`. With default config these directories and files are generated: `.next-globe-gen/`, `src/app/(i18n)/`, `next-globe-gen.d.ts`.
-
-:::
-
 :::tip
 
 You can inspect what each generated file has eaten, if you would like to know how the package works underneath the hood.
