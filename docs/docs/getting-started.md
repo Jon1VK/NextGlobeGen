@@ -29,10 +29,13 @@ Create the following file structure, which the package assumes is present by def
     │   ├── en.json
     │   └── fi.json
     ├── _app/ 4)
+    |   ├── dashboard/
+    │   │   ├── i18n.ts 5)
+    │   │   └── page.tsx
     │   ├── layout.tsx
     │   └── page.tsx
     ├── app/
-    └── middleware.ts 5)
+    └── middleware.ts 6)
 ```
 
 ### <span style={{ color: "#addb67"}}>1)</span> Configuration
@@ -126,7 +129,24 @@ export default function Home() {
 }
 ```
 
-### <span style={{ color: "#addb67"}}>5)</span> Middleware
+### <span style={{ color: "#addb67"}}>5)</span> Localized pathnames (optional)
+
+The pathnames in the url often need to be translated to improve SEO. In NextGlobeGen this is done at each route segment (directory) separately with special `i18n.ts` files. With this approach the route segment and it's localizations can be colocated.
+
+The simplest way to add the localizations is to export an object with localized versions of the route segment for each locale as a default export.
+
+```ts title="./src/_app/dashboard/i18n.ts"
+const segmentTranslations = {
+  en: "dashboard", // If omitted, the directory name is used
+  fi: "hallintapaneeli",
+};
+
+export default segmentTranslations;
+```
+
+With these translations, the Finnish page will be served from `/fi/hallintapaneeli` path.
+
+### <span style={{ color: "#addb67"}}>6)</span> Middleware
 
 Add middleware to the application by exporting NextGlobeGen `middleware` from `middleware.ts` file. The middleware handles locale negotiation and redirects to locale-prefixed path if the path has no locale yet.
 
@@ -162,9 +182,13 @@ src/
 └── app/
     └── (i18n)/
         ├── en/
+        │   ├── dashboard/
+        │   │   └── page.tsx
         │   ├── layout.tsx
         │   └── page.tsx
         └── fi/
+            ├── hallintapaneeli/
+            │   └── page.tsx
             ├── layout.tsx
             └── page.tsx
 ```
