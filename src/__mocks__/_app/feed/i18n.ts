@@ -1,3 +1,5 @@
-export const segmentTranslations = {
+const segmentTranslations = {
   fi: "syote",
 };
+
+export default segmentTranslations;

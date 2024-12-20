@@ -1,3 +1,5 @@
-export const segmentTranslations = {
+const segmentTranslations = {
   fi: "kuvat",
 };
+
+export default segmentTranslations;
