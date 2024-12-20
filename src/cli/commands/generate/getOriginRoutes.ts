@@ -22,6 +22,7 @@ export async function getOriginRoutes({
     const filePath = path.join(currentDir, file.name);
     const routePath = `${parentRoute?.path ?? ""}/${file.name}`;
     const isDir = file.type === "dir";
+    if (isDir && file.name.startsWith("_")) continue;
     const routeTranslations = isDir
       ? await getRouteTranslations(filePath)
       : undefined;
