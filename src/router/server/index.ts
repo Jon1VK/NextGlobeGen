@@ -4,6 +4,7 @@ import { LinkFactory } from "../shared/LinkFactory";
 import { useHrefFactory } from "../shared/useHrefFactory";
 import { useTranslationsFactory } from "../shared/useTranslationsFactory";
 import { useLocale } from "./LocaleStore";
+import { notSupported } from "./notSupported";
 
 export * from "./LocaleStore";
 export * from "./redirect";
@@ -19,3 +20,6 @@ export const getLocale = useLocale;
 export const getHref = useHref;
 export const getMessages = useMessages;
 export const getTranslations = useTranslations;
+
+// Client-only functions not supported on server
+export const useRouter = notSupported("useRouter");
