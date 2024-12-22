@@ -11,9 +11,9 @@ Whether you're building a blog, an e-commerce platform, or an enterprise applica
 
 ## Key Features
 
-- **Generative Locale Routes**: Includes plugin that generates routes for each supported language.
+- **Generative Locale Routes**: Includes plugin that generates routes on the fly for each supported language.
 - **Middleware Integration**: Provides pre-configured middleware for locale detection and redirection.
-- **Translation Logic**: Supports ICU formatted interpolation patterns in the tranlations.
+- **Translation Logic**: Supports [ICU](https://unicode-org.github.io/icu/userguide/format_parse/messages/) formatted interpolation patterns in the translations.
 - **Developer-Friendly**: Includes a locale-aware API that works interchangeably in server and client components.
 
 ## How It Works
