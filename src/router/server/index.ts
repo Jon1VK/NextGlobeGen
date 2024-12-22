@@ -6,6 +6,7 @@ import { useTranslationsFactory } from "../shared/useTranslationsFactory";
 import { useLocale } from "./LocaleStore";
 import { notSupported } from "./notSupported";
 
+export * from "./getServerTranslations";
 export * from "./LocaleStore";
 export * from "./redirect";
 
