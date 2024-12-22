@@ -32,9 +32,9 @@ We will create the following file structure on the following steps. The default 
     |   ├── dashboard/
     │   │   ├── i18n.ts 5)
     │   │   └── page.tsx
+    │   ├── LanguageSwitcher.tsx
     │   ├── layout.tsx
-    │   ├── page.tsx
-    │   └── LanguageSwitcher.tsx
+    │   └── page.tsx
     ├── app/
     └── middleware.ts 6)
 ```
@@ -78,20 +78,26 @@ Create message translations to the `src/messages` directory. There should be one
 ```json title="src/messages/en.json"
 {
   "title": "Homepage",
-  "description": "{name} package provides seamless internationalization experience for Next.js App Router devs."
+  "description": "{name} package provides seamless internationalization experience for Next.js App Router devs.",
+  "dashboard": {
+    "title": "Dashboard"
+  }
 }
 ```
 
 ```json title="src/messages/fi.json"
 {
   "title": "Kotisivu",
-  "description": "{name} paketti tarjoaa saumattoman kansainvälistämiskokemuksen Next.js App Router kehittäjille."
+  "description": "{name} paketti tarjoaa saumattoman kansainvälistämiskokemuksen Next.js App Router kehittäjille.",
+  "dashboard": {
+    "title": "Hallintapaneeli"
+  }
 }
 ```
 
 ### <span style={{ color: "#addb67"}}>4)</span> Routing
 
-Move your Next.js file-system based routing files into the `_app` directory from the `app` directory. The new routes should be created and modified in the `_app` directory.
+Create or move your Next.js file-system based routing files into the `_app` directory from the `app` directory. All the new routes should be created and modified in the `_app` directory.
 
 :::info
 
@@ -99,18 +105,65 @@ You can use the APIs NextGlobeGen package provides to handle navigation and mess
 
 :::
 
+```tsx title="src/_app/LanguageSwitcher.tsx"
+"use client";
+
+import { Link, useRoute } from "next-globe-gen";
+
+/**
+ * If you have dynamic route segments in your routes (ie. "/images/[id]"),
+ * you have to also pass the params provided by the Next.js useParams function
+ * as a prop to Link components so that the language switching works properly.
+ */
+export default function LanguageSwitcher() {
+  const route = useRoute();
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link href={route} locale="en">
+            In English
+          </Link>
+        </li>
+        <li>
+          <Link href={route} locale="fi">
+            Suomeksi
+          </Link>
+        </li>
+      </ul>
+    </nav>
+  );
+}
+```
+
 ```tsx title="src/_app/layout.tsx"
-import { useLocale } from "next-globe-gen";
+import { Metadata } from "next";
+import { Link, useLocale, useTranslations } from "next-globe-gen";
 import { ReactNode } from "react";
 import LanguageSwitcher from "./LanguageSwitcher";
 
+export const metadata: Metadata = {
+  title: { template: "%s | NextGlobeGen", default: "NextGlobeGen" },
+};
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   const locale = useLocale();
+  const t = useTranslations();
   return (
     <html lang={locale}>
       <body>
         <header>
           <LanguageSwitcher />
+          <nav>
+            <ul>
+              <li>
+                <Link href="/">{t("title")}</Link>
+              </li>
+              <li>
+                <Link href="/dashboard">{t("dashboard.title")}</Link>
+              </li>
+            </ul>
+          </nav>
         </header>
         <main>{children}</main>
       </body>
@@ -120,7 +173,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 ```
 
 ```tsx title="src/_app/page.tsx"
-import { useTranslations } from "next-globe-gen";
+import { Metadata } from "next";
+import { getServerTranslations, Locale, useTranslations } from "next-globe-gen";
+
+export function generateMetadata({ locale }: { locale: Locale }): Metadata {
+  const t = getServerTranslations(locale);
+  return { description: t("description", { name: "NextGlobeGen" }) };
+}
 
 export default function Home() {
   const t = useTranslations();
@@ -133,30 +192,21 @@ export default function Home() {
 }
 ```
 
-```tsx title="src/_app/LanguageSwitcher.tsx"
-"use client";
+```tsx title="src/_app/dashboard.tsx"
+import { Metadata } from "next";
+import { getServerTranslations, Locale, useTranslations } from "next-globe-gen";
 
-import { useParams } from "next";
-import { type RouteParams, Link, useRoute } from "next-globe-gen";
+export function generateMetadata({ locale }: { locale: Locale }): Metadata {
+  const t = getServerTranslations(locale, "dashboard");
+  return { title: t("title") };
+}
 
-export default function LanguageSwitcher() {
-  const route = useRoute();
-  const params = useParams<RouteParams<typeof route>>();
+export default function Dashboard() {
+  const t = useTranslations("dashboard");
   return (
-    <nav>
-      <ul>
-        <li>
-          <Link href={route} params={params} locale="en">
-            In English
-          </Link>
-        </li>
-        <li>
-          <Link href={route} params={params} locale="fi">
-            Suomeksi
-          </Link>
-        </li>
-      </ul>
-    </nav>
+    <section>
+      <h1>{t("title")}</h1>
+    </section>
   );
 }
 ```
