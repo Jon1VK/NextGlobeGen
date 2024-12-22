@@ -1,9 +1,4 @@
-import type {
-  DynamicRoute,
-  Locale,
-  Route,
-  RouteParams,
-} from "next-globe-gen/schema";
+import type { Locale, Route } from "next-globe-gen/schema";
 import {
   default as NextLink,
   type LinkProps as NextLinkProps,
@@ -11,6 +6,7 @@ import {
 import React from "react";
 import {
   extractUseHrefOptions,
+  type ParamsOption,
   type UseHrefArgs,
   type useHrefFactory,
   type UseHrefOptions,
@@ -20,9 +16,7 @@ type LinkProps<R extends Route> = Omit<NextLinkProps, "href"> & {
   ref?: React.Ref<HTMLAnchorElement>;
 } & (
     | { href: UseHrefOptions<R>; locale?: undefined; params?: undefined }
-    | ({ href: R; locale?: Locale } & (R extends DynamicRoute
-        ? { params: RouteParams<R> }
-        : { params?: undefined }))
+    | ({ href: R; locale?: Locale } & ParamsOption<R>)
   );
 
 type LinkPropsReal<R extends Route> = React.PropsWithChildren<

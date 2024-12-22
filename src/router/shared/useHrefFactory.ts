@@ -1,24 +1,26 @@
 import {
   schema,
-  type DynamicRoute,
   type Locale,
   type Route,
   type RouteParams,
+  type StaticRoute,
 } from "next-globe-gen/schema";
 import { compile } from "path-to-regexp";
+
+export type ParamsOption<R extends Route> = R extends StaticRoute
+  ? { params?: undefined }
+  : { params: RouteParams<R> };
 
 export type UseHrefOptions<R extends Route> = {
   route: R;
   locale?: Locale;
   query?: Record<string, string>;
-} & (R extends DynamicRoute
-  ? { params: RouteParams<R> }
-  : { params?: undefined });
+} & ParamsOption<R>;
 
 export type UseHrefArgs<R extends Route> =
-  | (R extends DynamicRoute
-      ? [route: R, params: RouteParams<R>, locale?: Locale]
-      : [route: R, locale?: Locale, _?: undefined])
+  | (R extends StaticRoute
+      ? [route: R, locale?: Locale, _?: undefined]
+      : [route: R, params: RouteParams<R>, locale?: Locale])
   | [options: UseHrefOptions<R>, _?: undefined, __?: undefined];
 
 export function useHrefFactory(useLocale: () => Locale) {
