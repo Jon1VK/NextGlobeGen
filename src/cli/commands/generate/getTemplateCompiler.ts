@@ -51,6 +51,8 @@ const routeTypeTemplates: Record<Exclude<RouteType, "copy">, string> = {
   default: baseTemplate,
   loading: withoutProps(baseTemplate),
   "not-found": withoutProps(baseTemplate),
+  forbidden: withoutProps(baseTemplate),
+  unauthorized: withoutProps(baseTemplate),
   error: errorTemplate,
   sitemap: baseTemplate,
   icon: baseTemplate,

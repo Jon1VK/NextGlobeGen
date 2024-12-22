@@ -137,6 +137,14 @@ export const getExpectedOriginRoutes = (
       },
     },
     {
+      type: "forbidden",
+      path: "/forbidden.tsx",
+      localizedPaths: {
+        en: "/en/forbidden.tsx",
+        fi: `${prefix}/forbidden.tsx`,
+      },
+    },
+    {
       type: "icon",
       path: "/icon.tsx",
       localizedPaths: {
@@ -182,6 +190,14 @@ export const getExpectedOriginRoutes = (
       localizedPaths: {
         en: "/en/sitemap.ts",
         fi: `${prefix}/sitemap.ts`,
+      },
+    },
+    {
+      type: "unauthorized",
+      path: "/unauthorized.tsx",
+      localizedPaths: {
+        en: "/en/unauthorized.tsx",
+        fi: `${prefix}/unauthorized.tsx`,
       },
     },
   ];

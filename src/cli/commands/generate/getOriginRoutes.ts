@@ -77,6 +77,8 @@ const APP_ROUTER_FILE_REGEXPS = {
   default: /^default\.(j|t)sx?$/,
   loading: /^loading\.(j|t)sx?$/,
   "not-found": /^not-found\.(j|t)sx?$/,
+  forbidden: /^forbidden\.(j|t)sx?$/,
+  unauthorized: /^unauthorized\.(j|t)sx?$/,
   error: /^error\.(j|t)sx?$/,
   sitemap: /^sitemap\.(j|t)s$/,
   icon: /^icon\.(j|t)sx?$/,
