@@ -12,7 +12,7 @@ import { notSupported } from "./notSupported";
 export type * from "~/types/messages";
 export type * from "~/types/schema";
 export type { UserConfig as Config } from "../../cli/types";
-export * from "./IntlProvider";
+export { IntlProvider, useLocale } from "./IntlProvider";
 export * from "./useRoute";
 export * from "./useRouter";
 
@@ -24,7 +24,6 @@ export const useTranslations = useTranslationsFactory(useLocale, useMessages);
 // Server functions that are not supported on client
 export const getLocale = notSupported("getLocale") as typeof useLocale;
 export const getHref = notSupported("getHref") as typeof useHref;
-export const getMessages = notSupported("getMessages") as typeof useMessages;
 export const getTranslations = notSupported(
   "getTranslations"
 ) as typeof useTranslations;

@@ -12,13 +12,12 @@ export * from "./redirect";
 export const useHref = useHrefFactory(useLocale);
 export const Link = LinkFactory(useHref);
 export const Form = FormFactory(useHref);
-export const useMessages = () => messages[useLocale()];
+const useMessages = () => messages[useLocale()];
 export const useTranslations = useTranslationsFactory(useLocale, useMessages);
 
 // Export get versions of functions for async server usage
 export const getLocale = useLocale;
 export const getHref = useHref;
-export const getMessages = useMessages;
 export const getTranslations = useTranslations;
 
 // Client-only functions not supported on server
