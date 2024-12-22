@@ -58,7 +58,7 @@ function Layout(props) {
     <html lang={locale}>
       <body>
         <h1>{t("home.title")}</h1>
-        <Link href="/about">{t("about.title")}</Link>
+        <Link href="/dashboard">{t("dashboard.title")}</Link>
         {props.children}
       </body>
     </html>
