@@ -13,6 +13,7 @@ export type * from "~/types/messages";
 export type * from "~/types/schema";
 export type { UserConfig as Config } from "../../cli/types";
 export * from "./IntlProvider";
+export * from "./useRoute";
 export * from "./useRouter";
 
 export const useHref = useHrefFactory(useLocale);

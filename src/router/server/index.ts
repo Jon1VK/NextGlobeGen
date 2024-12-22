@@ -23,3 +23,4 @@ export const getTranslations = useTranslations;
 
 // Client-only functions not supported on server
 export const useRouter = notSupported("useRouter");
+export const useRoute = notSupported("useRoute");
