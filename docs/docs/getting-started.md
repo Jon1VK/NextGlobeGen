@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 Let's see how you can use the NextGlobeGen package to setup i18n for your Next.js app.
 
-If you haven’t done so already, [create new a Next.js app](https://nextjs.org/docs/app/getting-started/installation) that uses the App Router.
+If you haven’t done so already, [create a new Next.js app](https://nextjs.org/docs/app/getting-started/installation) that uses the App Router.
 
 ## Installation
 
