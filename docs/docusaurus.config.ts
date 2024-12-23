@@ -1,4 +1,5 @@
 import type * as Preset from "@docusaurus/preset-classic";
+import npm2yarn from "@docusaurus/remark-plugin-npm2yarn";
 import type { Config } from "@docusaurus/types";
 import { themes as prismThemes } from "prism-react-renderer";
 
@@ -27,6 +28,7 @@ const config: Config = {
         docs: {
           sidebarPath: "./sidebars.ts",
           editUrl: "https://github.com/Jon1VK/NextGlobeGen/tree/main/docs",
+          remarkPlugins: [[npm2yarn, { sync: true }]],
         },
         theme: { customCss: "./src/css/custom.css" },
       } satisfies Preset.Options,

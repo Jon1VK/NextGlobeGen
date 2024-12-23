@@ -2,6 +2,9 @@
 sidebar_position: 2
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Getting started
 
 Let's see how you can use the NextGlobeGen package to setup i18n for your Next.js app.
@@ -12,7 +15,7 @@ If you haven’t done so already, [create new a Next.js app](https://nextjs.org/
 
 Install the package by running the following command.
 
-```bash title="Installation command"
+```bash npm2yarn
 npm install next-globe-gen
 ```
 
@@ -75,6 +78,9 @@ export default withNextGlobeGen(nextConfig);
 
 Create message translations to the `src/messages` directory. There should be one `<locale>.json` file for each configured `locale`.
 
+<Tabs>
+<TabItem value="en.json">
+
 ```json title="src/messages/en.json"
 {
   "title": "Homepage",
@@ -84,6 +90,9 @@ Create message translations to the `src/messages` directory. There should be one
   }
 }
 ```
+
+</TabItem>
+<TabItem value="fi.json">
 
 ```json title="src/messages/fi.json"
 {
@@ -95,6 +104,9 @@ Create message translations to the `src/messages` directory. There should be one
 }
 ```
 
+</TabItem>
+</Tabs>
+
 ### <span style={{ color: "#addb67"}}>4)</span> Routing
 
 Create or move your Next.js file-system based routing files into the `_app` directory from the `app` directory. All the new routes should be created and modified in the `_app` directory.
@@ -105,7 +117,10 @@ You can use the APIs NextGlobeGen package provides to handle navigation and mess
 
 :::
 
-```tsx title="src/_app/LanguageSwitcher.tsx"
+<Tabs>
+<TabItem value="LanguageSwitcher" >
+
+```tsx title="src/_app/LanguageSwitcher"
 "use client";
 
 import { Link, useRoute } from "next-globe-gen";
@@ -135,6 +150,9 @@ export default function LanguageSwitcher() {
   );
 }
 ```
+
+</TabItem >
+<TabItem value="RootLayout">
 
 ```tsx title="src/_app/layout.tsx"
 import { Metadata } from "next";
@@ -172,6 +190,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 }
 ```
 
+</TabItem >
+<TabItem value="Home">
+
 ```tsx title="src/_app/page.tsx"
 import { Metadata } from "next";
 import { getServerTranslations, Locale, useTranslations } from "next-globe-gen";
@@ -192,7 +213,10 @@ export default function Home() {
 }
 ```
 
-```tsx title="src/_app/dashboard.tsx"
+</TabItem >
+<TabItem value="Dashboard">
+
+```tsx title="src/_app/dashboard/page.tsx"
 import { Metadata } from "next";
 import { getServerTranslations, Locale, useTranslations } from "next-globe-gen";
 
@@ -210,6 +234,9 @@ export default function Dashboard() {
   );
 }
 ```
+
+</TabItem >
+</Tabs>
 
 ### <span style={{ color: "#addb67"}}>5)</span> Localized pathnames (optional)
 
@@ -245,7 +272,7 @@ export const config = {
 
 After the setup has been done, start the Next.js development server and enjoy the seamless internationalization experience.
 
-```bash title="Run command"
+```bash npm2yarn
 npm run dev
 ```
 
