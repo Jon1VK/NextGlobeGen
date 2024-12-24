@@ -26,6 +26,12 @@ export function LinkFactory(useHref: ReturnType<typeof useHrefFactory>) {
   }: LinkProps<R>) {
     const useHrefArgs = [href, params ?? locale, locale] as UseHrefArgs<R>;
     const options = extractUseHrefOptions(useHrefArgs);
-    return <NextLink {...linkProps} href={useHref(options)} />;
+    return (
+      <NextLink
+        {...linkProps}
+        href={useHref(options)}
+        hrefLang={options.locale}
+      />
+    );
   };
 }
