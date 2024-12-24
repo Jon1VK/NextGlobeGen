@@ -1,0 +1,39 @@
+---
+sidebar_position: 1
+---
+
+# Components
+
+NextGlobeGen provides `Link` and `Form` components that wrap the Next.js components with the same names. These can be used to navigate to localized pathnames.
+
+## \<Link>
+
+`<Link>` is a React component that extends the Next.js [`<Link>`](https://nextjs.org/docs/app/api-reference/components/link) component to provide locale-aware navigation to localized pathnames. It is the primary way to navigate between localized routes.
+
+```tsx
+import { Link } from "next-globe-gen";
+
+export default function Page() {
+  return <Link href="/dashboard">Dashboard</Link>;
+}
+```
+
+### Props
+
+The following props can be passed to the `<Link>` component:
+
+| Prop     | Example                     | Type                          | Required    |
+| -------- | --------------------------- | ----------------------------- | ----------- |
+| `href`   | `href="/dashboard"`         | `Route \| HrefOptions<Route>` | Yes         |
+| `locale` | `locale="en"`               | `Locale`                      | -           |
+| `params` | `params={{ slug: "slug" }}` | `RouteParams<Route>`          | Yes / No \* |
+
+\* params prop is required only if the given route has dynamic segments.
+
+:::info Good to know
+
+In addition to the listed props, all of the Next.js `Link` component props can also be passed as props to the component.
+
+:::
+
+## \<Form>
