@@ -3,18 +3,18 @@ import { default as NextLink } from "next/link";
 import { type ComponentProps } from "react";
 import {
   extractUseHrefOptions,
+  type HrefOptions,
   type ParamsOption,
   type UseHrefArgs,
   type useHrefFactory,
-  type UseHrefOptions,
 } from "./useHrefFactory";
 
 type NextLinkProps = ComponentProps<typeof NextLink>;
 
 type LinkProps<R extends Route> = Omit<NextLinkProps, "href"> &
   (
-    | { href: UseHrefOptions<R>; locale?: undefined; params?: undefined }
-    | ({ href: R; locale?: Locale } & ParamsOption<R>)
+    | { href: HrefOptions<R>; locale?: undefined; params?: undefined }
+    | ({ href: R | (string & {}); locale?: Locale } & ParamsOption<R>)
   );
 
 export function LinkFactory(useHref: ReturnType<typeof useHrefFactory>) {

@@ -11,8 +11,8 @@ export type ParamsOption<R extends Route> = R extends StaticRoute
   ? { params?: undefined }
   : { params: RouteParams<R> };
 
-export type UseHrefOptions<R extends Route> = {
-  route: R;
+export type HrefOptions<R extends Route> = {
+  pathname: R | (string & {});
   locale?: Locale;
   query?: Record<string, string>;
 } & ParamsOption<R>;
@@ -21,27 +21,32 @@ export type UseHrefArgs<R extends Route> =
   | (R extends StaticRoute
       ? [route: R, locale?: Locale, _?: undefined]
       : [route: R, params: RouteParams<R>, locale?: Locale])
-  | [options: UseHrefOptions<R>, _?: undefined, __?: undefined];
+  | [options: HrefOptions<R>, _?: undefined, __?: undefined];
 
 export function useHrefFactory(useLocale: () => Locale) {
   return function useHref<R extends Route>(...args: UseHrefArgs<R>) {
-    const { route, params, query, locale } = extractUseHrefOptions(args);
-    const localizedPaths = schema.routes[route];
-    if (!localizedPaths) throw new Error(`Invalid route "${route}"`);
+    const { pathname, params, query, locale } = extractUseHrefOptions(args);
+    const localizedPaths = schema.routes[pathname];
+    if (!localizedPaths) return withQuery(pathname, query);
     const path = localizedPaths[locale ?? useLocale()];
-    if (!path) throw new Error(`Invalid locale "${locale}"`);
+    if (!path) return withQuery(pathname, query);
     const compliedPath = compile(path)(params);
     if (!query) return compliedPath;
-    const searchParams = new URLSearchParams(query);
-    return `${compliedPath}?${searchParams}`;
+    return withQuery(compliedPath, query);
   };
+}
+
+function withQuery(pathname: string, query?: Record<string, string>) {
+  if (!query) return pathname;
+  const searchParams = new URLSearchParams(query);
+  return `${pathname}?${searchParams}`;
 }
 
 export function extractUseHrefOptions<R extends Route>(args: UseHrefArgs<R>) {
   const [arg1, arg2, arg3] = args;
   if (typeof arg1 === "object") return arg1;
-  const route = arg1;
+  const pathname = arg1;
   const params = typeof arg2 === "object" ? arg2 : undefined;
   const locale = typeof arg2 === "object" ? arg3 : arg2;
-  return { route, params, locale, query: undefined };
+  return { pathname, params, locale, query: undefined };
 }
