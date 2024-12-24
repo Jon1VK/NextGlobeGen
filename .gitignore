@@ -1,5 +1,1 @@
-/node_modules
-/dist
-/examples
-
-tsconfig.tsbuildinfo
+examples/

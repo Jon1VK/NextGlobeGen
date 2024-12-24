@@ -6,6 +6,9 @@ on:
 
 jobs:
   publish:
+    defaults:
+      run:
+        working-directory: ./packages/next-globe-gen
     runs-on: ubuntu-latest
     permissions:
       contents: read
