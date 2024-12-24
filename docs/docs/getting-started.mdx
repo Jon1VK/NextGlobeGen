@@ -195,10 +195,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
 ```tsx title="src/_app/page.tsx"
 import { Metadata } from "next";
-import { getServerTranslations, Locale, useTranslations } from "next-globe-gen";
+import { createTranslator, Locale, useTranslations } from "next-globe-gen";
 
 export function generateMetadata({ locale }: { locale: Locale }): Metadata {
-  const t = getServerTranslations(locale);
+  const t = createTranslator(locale);
   return { description: t("description", { name: "NextGlobeGen" }) };
 }
 
@@ -218,10 +218,10 @@ export default function Home() {
 
 ```tsx title="src/_app/dashboard/page.tsx"
 import { Metadata } from "next";
-import { getServerTranslations, Locale, useTranslations } from "next-globe-gen";
+import { createTranslator, Locale, useTranslations } from "next-globe-gen";
 
 export function generateMetadata({ locale }: { locale: Locale }): Metadata {
-  const t = getServerTranslations(locale, "dashboard");
+  const t = createTranslator(locale, "dashboard");
   return { title: t("title") };
 }
 
