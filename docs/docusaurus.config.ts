@@ -36,7 +36,10 @@ const config: Config = {
   ],
 
   themeConfig: {
-    prism: { theme: prismThemes.nightOwl },
+    prism: {
+      theme: prismThemes.github,
+      darkTheme: prismThemes.nightOwl,
+    },
     colorMode: { defaultMode: "dark" },
     navbar: {
       title: "NextGlobeGen",
