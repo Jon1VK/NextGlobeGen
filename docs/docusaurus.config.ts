@@ -27,7 +27,6 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./sidebars.ts",
-          editUrl: "https://github.com/Jon1VK/NextGlobeGen/tree/main/docs",
           remarkPlugins: [[npm2yarn, { sync: true }]],
         },
         theme: { customCss: "./src/css/custom.css" },
