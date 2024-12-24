@@ -8,7 +8,7 @@ import {
 } from "next-globe-gen/messages";
 import type { Locale } from "next-globe-gen/schema";
 
-export function getServerTranslations<N extends Namespace>(
+export function createTranslator<N extends Namespace>(
   locale: Locale,
   namespace?: N
 ) {

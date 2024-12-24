@@ -1,5 +1,5 @@
 import type {
-  getServerTranslations as $getServerTranslations,
+  createTranslator as $createTranslator,
   permanentRedirect as $permanentRedirect,
   redirect as $redirect,
 } from "../server";
@@ -32,6 +32,6 @@ export const redirect = notSupported("redirect") as unknown as typeof $redirect;
 export const permanentRedirect = notSupported(
   "permanentRedirect"
 ) as unknown as typeof $permanentRedirect;
-export const getServerTranslations = notSupported(
-  "getServerTranslations"
-) as unknown as typeof $getServerTranslations;
+export const createTranslator = notSupported(
+  "createTranslator"
+) as unknown as typeof $createTranslator;
