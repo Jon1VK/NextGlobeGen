@@ -22,13 +22,13 @@ export default function Page() {
 
 The following props can be passed to the `<Link>` component:
 
-| Prop     | Example                     | Type                          | Required    |
-| -------- | --------------------------- | ----------------------------- | ----------- |
-| `href`   | `href="/dashboard"`         | `Route \| HrefOptions<Route>` | Yes         |
-| `locale` | `locale="en"`               | `Locale`                      | -           |
-| `params` | `params={{ slug: "slug" }}` | `RouteParams<Route>`          | Yes / No \* |
+| Prop     | Example                 | Type                          | Required |
+| -------- | ----------------------- | ----------------------------- | -------- |
+| `href`   | `href="/dashboard"`     | `Route \| HrefOptions<Route>` | Yes      |
+| `locale` | `locale="en"`           | `Locale`                      | -        |
+| `params` | `params={{ id: "id" }}` | `RouteParams<Route>`          | **\***   |
 
-\* params prop is required only if the given route has dynamic segments.
+**\*** params prop is required only if the given route has dynamic segments.
 
 :::info Good to know
 
@@ -36,4 +36,117 @@ In addition to the listed props, all of the Next.js `Link` component props can a
 
 :::
 
+#### `href` (required)
+
+The route, pathname or URL to navigate to. If the given `href` matches to a route that has localizations, it will be localized. Otherwise the `href` will be passed as it is to the Next.js `Link` component.
+
+```tsx title="Using href prop"
+// When the user is on `en` locale, the link will point to `/en/dashboard`
+<Link href="/dashboard">
+  Dashboard
+</Link>
+
+// Search params can be added via a `query`
+<Link href={{ pathname: "/dashboard", query: { sortBy: "name" } }}>
+  Dashboard
+</Link>
+```
+
+#### `locale`
+
+To switch to another language, one can pass a `locale` as a prop. It will also set the `hreflang` attribute to the anchor tag.
+
+```tsx title="Using locale prop"
+// Will point to `/fi/hallintapaneeli`
+<Link href="/dashboard" locale="fi">
+  Hallintapaneeli
+</Link>
+
+// If the href is given as an object, the locale should be passed in the object
+<Link href={{ pathname: "/dashboard", locale: "fi" }}>
+  Hallintapaneeli
+</Link>
+```
+
+#### `params`
+
+If the given href is a route that includes dynamic segments, the params for the route can be passed by a `params` prop.
+
+```tsx title="Using params prop"
+// When the user is on `en` locale, the link will point to `/en/images/43-image-slug`
+<Link href="/images/[id]" params={{ id: "43-image-slug" }}>
+  Image Slug
+</Link>
+
+// If the href is given as an object, the params should be passed in the object
+<Link href={{ pathname: "/images/[id]", params: { id: "43-image-slug" } }}>
+  Image Slug
+</Link>
+```
+
 ## \<Form>
+
+`<Form>` is a React component that extends the Next.js [`<Form>`](https://nextjs.org/docs/app/api-reference/components/form) component so that the Next.js `Form` component enhancements work also with localized pathnames.
+
+```tsx
+import { Form } from "next-globe-gen";
+
+export default function Page() {
+  return (
+    {/* On submission, the URL will change to /en/search?query=abc */}
+    <Form action="/search">
+      <input name="query" />
+      <button type="submit">Submit</button>
+    </Form>
+  );
+}
+```
+
+### Props
+
+The following props can be passed to the `<Form>` component:
+
+| Prop     | Example                       | Type                 | Required |
+| -------- | ----------------------------- | -------------------- | -------- |
+| `action` | `action="/search"`            | `Route`              | Yes      |
+| `locale` | `locale="en"`                 | `Locale`             | -        |
+| `params` | `params={{ user: "Jon1VK" }}` | `RouteParams<Route>` | **\***   |
+
+**\*** params prop is required only if the given route has dynamic segments.
+
+:::info Good to know
+
+In addition to the listed props, all of the Next.js `Form` component props can also be passed as props to the component.
+
+:::
+
+#### `action` (required)
+
+The route, pathname or URL to navigate to. If the given `action` matches to a route that has localizations, it will be localized. Otherwise the `action` will be passed as it is to the Next.js `Form` component.
+
+```tsx title="Using action prop"
+// When the user is on `en` locale, the form will navigate to `/en/search?query=abc`
+<Form action="/search">{/* Inputs */}</Form>
+```
+
+#### `locale`
+
+To switch to another language, one can pass a `locale` as a prop.
+
+```tsx title="Using locale prop"
+// Form will navigate to `/fi/haku?query=abc`
+<Form action="/search" locale="fi">
+  {/* Inputs */}
+</Form>
+```
+
+#### `params`
+
+If the given action is a route that includes dynamic segments, the params for the route can be passed by a `params` prop.
+
+```tsx title="Using params prop"
+// When the user is on `en` locale, the form will navigate to `/en/blog/Jon1VK?query=abc`
+<Form action="/blog/[user]" params={{ user: "Jon1VK" }}>
+  {/* Inputs */}
+</Form>
+```

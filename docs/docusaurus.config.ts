@@ -41,6 +41,9 @@ const config: Config = {
       darkTheme: prismThemes.nightOwl,
     },
     colorMode: { defaultMode: "dark" },
+    tableOfContents: {
+      maxHeadingLevel: 4,
+    },
     navbar: {
       title: "NextGlobeGen",
       logo: {
