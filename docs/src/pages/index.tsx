@@ -67,7 +67,7 @@ function Layout(props) {
 
 function CodeExample() {
   return (
-    <div className="-mx-8 pl-6 pt-8 md:pt-12 md:pl-10 md:mx-auto md:max-w-3xl xl:md:mx-0 xl:max-w-none bg-gradient-to-b from-sky-500/90 to-white dark:to-sky-950 [clip-path:inset(0)] md:[clip-path:inset(0_round_theme(borderRadius.3xl))]">
+    <div className="-mx-8 pl-6 pt-8 md:pt-12 md:pl-10 md:mx-auto md:max-w-3xl xl:mx-0 xl:max-w-none bg-gradient-to-b from-sky-500/90 to-white dark:to-sky-950 [clip-path:inset(0)] md:[clip-path:inset(0_round_theme(borderRadius.3xl))]">
       <div
         className="absolute inset-0 left-1/2 -z-10 ml-10 w-[200%] skew-x-[-30deg] bg-gradient-to-t from-sky-500/90 to-white dark:to-sky-950 md:ml-20 lg:ml-36"
         aria-hidden="true"
