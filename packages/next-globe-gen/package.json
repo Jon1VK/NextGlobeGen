@@ -40,7 +40,11 @@
   },
   "scripts": {
     "build": "tsup",
-    "test": "tsc && eslint . && prettier --check . && vitest --no-watch",
+    "check": "pnpm run /^check:/",
+    "check:types": "tsc",
+    "check:lint": "eslint .",
+    "check:format": "prettier --check .",
+    "test": "vitest --no-watch",
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {

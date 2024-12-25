@@ -12,8 +12,10 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc",
-    "check": "tsc && eslint . && prettier --check ."
+    "check": "pnpm run /^check:/",
+    "check:types": "tsc",
+    "check:lint": "eslint .",
+    "check:format": "prettier --check ."
   },
   "dependencies": {
     "@docusaurus/core": "3.6.3",

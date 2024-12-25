@@ -1,0 +1,41 @@
+name: Package Code Quality
+
+on:
+  pull_request:
+    paths:
+      - packages/next-globe-gen/**
+
+defaults:
+  run:
+    working-directory: ./packages/next-globe-gen
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - run: pnpm install
+      - run: pnpm check
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - run: pnpm install
+      - run: pnpm test
