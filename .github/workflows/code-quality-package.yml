@@ -3,11 +3,11 @@ name: Package Code Quality
 on:
   pull_request:
     paths:
-      - packages/next-globe-gen/**
+      - package/**
 
 defaults:
   run:
-    working-directory: ./packages/next-globe-gen
+    working-directory: ./package
 
 jobs:
   check:
