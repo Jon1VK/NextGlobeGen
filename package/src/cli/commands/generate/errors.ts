@@ -8,6 +8,6 @@ export const configNotFoundError = (configPath: string) => {
 
 export const originDirNotFoundError = (config: Config) => {
   return new Error(
-    `Cannot find directory: ${config.originDir}\nAre your App Router routes defined in the specified directory?`,
+    `Cannot find directory: ${config.routes.originDir}\nAre your App Router routes defined in the specified directory?`,
   );
 };

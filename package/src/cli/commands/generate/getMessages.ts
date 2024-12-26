@@ -6,7 +6,7 @@ export type Messages = Record<string, Record<string, string>>;
 export async function getMessages(config: Config) {
   const messages: Messages = {};
   for await (const locale of config.locales) {
-    const localeMessages = await config.getMessages(locale);
+    const localeMessages = await config.messages.getMessages(locale);
     messages[locale] = flatten(localeMessages);
   }
   return messages;

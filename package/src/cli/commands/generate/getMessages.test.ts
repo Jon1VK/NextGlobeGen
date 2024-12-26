@@ -2,15 +2,14 @@ import { describe, expect, test } from "vitest";
 import { DEFAULT_CONFIG } from ".";
 import { getMessages } from "./getMessages";
 
-const exampleDir = "./src/__mocks__/messages";
-
 describe("getMessages()", () => {
   test("works correctly", async () => {
     const messages = await getMessages({
       ...DEFAULT_CONFIG,
       locales: ["fi", "en"],
-      getMessages: async (locale) => {
-        return (await import(`${exampleDir}/${locale}.json`)).default;
+      messages: {
+        ...DEFAULT_CONFIG.messages,
+        originDir: "./src/__mocks__/messages",
       },
     });
     expect(messages).toStrictEqual({

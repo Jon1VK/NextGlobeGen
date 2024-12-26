@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import { readFileSync, watch } from "fs";
+import path from "path";
 import type { Config, UserConfig } from "~/cli/types";
 import { debounce } from "~/cli/utils/debounce";
 import { isDirectory, isFile, rmDirectory } from "~/cli/utils/fs-utils";
@@ -14,15 +15,20 @@ import { generateLocalizedRoutes } from "./generateLocalizedRoutes";
 import { getOriginRoutes } from "./getOriginRoutes";
 
 export const DEFAULT_CONFIG: Config = {
-  originDir: "./src/_app",
-  localizedDir: "./src/app/(i18n)",
   locales: [],
   defaultLocale: "",
   prefixDefaultLocale: true,
-  messagesWatchDir: "./src/messages",
-  async getMessages(locale) {
-    const content = readFileSync(`./src/messages/${locale}.json`).toString();
-    return JSON.parse(content);
+  routes: {
+    originDir: "./src/_app",
+    localizedDir: "./src/app/(i18n)",
+  },
+  messages: {
+    originDir: "./src/messages",
+    async getMessages(locale) {
+      const messageFilePath = path.join(this.originDir, `${locale}.json`);
+      const content = readFileSync(messageFilePath).toString();
+      return JSON.parse(content);
+    },
   },
 };
 
@@ -40,18 +46,31 @@ export const generateCommand = new Command("generate")
 async function generateAction(args: { config: string; watch: boolean }) {
   if (!isFile(args.config)) throw configNotFoundError(args.config);
   const userConfig = await compile<{ default: UserConfig }>(args.config);
-  const config: Config = { ...DEFAULT_CONFIG, ...userConfig.default };
-  if (!isDirectory(config.originDir)) throw originDirNotFoundError(config);
-  rmDirectory(config.localizedDir);
-  generateOutdirs(config.localizedDir);
+  const config: Config = {
+    ...DEFAULT_CONFIG,
+    ...userConfig.default,
+    routes: {
+      ...DEFAULT_CONFIG.routes,
+      ...userConfig.default.routes,
+    },
+    messages: {
+      ...DEFAULT_CONFIG.messages,
+      ...userConfig.default.messages,
+    },
+  };
+  if (!isDirectory(config.routes.originDir)) {
+    throw originDirNotFoundError(config);
+  }
+  rmDirectory(config.routes.localizedDir);
+  generateOutdirs(config.routes.localizedDir);
   await generateMessages(config);
   await generateRoutes(config);
   if (args.watch) {
-    watch(config.originDir, { recursive: true }, (_, fileName) => {
+    watch(config.routes.originDir, { recursive: true }, (_, fileName) => {
       if (!fileName) return;
       debouncedGenerateRoutes(config, `/${fileName}`);
     });
-    watch(config.messagesWatchDir, { recursive: true }, () => {
+    watch(config.messages.originDir, { recursive: true }, () => {
       debouncedGenerateMessages(config);
     });
   }

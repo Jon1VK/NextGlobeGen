@@ -22,13 +22,13 @@ export function generateLocalizedRoutes(
   prevRoutes = originRoutes;
   originRoutes.forEach((originRoute) => {
     if (!needsUpdate(originRoute, newPaths, updatedOriginPath)) return;
-    const originPath = path.join(config.originDir, originRoute.path);
+    const originPath = path.join(config.routes.originDir, originRoute.path);
     const originPathDir = path.dirname(originPath);
     const compileTemplate = getTemplateCompiler(config, originRoute);
     Object.entries(originRoute.localizedPaths).forEach(
       ([locale, localizedRoutePath]) => {
         const localizedPath = path.join(
-          config.localizedDir,
+          config.routes.localizedDir,
           localizedRoutePath,
         );
         const localizedPathDir = path.dirname(localizedPath);
@@ -80,7 +80,7 @@ function needsUpdate(
 function deleteRemovedPaths(config: Config, removedPaths: Set<string>) {
   removedPaths.forEach((localizedPath) => {
     try {
-      const fullPath = path.join(config.localizedDir, localizedPath);
+      const fullPath = path.join(config.routes.localizedDir, localizedPath);
       rmSync(fullPath);
       let dirPath = path.dirname(fullPath);
       while (readdirSync(dirPath).length === 0) {

@@ -16,7 +16,7 @@ export async function getOriginRoutes({
   parentRoute,
 }: GetOriginRoutesParams) {
   const originRoutes: OriginRoute[] = [];
-  const currentDir = directory ?? config.originDir;
+  const currentDir = directory ?? config.routes.originDir;
   const files = getAppRouterFiles(currentDir);
   for await (const file of files) {
     const filePath = path.join(currentDir, file.name);
