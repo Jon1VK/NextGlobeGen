@@ -22,11 +22,11 @@ export default function Page() {
 
 The following props can be passed to the `<Link>` component:
 
-| Prop     | Example                 | Type                          | Required |
-| -------- | ----------------------- | ----------------------------- | -------- |
-| `href`   | `href="/dashboard"`     | `Route \| HrefOptions<Route>` | Yes      |
-| `locale` | `locale="en"`           | `Locale`                      | -        |
-| `params` | `params={{ id: "id" }}` | `RouteParams<Route>`          | **\***   |
+| Prop     | Type                          | Required |
+| -------- | ----------------------------- | -------- |
+| `href`   | `Route \| HrefOptions<Route>` | Yes      |
+| `locale` | `Locale`                      | -        |
+| `params` | `RouteParams<Route>`          | **\***   |
 
 **\*** params prop is required only if the given route has dynamic segments.
 
@@ -106,11 +106,11 @@ export default function Page() {
 
 The following props can be passed to the `<Form>` component:
 
-| Prop     | Example                       | Type                 | Required |
-| -------- | ----------------------------- | -------------------- | -------- |
-| `action` | `action="/search"`            | `Route`              | Yes      |
-| `locale` | `locale="en"`                 | `Locale`             | -        |
-| `params` | `params={{ user: "Jon1VK" }}` | `RouteParams<Route>` | **\***   |
+| Prop     | Type                 | Required |
+| -------- | -------------------- | -------- |
+| `action` | `Route`              | Yes      |
+| `locale` | `Locale`             | -        |
+| `params` | `RouteParams<Route>` | **\***   |
 
 **\*** params prop is required only if the given route has dynamic segments.
 

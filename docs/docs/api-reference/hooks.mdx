@@ -4,16 +4,165 @@ sidebar_position: 2
 
 # Hooks
 
-## Client & Server
+NextGlobeGen provides multiple hooks that help you with the internationalization requirements of the application. Some of the hooks work interchangeably in client and server components but some can be used only in client components.
+
+## Client & Server Components
+
+These hooks work on both server and client components. As so, the developer does not need to know if a component will be used in a client or server context when building components with these hooks.
 
 ### useLocale
 
+The `useLocale` hook returns the current locale.
+
+:::info
+
+An alias `getLocale` is also available for async server components.
+
+:::
+
+```tsx
+import { useLocale } from "next-globe-gen";
+import { ReactNode } from "react";
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  const locale = useLocale();
+  return (
+    <html lang={locale}>
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+#### Parameters
+
+`useLocale` does not take any parameters.
+
+#### Returns
+
+`useLocale` returns the current locale.
+
 ### useHref
+
+If you need to construct a localized href of a route, you can use the `useHref` hook. This hook is used under the hood in some other components and functions, such as the [`Link`](components.mdx#link) component.
+
+:::info
+
+An alias `getHref` is also available for async server components.
+
+:::
+
+#### Parameters
+
+`useHref` has three overloads when calling it.
+
+##### 1. With a static route
+
+```tsx
+const href = useHref(route: StaticRoute, locale?: Locale);
+```
+
+| Param    | Type          | Required | Description                                                                     |
+| -------- | ------------- | -------- | ------------------------------------------------------------------------------- |
+| `route`  | `StaticRoute` | Yes      | A static route for which to construct the href for (ie. `/dashboard`)           |
+| `locale` | `Locale`      | -        | In which locale the href should be constructed. Uses current locale by default. |
+
+##### 2. With a dynamic route
+
+```tsx
+const href = useHref(route: DynamicRoute, params: RouteParams<DynamicRoute>, locale?: Locale);
+```
+
+| Param    | Type                        | Required | Description                                                                     |
+| -------- | --------------------------- | -------- | ------------------------------------------------------------------------------- |
+| `route`  | `DynamicRoute`              | Yes      | A dynamic route for which to construct the href for, ie. `/blog/[user]`         |
+| `params` | `RouteParams<DynamicRoute>` | Yes      | The params for the dynamic segments of the route, ie. `{ user: "Jon1VK" }`      |
+| `locale` | `Locale`                    | -        | In which locale the href should be constructed. Uses current locale by default. |
+
+##### 3. With an options object
+
+```tsx
+const href = useHref({ pathname, params, locale, query }: HrefOptions<Route>);
+```
+
+| Option     | Type                     | Required | Description                                                                     |
+| ---------- | ------------------------ | -------- | ------------------------------------------------------------------------------- |
+| `pathname` | `Route`                  | Yes      | A route for which to construct the href for, ie. `/blog/[user]`                 |
+| `params`   | `RouteParams<Route>`     | \*       | The params for the dynamic segments of the route, ie. `{ user: "Jon1VK" }`      |
+| `locale`   | `Locale`                 | -        | In which locale the href should be constructed. Uses current locale by default. |
+| `query`    | `Record<string, string>` | -        | URL search params that should be included in the href                           |
+
+**\*** params option is required only if the given pathname has dynamic segments.
+
+#### Returns
+
+`useHref` returns the localized version of the given route.
 
 ### useTranslations
 
-## Client-only
+The API reference for `useTranslations` is being worked on.
+
+:::info
+
+An alias `getTranslations` is also available for async server components.
+
+:::
+
+## Async Server Components
+
+Since ESLint has a rule which disallows calling hooks in async server components, the package also exports `get`-prefixed aliases of the hooks that can be used in async server components.
+
+These aliases are included:
+
+- [`getLocale`](#uselocale)
+- [`getHref`](#usehref)
+- [`getTranslations`](#usetranslations)
+
+## Client Components
+
+These hooks can only be called in client components, since they use internally Next.js hooks which work only in client components.
 
 ### useRoute
 
+The `useRoute` hook returns the current route of the page. It can be used to create a generic language switcher component.
+
+```tsx title="LanguageSwitcher"
+"use client";
+
+import { Link, useRoute, type RouteParams } from "next-globe-gen";
+import { useParams } from "next/navigation";
+
+export default function LanguageSwitcher() {
+  const route = useRoute();
+  const params = useParams<RouteParams<typeof route>>();
+
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link href={route} params={params} locale="en">
+            In English
+          </Link>
+        </li>
+        <li>
+          <Link href={route} params={params} locale="fi">
+            Suomeksi
+          </Link>
+        </li>
+      </ul>
+    </nav>
+  );
+}
+```
+
+#### Parameters
+
+`useRoute` does not take any parameters.
+
+#### Returns
+
+`useRoute` returns the current route of the page.
+
 ### useRouter
+
+The API reference for `useRouter` is being worked on.
