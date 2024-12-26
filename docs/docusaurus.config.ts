@@ -8,11 +8,11 @@ import tailwindcssPlugin from "tailwindcss";
 const config: Config = {
   title: "NextGlobeGen",
   tagline: "Route Localizer for Next.js App Router",
-  favicon: "favicon.ico",
+  favicon: "img/favicon.ico",
 
   // Deployment config
-  url: "https://Jon1VK.github.io",
-  baseUrl: "/NextGlobeGen",
+  url: "https://next-globe-gen.dev",
+  baseUrl: "/",
   trailingSlash: false,
   organizationName: "Jon1VK",
   projectName: "NextGlobeGen",
