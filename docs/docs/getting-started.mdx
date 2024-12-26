@@ -24,7 +24,7 @@ npm install next-globe-gen
 We will create the following file structure on the following steps. The default directory and file locations can be altered by configuration, but let's use the defaults for now.
 
 ```treeview title="File structure"
-.
+./
 ├── i18n.config.ts 1)
 ├── next.config.ts 2)
 └── src/
@@ -42,7 +42,7 @@ We will create the following file structure on the following steps. The default 
     └── middleware.ts 6)
 ```
 
-### <span style={{ color: "#addb67"}}>1)</span> Configuration
+### <span className="text-[#e3116c] dark:text-[#addb67]">1)</span> Configuration
 
 Create an `i18n.config.ts` file to the application root directory and export your configuration as a default export. You have to at least configure what locales the application supports and what is the default locale.
 
@@ -57,7 +57,7 @@ const config: Config = {
 export default config;
 ```
 
-### <span style={{ color: "#addb67"}}>2)</span> Plugin
+### <span className="text-[#e3116c] dark:text-[#addb67]">2)</span> Plugin
 
 Enable the NextGlobeGen plugin in the `next.config.ts` file.
 
@@ -74,7 +74,7 @@ const nextConfig: NextConfig = {
 export default withNextGlobeGen(nextConfig);
 ```
 
-### <span style={{ color: "#addb67"}}>3)</span> Messages
+### <span className="text-[#e3116c] dark:text-[#addb67]">3)</span> Messages
 
 Create message translations to the `src/messages` directory. There should be one `<locale>.json` file for each configured `locale`.
 
@@ -107,7 +107,7 @@ Create message translations to the `src/messages` directory. There should be one
 </TabItem>
 </Tabs>
 
-### <span style={{ color: "#addb67"}}>4)</span> Routing
+### <span className="text-[#e3116c] dark:text-[#addb67]">4)</span> Routing
 
 Create or move your Next.js file-system based routing files into the `_app` directory from the `app` directory. All the new routes should be created and modified in the `_app` directory.
 
@@ -238,7 +238,7 @@ export default function Dashboard() {
 </TabItem >
 </Tabs>
 
-### <span style={{ color: "#addb67"}}>5)</span> Localized pathnames (optional)
+### <span className="text-[#e3116c] dark:text-[#addb67]">5)</span> Localized pathnames (optional)
 
 The pathnames in the url often need to be translated to improve SEO. In NextGlobeGen this is done for each route segment (directory) separately with special `i18n.ts` files. With this approach the route segment and it's localizations can be colocated.
 
@@ -255,7 +255,7 @@ export default segmentTranslations;
 
 With these translations, the Finnish page will be served from `/fi/hallintapaneeli` path.
 
-### <span style={{ color: "#addb67"}}>6)</span> Middleware
+### <span className="text-[#e3116c] dark:text-[#addb67]">6)</span> Middleware
 
 Add middleware to the application by exporting NextGlobeGen `middleware` from `src/middleware.ts` file. The middleware handles locale negotiation and adds alternate links of the page to the response headers.
 

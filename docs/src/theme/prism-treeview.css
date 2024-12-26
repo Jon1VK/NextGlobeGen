@@ -47,7 +47,6 @@
   height: 100%;
   width: 1em;
   background: no-repeat 50% 50% / contain;
-  filter: invert(0.9);
   background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIiA+DQo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgaGVpZ2h0PSIxNzkuMiIgd2lkdGg9IjE3OS4yIj4NCgk8Zz4NCgkJPHBhdGggdHJhbnNmb3JtPSJzY2FsZSgwLjEsLTAuMSkgdHJhbnNsYXRlKDAsLTE1MzYpIiBkPSJNMTQ2OCAxMTU2cTI4IC0yOCA0OCAtNzZ0MjAgLTg4di0xMTUycTAgLTQwIC0yOCAtNjh0LTY4IC0yOGgtMTM0NHEtNDAgMCAtNjggMjh0LTI4IDY4djE2MDBxMCA0MCAyOCA2OHQ2OCAyOGg4OTZxNDAgMCA4OCAtMjB0NzYgLTQ4ek0xMDI0IDE0MDB2LTM3NmgzNzZxLTEwIDI5IC0yMiA0MWwtMzEzIDMxM3EtMTIgMTIgLTQxIDIyek0xNDA4IC0xMjh2MTAyNGgtNDE2cS00MCAwIC02OCAyOHQtMjggNjh2NDE2aC03Njh2LTE1MzZoMTI4MHogIiAvPg0KCTwvZz4NCjwvc3ZnPg==");
 }
 
@@ -73,5 +72,13 @@
   display: inline-block;
   vertical-align: top;
   padding: 0;
+  color: rgb(227, 17, 108);
+}
+
+[data-theme="dark"] .treeview-part.entry-name.step {
   color: rgb(173, 219, 103);
+}
+
+[data-theme="dark"] .treeview-part.entry-name:before {
+  filter: invert(0.9);
 }
