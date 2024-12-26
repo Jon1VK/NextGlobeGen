@@ -48,7 +48,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@formatjs/intl-localematcher": "^0.5.8",
+    "@formatjs/intl-localematcher": "^0.5.9",
     "commander": "^12.1.0",
     "intl-messageformat": "^10.7.10",
     "negotiator": "^1.0.0",
@@ -59,14 +59,14 @@
     "@eslint/js": "^9.17.0",
     "@types/figlet": "^1.7.0",
     "@types/negotiator": "^0.6.3",
-    "@types/node": "^22.10.1",
-    "@types/react": "^19.0.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
     "eslint": "^9.17.0",
-    "next": "^15.0.4",
+    "next": "^15.1.2",
     "prettier": "^3.4.2",
     "react": "^19.0.0",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.18.0",
+    "typescript-eslint": "^8.18.2",
     "vitest": "^2.1.8"
   },
   "peerDependencies": {
