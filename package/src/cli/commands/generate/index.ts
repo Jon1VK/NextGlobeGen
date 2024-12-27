@@ -4,7 +4,7 @@ import path from "path";
 import type { Config, UserConfig } from "~/cli/types";
 import { debounce } from "~/cli/utils/debounce";
 import { isDirectory, isFile, rmDirectory } from "~/cli/utils/fs-utils";
-import { compile, removeCompiledFiles } from "~/cli/utils/ts-utils";
+import { compile } from "~/cli/utils/ts-utils";
 import { configNotFoundError, originDirNotFoundError } from "./errors";
 import {
   generateMessagesFile,
@@ -17,8 +17,8 @@ import { getOriginRoutes } from "./getOriginRoutes";
 export const DEFAULT_CONFIG: Config = {
   locales: [],
   defaultLocale: "",
-  prefixDefaultLocale: true,
   routes: {
+    prefixDefaultLocale: true,
     originDir: "./src/_app",
     localizedDir: "./src/app/(i18n)",
   },
@@ -90,7 +90,7 @@ async function generateRoutes(config: Config, updatedOriginPath?: string) {
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
   } finally {
-    removeCompiledFiles();
+    // removeCompiledFiles();
   }
 }
 

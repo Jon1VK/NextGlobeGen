@@ -222,7 +222,10 @@ describe("getOriginRoutes()", () => {
         ...DEFAULT_CONFIG,
         locales: ["fi", "en"],
         defaultLocale: "fi",
-        prefixDefaultLocale: false,
+        routes: {
+          ...DEFAULT_CONFIG.routes,
+          prefixDefaultLocale: false,
+        },
       },
       directory: exampleDir,
     });

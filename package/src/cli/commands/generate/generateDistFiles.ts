@@ -55,7 +55,7 @@ export function generateSchemaFile(
   const schema = {
     locales: config.locales,
     defaultLocale: config.defaultLocale,
-    prefixDefaultLocale: config.prefixDefaultLocale,
+    prefixDefaultLocale: config.routes.prefixDefaultLocale,
     routes,
   };
   const JSONSchema = JSON.stringify(schema);

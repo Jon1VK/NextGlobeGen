@@ -3,14 +3,15 @@ import type { RouteType } from "./commands/generate/getOriginRoutes";
 export type Config<L extends string[] = string[]> = {
   locales: L;
   defaultLocale: L[number];
-  prefixDefaultLocale: boolean;
   routes: {
+    prefixDefaultLocale: boolean;
     originDir: string;
     localizedDir: string;
   };
   messages: {
     originDir: string;
-    getMessages: (locale: L[number]) => Promise<object> | object;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getMessages: (locale: L[number]) => Promise<any>;
   };
 };
 
