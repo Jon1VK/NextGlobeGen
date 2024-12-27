@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { OriginRoute } from "~/cli/types";
-import { DEFAULT_CONFIG } from ".";
+import { DEFAULT_CONFIG, mergeConfigs } from "./config";
 import { getOriginRoutes } from "./getOriginRoutes";
 
 const exampleDir = "./src/__mocks__/_app";
@@ -206,11 +206,10 @@ export const getExpectedOriginRoutes = (
 describe("getOriginRoutes()", () => {
   test("works correctly with prefixDefaultLocale: true", async () => {
     const files = await getOriginRoutes({
-      config: {
-        ...DEFAULT_CONFIG,
+      config: mergeConfigs(DEFAULT_CONFIG, {
         locales: ["fi", "en"],
         defaultLocale: "fi",
-      },
+      }),
       directory: exampleDir,
     });
     expect(files).toStrictEqual(getExpectedOriginRoutes(true));
@@ -218,15 +217,11 @@ describe("getOriginRoutes()", () => {
 
   test("works correctly with prefixDefaultLocale: false", async () => {
     const files = await getOriginRoutes({
-      config: {
-        ...DEFAULT_CONFIG,
+      config: mergeConfigs(DEFAULT_CONFIG, {
         locales: ["fi", "en"],
         defaultLocale: "fi",
-        routes: {
-          ...DEFAULT_CONFIG.routes,
-          prefixDefaultLocale: false,
-        },
-      },
+        routes: { prefixDefaultLocale: false },
+      }),
       directory: exampleDir,
     });
     expect(files).toStrictEqual(getExpectedOriginRoutes(false));

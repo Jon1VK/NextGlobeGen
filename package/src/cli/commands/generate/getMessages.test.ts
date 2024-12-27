@@ -1,17 +1,15 @@
 import { describe, expect, test } from "vitest";
-import { DEFAULT_CONFIG } from ".";
+import { DEFAULT_CONFIG, mergeConfigs } from "./config";
 import { getMessages } from "./getMessages";
 
 describe("getMessages()", () => {
   test("works correctly", async () => {
-    const messages = await getMessages({
-      ...DEFAULT_CONFIG,
-      locales: ["fi", "en"],
-      messages: {
-        ...DEFAULT_CONFIG.messages,
-        originDir: "./src/__mocks__/messages",
-      },
-    });
+    const messages = await getMessages(
+      mergeConfigs(DEFAULT_CONFIG, {
+        locales: ["fi", "en"],
+        messages: { originDir: "./src/__mocks__/messages" },
+      }),
+    );
     expect(messages).toStrictEqual({
       fi: {
         "hello.world": "Hei maailma",

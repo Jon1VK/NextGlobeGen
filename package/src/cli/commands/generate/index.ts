@@ -1,10 +1,10 @@
 import { Command } from "commander";
-import { readFileSync, watch } from "fs";
-import path from "path";
+import { watch } from "fs";
 import type { Config, UserConfig } from "~/cli/types";
 import { debounce } from "~/cli/utils/debounce";
 import { isDirectory, isFile, rmDirectory } from "~/cli/utils/fs-utils";
-import { compile } from "~/cli/utils/ts-utils";
+import { compile, removeCompiledFiles } from "~/cli/utils/ts-utils";
+import { DEFAULT_CONFIG, mergeConfigs } from "./config";
 import { configNotFoundError, originDirNotFoundError } from "./errors";
 import {
   generateMessagesFile,
@@ -13,24 +13,6 @@ import {
 } from "./generateDistFiles";
 import { generateLocalizedRoutes } from "./generateLocalizedRoutes";
 import { getOriginRoutes } from "./getOriginRoutes";
-
-export const DEFAULT_CONFIG: Config = {
-  locales: [],
-  defaultLocale: "",
-  routes: {
-    prefixDefaultLocale: true,
-    originDir: "./src/_app",
-    localizedDir: "./src/app/(i18n)",
-  },
-  messages: {
-    originDir: "./src/messages",
-    async getMessages(locale) {
-      const messageFilePath = path.join(this.originDir, `${locale}.json`);
-      const content = readFileSync(messageFilePath).toString();
-      return JSON.parse(content);
-    },
-  },
-};
 
 export const generateCommand = new Command("generate")
   .summary("generate localized routes")
@@ -46,18 +28,7 @@ export const generateCommand = new Command("generate")
 async function generateAction(args: { config: string; watch: boolean }) {
   if (!isFile(args.config)) throw configNotFoundError(args.config);
   const userConfig = await compile<{ default: UserConfig }>(args.config);
-  const config: Config = {
-    ...DEFAULT_CONFIG,
-    ...userConfig.default,
-    routes: {
-      ...DEFAULT_CONFIG.routes,
-      ...userConfig.default.routes,
-    },
-    messages: {
-      ...DEFAULT_CONFIG.messages,
-      ...userConfig.default.messages,
-    },
-  };
+  const config = mergeConfigs(DEFAULT_CONFIG, userConfig.default);
   if (!isDirectory(config.routes.originDir)) {
     throw originDirNotFoundError(config);
   }
@@ -90,7 +61,7 @@ async function generateRoutes(config: Config, updatedOriginPath?: string) {
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
   } finally {
-    // removeCompiledFiles();
+    removeCompiledFiles();
   }
 }
 
