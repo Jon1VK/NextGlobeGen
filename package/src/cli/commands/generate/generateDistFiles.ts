@@ -10,6 +10,9 @@ const OUT_DIR = "./.next-globe-gen";
 const template = (type: "schema" | "messages") => {
   return "".concat(
     `export const ${type} = {${type}} as const;\n\n`,
+    type === "messages"
+      ? "export const clientMessages = {clientMessages};\n\n"
+      : "",
     `declare module "next-globe-gen" {\n`,
     `\tinterface ${toPascalCase(type)}Register {\n`,
     `\t\t${type}: typeof ${type}\n\t}\n}\n`,
@@ -67,7 +70,26 @@ export function generateSchemaFile(
 export async function generateMessagesFile(config: Config) {
   const messages = await getMessages(config);
   const JSONMessages = JSON.stringify(messages);
-  const messagesFile = template("messages").replace("{messages}", JSONMessages);
+  const clientKeys =
+    config.messages.clientKeys instanceof RegExp
+      ? [config.messages.clientKeys]
+      : config.messages.clientKeys;
+  const clientMessages = !clientKeys
+    ? messages
+    : Object.fromEntries(
+        Object.entries(messages).map(([locale, localeMessages]) => {
+          const filteredMessages = Object.fromEntries(
+            Object.entries(localeMessages).filter(([key]) => {
+              return clientKeys.some((regExp) => regExp.test(key));
+            }),
+          );
+          return [locale, filteredMessages];
+        }),
+      );
+  const JSONClientMessages = JSON.stringify(clientMessages);
+  const messagesFile = template("messages")
+    .replace("{messages}", JSONMessages)
+    .replace("{clientMessages}", JSONClientMessages);
   const messagesFilePath = path.join(OUT_DIR, "messages.ts");
   writeFileSync(messagesFilePath, messagesFile);
 }
