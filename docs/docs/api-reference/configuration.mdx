@@ -1,0 +1,144 @@
+---
+sidebar_position: 4
+---
+
+# Configuration
+
+NextGlobeGen can be configured through an `i18n.config.ts` file in the root of your project directory with a default export.
+
+```tsx title="i18n.config.ts"
+import { Config } from "next-globe-gen";
+
+const config: Config = {
+  /* config options here */
+};
+
+export default config;
+```
+
+The location of the configuration file can be altered by giving the path to the configuration file as an argument to the NextGlobeGen plugin in `next.config.ts` file.
+
+```tsx title="next.config.ts"
+import type { NextConfig } from "next";
+import { withNextGlobeGenPlugin } from "next-globe-gen/plugin";
+
+// highlight-next-line
+const withNextGlobeGen = withNextGlobeGenPlugin("./configs/next-globe-gen.ts");
+
+const nextConfig: NextConfig = {
+  /* Next.js config options here */
+};
+
+export default withNextGlobeGen(nextConfig);
+```
+
+## Options
+
+This section documents all the available configuration options.
+
+### locales (required)
+
+An array of locales that the application supports. At least one locale needs to be provided.
+
+```tsx
+const config: Config = {
+  // highlight-next-line
+  locales: ["en", "fi"],
+};
+```
+
+### defaultLocale (required)
+
+A locale that will be used as a default locale. Should be one of the provided [`locales`](#locales-required).
+
+```tsx
+const config: Config = {
+  locales: ["en", "fi"],
+  // highlight-next-line
+  defaultLocale: "en",
+};
+```
+
+### Routes
+
+Options under `routes` namespace affect how localized routes are generated.
+
+#### prefixDefaultLocale
+
+A boolean value indicating if the default locale version of the site should be served from locale-prefixed path or from the root.
+
+```tsx
+const config: Config = {
+  routes: {
+    // highlight-next-line
+    prefixDefaultLocale: false, // Default: true
+  },
+};
+```
+
+#### originDir
+
+A path to a directory where the origin routes are located. The NextGlobeGen pugin watches this directory for changes and regenerates the routes when necessary.
+
+```tsx
+const config: Config = {
+  routes: {
+    // highlight-next-line
+    originDir: "./_app", // Default: "./src/_app"
+  },
+};
+```
+
+#### localizedDir
+
+A path to a directory where the localized routes will be generated.
+
+```tsx
+const config: Config = {
+  routes: {
+    // highlight-next-line
+    localizedDir: "./app/(i18n)", // Default: "./src/app/(i18n)"
+  },
+};
+```
+
+### Messages
+
+Options under `messages` namespace affect how messages are loaded and handled in the application.
+
+#### originDir
+
+A path to a directory where the message files are located. The NextGlobeGen pugin watches this directory for changes and recompiles the messages when necessary.
+
+```tsx
+const config: Config = {
+  messages: {
+    // highlight-next-line
+    originDir: "./messages", // Default: "./src/messages"
+  },
+};
+```
+
+#### getMessages
+
+An async function which handles loading the messages. The `getMessages` function must return a possibly deeply nested object with message translations as values.
+
+```tsx
+const config: Config = {
+  messages: {
+    // highlight-start
+    async getMessages(locale) {
+      /* fetch messages for example from an external provider */
+    },
+    // highlight-end
+  },
+};
+```
+
+:::info Default message loading
+
+By default messages are loaded from `<locale>.json` and `<locale>/<namespace>.json` files from the directory specified by the [`originDir`](#origindir-1) option.
+
+The messages in the `<locale>/<namespace>.json` file will all have the filename `<namespace>` as their namespace prefix. Expection to this rule are the messages in the `<locale>/index.json` file. The messages in this file not be prefixed with the `index` namespace.
+
+:::
