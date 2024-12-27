@@ -137,8 +137,8 @@ const config: Config = {
 
 :::info Default message loading
 
-By default messages are loaded from `<locale>.json` and `<locale>/<namespace>.json` files from the directory specified by the [`originDir`](#origindir-1) option.
+By default messages are loaded from `<locale>.json` and `<locale>/<filename>.json` files from the directory specified by the [`originDir`](#origindir-1) option.
 
-The messages in the `<locale>/<namespace>.json` file will all have the filename `<namespace>` as their namespace prefix. Expection to this rule are the messages in the `<locale>/index.json` file. The messages in this file not be prefixed with the `index` namespace.
+The messages from the `<locale>/<filename>.json` file are put under `<filename>` namespace. An expection to this rule are the messages from the `<locale>/index.json` file, which are not put under any namespace.
 
 :::
