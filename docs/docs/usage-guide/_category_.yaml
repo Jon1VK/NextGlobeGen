@@ -1,0 +1,7 @@
+position: 3
+label: Usage Guide
+link:
+  type: generated-index
+  title: Usage Guide
+  slug: usage-guide
+  description: "The NextGlobeGen usage guide is being worked on."
