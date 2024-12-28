@@ -1,12 +1,12 @@
-import IntlMessageFormat from "intl-messageformat";
 import {
-  messages,
+  messages as allMessages,
   type Message,
   type MessageArguments,
   type Namespace,
   type NamespaceKey,
 } from "next-globe-gen/messages";
 import type { Locale } from "next-globe-gen/schema";
+import { tImpl } from "../shared/useTranslationsFactory";
 
 export function createTranslator<N extends Namespace>(
   locale: Locale,
@@ -21,10 +21,7 @@ export function createTranslator<N extends Namespace>(
       : [key: K, args: A]
   ) {
     const [key, args] = params;
-    const fullKey = namespace ? `${namespace}.${key}` : key;
-    const message = messages[locale]?.[fullKey];
-    if (!message) return fullKey;
-    const msgFormat = new IntlMessageFormat(message, locale);
-    return msgFormat.format(args) as string;
+    const messages = allMessages[locale];
+    return tImpl({ messages, locale, namespace, key, args });
   };
 }
