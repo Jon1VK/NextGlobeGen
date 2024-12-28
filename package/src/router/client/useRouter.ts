@@ -6,57 +6,39 @@ import type {
 } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter as useNextRouter } from "next/navigation";
 import { useHref } from ".";
-import {
-  type UseHrefArgs,
-  extractUseHrefOptions,
-} from "../shared/useHrefFactory";
+import { type HrefOptions } from "../shared/useHrefFactory";
 
 export function useRouter() {
   const router = useNextRouter();
 
-  function push<R extends Route>(...args: UseHrefArgs<R>) {
-    const useHrefOptions = extractUseHrefOptions(args);
-    return router.push(useHref(useHrefOptions));
+  function push<R extends Route>(
+    hrefOptions: HrefOptions<R>,
+    opts?: NavigateOptions,
+  ) {
+    router.push(useHref(hrefOptions), opts);
   }
-  push.opts = (opts: NavigateOptions) => {
-    return function pushWithOptions<R extends Route>(...args: UseHrefArgs<R>) {
-      const useHrefOptions = extractUseHrefOptions(args);
-      return router.push(useHref(useHrefOptions), opts);
-    };
-  };
 
-  function replace<R extends Route>(...args: UseHrefArgs<R>) {
-    const useHrefOptions = extractUseHrefOptions(args);
-    return router.replace(useHref(useHrefOptions));
+  function replace<R extends Route>(
+    hrefOptions: HrefOptions<R>,
+    opts?: NavigateOptions,
+  ) {
+    router.replace(useHref(hrefOptions), opts);
   }
-  replace.opts = (opts: NavigateOptions) => {
-    return function replaceWithOptions<R extends Route>(
-      ...args: UseHrefArgs<R>
-    ) {
-      const useHrefOptions = extractUseHrefOptions(args);
-      return router.replace(useHref(useHrefOptions), opts);
-    };
-  };
 
-  function prefetch<R extends Route>(...args: UseHrefArgs<R>) {
-    const useHrefOptions = extractUseHrefOptions(args);
-    return router.prefetch(useHref(useHrefOptions));
+  function prefetch<R extends Route>(
+    hrefOptions: HrefOptions<R>,
+    opts?: PrefetchOptions,
+  ) {
+    router.prefetch(useHref(hrefOptions), opts);
   }
-  prefetch.opts = (opts: PrefetchOptions) => {
-    return function prefetchWithOptions<R extends Route>(
-      ...args: UseHrefArgs<R>
-    ) {
-      const useHrefOptions = extractUseHrefOptions(args);
-      return router.prefetch(useHref(useHrefOptions), opts);
-    };
-  };
 
   return {
-    back: router.back,
-    forward: router.forward,
-    refresh: router.refresh,
+    back: router.back.bind(router),
+    forward: router.forward.bind(router),
+    refresh: router.refresh.bind(router),
     push,
     replace,
     prefetch,
-  } satisfies Record<keyof AppRouterInstance, () => void>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } satisfies Record<keyof AppRouterInstance, (...args: any) => void>;
 }
