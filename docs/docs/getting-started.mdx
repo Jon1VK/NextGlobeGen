@@ -78,6 +78,18 @@ export default withNextGlobeGen(nextConfig);
 
 Create message translations to the `src/messages` directory. There should be one `<locale>.json` file for each configured `locale`.
 
+:::tip Dividing messages to multiple files
+
+You can divide the messages to namespaced `<locale>/<namespace>.json` files if you prefer so.
+
+:::
+
+:::tip YAML Support
+
+You can create the message translations to `.yaml` or `.yml` files if you prefer so.
+
+:::
+
 <Tabs>
 <TabItem value="en.json">
 
@@ -109,11 +121,11 @@ Create message translations to the `src/messages` directory. There should be one
 
 ### <span className="text-[#e3116c] dark:text-[#addb67]">4)</span> Routing
 
-Create or move your Next.js file-system based routing files into the `_app` directory from the `app` directory. All the new routes should be created and modified in the `_app` directory.
+Create or move your Next.js file-system based routing files into the `_app` directory from the `app` directory. All new routes should be created and modified in the `_app` directory.
 
 :::info [API Reference](./api-reference)
 
-You can use the APIs NextGlobeGen package provides to handle navigation and message translations.
+You can use the APIs NextGlobeGen package provides to handle navigation and rendering translations.
 
 :::
 
