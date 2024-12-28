@@ -17,7 +17,7 @@ describe("getMessages()", () => {
         "hello.world": "Hei maailma",
         "hello.name": "Hei {name}",
         projects:
-          "{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}",
+          "{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}",
       },
       en: {
         message: "No namespace message",
@@ -25,7 +25,7 @@ describe("getMessages()", () => {
         "hello.world": "Hello world",
         "hello.name": "Hello {name}",
         projects:
-          "{count, plural, =0 {No project} one {One project} other {# projects}",
+          "{count, plural, =0 {No project} one {One project} other {# projects}}",
       },
     });
   });

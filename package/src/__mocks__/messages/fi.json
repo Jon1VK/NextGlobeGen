@@ -3,5 +3,5 @@
     "world": "Hei maailma",
     "name": "Hei {name}"
   },
-  "projects": "{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}"
+  "projects": "{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}"
 }

@@ -12,7 +12,7 @@ export type Config<L extends string[] = string[]> = {
     originDir: string;
     clientKeys?: RegExp[] | RegExp;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getMessages: (locale: L[number]) => Promise<any>;
+    getMessages: (locale: L[number]) => Promise<any> | any;
   };
 };
 

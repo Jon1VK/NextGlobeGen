@@ -1,0 +1,8 @@
+hello:
+  world: Hello world
+  name: Hello {name}
+projects: >-
+  {count, plural,
+  =0 {No project}
+  one {One project}
+  other {# projects}}
