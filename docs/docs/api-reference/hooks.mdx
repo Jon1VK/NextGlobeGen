@@ -42,6 +42,50 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
 `useLocale` returns the current locale.
 
+### useTranslations
+
+The `useTranslations` hook is used to render messages in the current locale.
+
+:::info
+
+An alias `getTranslations` is also available for async server components.
+
+:::
+
+```tsx
+import { useTranslations } from "next-globe-gen";
+
+export default function HomePage() {
+  const t = useTranslations("home");
+  return (
+    <section>
+      <h1>{t("title")}</h1>
+      <p>{t("description", { name: "NextGlobeGen" })}</p>
+    </section>
+  );
+}
+```
+
+#### Parameters
+
+```tsx
+useTranslations(namespace?: Namespace);
+```
+
+| Param       | Type        | Required | Description                          |
+| ----------- | ----------- | -------- | ------------------------------------ |
+| `namespace` | `Namespace` | -        | Access messages in a given namespace |
+
+:::info Namespace
+
+Namespace of some deeply nested messages object is it's full object dot notation syntax as a string, possibly prefixed with a filename namespace.
+
+:::
+
+#### Returns
+
+`useTranslations` returns a [`t`](./functions.mdx#t-function) function.
+
 ### useHref
 
 If you need to construct a localized href of a route, you can use the `useHref` hook. This hook is used under the hood in some other components and functions, such as the [`Link`](components.mdx#link) component.
@@ -97,50 +141,6 @@ useHref<R extends HrefOptions<Route>>({ pathname, params, locale, query }: R);
 #### Returns
 
 `useHref` returns the localized version of the given route.
-
-### useTranslations
-
-The `useTranslations` hook is used to render messages in the current locale.
-
-:::info
-
-An alias `getTranslations` is also available for async server components.
-
-:::
-
-```tsx
-import { useTranslations } from "next-globe-gen";
-
-export default function HomePage() {
-  const t = useTranslations("home");
-  return (
-    <section>
-      <h1>{t("title")}</h1>
-      <p>{t("description", { name: "NextGlobeGen" })}</p>
-    </section>
-  );
-}
-```
-
-#### Parameters
-
-```tsx
-useTranslations(namespace?: Namespace);
-```
-
-| Param       | Type        | Required | Description                          |
-| ----------- | ----------- | -------- | ------------------------------------ |
-| `namespace` | `Namespace` | -        | Access messages in a given namespace |
-
-:::info Namespace
-
-Namespace of some deeply nested messages object is it's full object dot notation syntax as a string, possibly prefixed with a filename namespace.
-
-:::
-
-#### Returns
-
-`useTranslations` returns a [`t`](./functions.mdx#t-function) function.
 
 ## Client Components
 
@@ -232,5 +232,5 @@ Since ESLint has a rule which disallows calling hooks in async server components
 These aliases are included:
 
 - [`getLocale`](#uselocale)
-- [`getHref`](#usehref)
 - [`getTranslations`](#usetranslations)
+- [`getHref`](#usehref)
