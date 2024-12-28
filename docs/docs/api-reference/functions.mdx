@@ -4,8 +4,56 @@ sidebar_position: 3
 
 # Functions
 
+These functions can only be used in server context. There is various functions for different purposes, so check out all functions separately what they are used for.
+
 ## createTranslator
+
+```tsx
+import { Metadata } from "next";
+import { createTranslator, Locale } from "next-globe-gen";
+
+export function generateMetadata({ locale }: { locale: Locale }): Metadata {
+  const t = createTranslator(locale, "dashboard");
+  return { title: t("title") };
+}
+```
+
+#### Parameters
+
+```tsx
+createTranslator(locale: Locale, namespace?: Namespace);
+```
+
+| Param       | Type        | Required | Description                          |
+| ----------- | ----------- | -------- | ------------------------------------ |
+| `locale`    | `Locale`    | Yes      | Access messages in the given locale  |
+| `namespace` | `Namespace` | -        | Access messages by a given namespace |
+
+:::info Namespace
+
+Namespace of some deeply nested messages object is it's full object dot notation syntax as a string, possibly prefixed with a filename namespace.
+
+:::
+
+#### Returns
+
+`createTranslator` returns a `t` function which is used to translate the messages in the given locale and namespace. The `t` function returns the final translated and formatted message.
+
+```tsx
+t<N extends Namespace, K extends NamespaceKey<N>>(key: K, args?: MessageArguments<Message<N, K>>);
+```
+
+| Param  | Type                              | Required | Description                                      |
+| ------ | --------------------------------- | -------- | ------------------------------------------------ |
+| `key`  | `NamespaceKey<N>`                 | Yes      | Access message by a key in the given namespace   |
+| `args` | `MessageArguments<Message<N, K>>` | \*       | Arguments for the message interpolation patterns |
+
+**\*** args param is required only if the given message has interpolation patterns.
 
 ## redirect
 
+The API reference for `redirect` is being worked on.
+
 ## permanentRedirect
+
+The API reference for `permanentRedirect` is being worked on.

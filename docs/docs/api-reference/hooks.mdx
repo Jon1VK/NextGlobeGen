@@ -59,7 +59,7 @@ An alias `getHref` is also available for async server components.
 ##### 1. With a static route
 
 ```tsx
-const href = useHref(route: StaticRoute, locale?: Locale);
+useHref<R extends StaticRoute>(route: R, locale?: Locale);
 ```
 
 | Param    | Type          | Required | Description                                                                     |
@@ -70,19 +70,19 @@ const href = useHref(route: StaticRoute, locale?: Locale);
 ##### 2. With a dynamic route
 
 ```tsx
-const href = useHref(route: DynamicRoute, params: RouteParams<DynamicRoute>, locale?: Locale);
+useHref<R extends DynamicRoute>(route: R, params: RouteParams<R>, locale?: Locale);
 ```
 
-| Param    | Type                        | Required | Description                                                                     |
-| -------- | --------------------------- | -------- | ------------------------------------------------------------------------------- |
-| `route`  | `DynamicRoute`              | Yes      | A dynamic route for which to construct the href for, ie. `/blog/[user]`         |
-| `params` | `RouteParams<DynamicRoute>` | Yes      | The params for the dynamic segments of the route, ie. `{ user: "Jon1VK" }`      |
-| `locale` | `Locale`                    | -        | In which locale the href should be constructed. Uses current locale by default. |
+| Param    | Type             | Required | Description                                                                     |
+| -------- | ---------------- | -------- | ------------------------------------------------------------------------------- |
+| `route`  | `DynamicRoute`   | Yes      | A dynamic route for which to construct the href for, ie. `/blog/[user]`         |
+| `params` | `RouteParams<R>` | Yes      | The params for the dynamic segments of the route, ie. `{ user: "Jon1VK" }`      |
+| `locale` | `Locale`         | -        | In which locale the href should be constructed. Uses current locale by default. |
 
 ##### 3. With an options object
 
 ```tsx
-const href = useHref({ pathname, params, locale, query }: HrefOptions<Route>);
+useHref<R extends HrefOptions<Route>>({ pathname, params, locale, query }: R);
 ```
 
 | Option     | Type                     | Required | Description                                                                     |
@@ -100,13 +100,59 @@ const href = useHref({ pathname, params, locale, query }: HrefOptions<Route>);
 
 ### useTranslations
 
-The API reference for `useTranslations` is being worked on.
+The `useTranslations` hook is used to render messages in the current locale.
 
 :::info
 
 An alias `getTranslations` is also available for async server components.
 
 :::
+
+```tsx
+import { useTranslations } from "next-globe-gen";
+import { ReactNode } from "react";
+
+export default function HomePage() {
+  const t = useTranslations("home");
+  return (
+    <section>
+      <h1>{t("title")}</h1>
+      <p>{t("description", { name: "NextGlobeGen" })}</p>
+    </section>
+  );
+}
+```
+
+#### Parameters
+
+```tsx
+useTranslations(namespace?: Namespace);
+```
+
+| Param       | Type        | Required | Description                          |
+| ----------- | ----------- | -------- | ------------------------------------ |
+| `namespace` | `Namespace` | -        | Access messages by a given namespace |
+
+:::info Namespace
+
+Namespace of some deeply nested messages object is it's full object dot notation syntax as a string, possibly prefixed with a filename namespace.
+
+:::
+
+#### Returns
+
+`useTranslations` returns a `t` function which is used to render the messages in the given namespace. The `t` function returns the final translated and formatted message.
+
+```tsx
+t<N extends Namespace, K extends NamespaceKey<N>>(key: K, args?: MessageArguments<Message<N, K>>);
+```
+
+| Param  | Type                              | Required | Description                                      |
+| ------ | --------------------------------- | -------- | ------------------------------------------------ |
+| `key`  | `NamespaceKey<N>`                 | Yes      | Access message by a key in the given namespace   |
+| `args` | `MessageArguments<Message<N, K>>` | \*       | Arguments for the message interpolation patterns |
+
+**\*** args param is required only if the given message has interpolation patterns.
 
 ## Async Server Components
 
