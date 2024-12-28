@@ -147,24 +147,6 @@ The messages from the `<locale>/<filename>.json` file are put under `<filename>`
 
 A regular expression or an array of regular expressions that filter out which messages are provided to the client. A message will be provided to the client if it's key matches to any of the given regular expressions.
 
-:::info Message key
-
-Key of the message is it's full object dot notation syntax as a string, possibly prefixed with a filename namespace.
-
-:::
-
-The `clientKeys` option allows full regex so excluding some of the messages is also possible using negative lookaheads.
-
-By default all messages are sent to the client.
-
-If you want to exclude all messages from being provided to the client, use an empty array.
-
-:::tip Reducing payload
-
-This option is helpful if you would like to reduce the payload of the responses by sending fewer of the messages to the client.
-
-:::
-
 ```tsx
 const config: Config = {
   messages: {
@@ -175,3 +157,19 @@ const config: Config = {
   },
 };
 ```
+
+:::info Message key
+
+Key of the message is it's full object dot notation syntax as a string, possibly prefixed with a filename namespace.
+
+:::
+
+The `clientKeys` option allows full regex so excluding some of the messages is also possible using negative lookaheads.
+
+By default all messages are sent to the client. If you want to exclude all messages from being provided to the client, use an empty array.
+
+:::tip Reducing payload
+
+This option is helpful if you would like to reduce the payload of the responses by sending fewer of the messages to the client.
+
+:::
