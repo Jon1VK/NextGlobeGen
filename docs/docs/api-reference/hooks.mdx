@@ -189,7 +189,41 @@ export default function LanguageSwitcher() {
 
 ### useRouter
 
-The API reference for `useRouter` is being worked on.
+The `useRouter` hook extends the Next.js [`useRouter`](https://nextjs.org/docs/app/api-reference/functions/use-router) hook to allow programmatic navigations to localized pathnames in Client Components.
+
+:::info Recommendation
+
+Use the [`<Link>`](./components.mdx#link) component for navigation unless you have a specific requirement for using useRouter.
+
+:::
+
+```tsx
+"use client";
+
+import { useRouter } from "next-globe-gen";
+
+export default function Page() {
+  const router = useRouter();
+  return <button onClick={() => router.push("/dashboard")}>Dashboard</button>;
+}
+```
+
+#### Parameters
+
+`useRouter` does not take any parameters.
+
+#### Returns
+
+`useRouter` returns a `router` instance. Check out from Next.js [`useRouter`](https://nextjs.org/docs/app/api-reference/functions/use-router#userouter) docs what each function does. You can see from [`useHref`](#3-with-an-options-object) section what values should be given in the `HrefOptions` object.
+
+```tsx
+router.push<R extends Route>(opts: HrefOptions<R>, { scroll: boolean })
+router.replace<R extends Route>(opts: HrefOptions<R>, { scroll: boolean })
+router.prefetch<R extends Route>(opts: HrefOptions<R>, { kind: string })
+router.refresh()
+router.back()
+router.forward()
+```
 
 ## Async Server Components
 

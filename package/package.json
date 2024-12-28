@@ -1,6 +1,6 @@
 {
   "name": "next-globe-gen",
-  "version": "1.0.0",
+  "version": "1.0.0-rc29",
   "description": "Internationalization (i18n) library for Next.js App Router",
   "author": "Joni Vainio-Kaila",
   "license": "MIT",
