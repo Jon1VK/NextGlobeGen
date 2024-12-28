@@ -110,7 +110,6 @@ An alias `getTranslations` is also available for async server components.
 
 ```tsx
 import { useTranslations } from "next-globe-gen";
-import { ReactNode } from "react";
 
 export default function HomePage() {
   const t = useTranslations("home");
@@ -131,7 +130,7 @@ useTranslations(namespace?: Namespace);
 
 | Param       | Type        | Required | Description                          |
 | ----------- | ----------- | -------- | ------------------------------------ |
-| `namespace` | `Namespace` | -        | Access messages by a given namespace |
+| `namespace` | `Namespace` | -        | Access messages in a given namespace |
 
 :::info Namespace
 
@@ -141,28 +140,7 @@ Namespace of some deeply nested messages object is it's full object dot notation
 
 #### Returns
 
-`useTranslations` returns a `t` function which is used to render the messages in the given namespace. The `t` function returns the final translated and formatted message.
-
-```tsx
-t<N extends Namespace, K extends NamespaceKey<N>>(key: K, args?: MessageArguments<Message<N, K>>);
-```
-
-| Param  | Type                              | Required | Description                                      |
-| ------ | --------------------------------- | -------- | ------------------------------------------------ |
-| `key`  | `NamespaceKey<N>`                 | Yes      | Access message by a key in the given namespace   |
-| `args` | `MessageArguments<Message<N, K>>` | \*       | Arguments for the message interpolation patterns |
-
-**\*** args param is required only if the given message has interpolation patterns.
-
-## Async Server Components
-
-Since ESLint has a rule which disallows calling hooks in async server components, the package also exports `get`-prefixed aliases of the hooks that can be used in async server components.
-
-These aliases are included:
-
-- [`getLocale`](#uselocale)
-- [`getHref`](#usehref)
-- [`getTranslations`](#usetranslations)
+`useTranslations` returns a [`t`](./functions.mdx#t-function) function.
 
 ## Client Components
 
@@ -212,3 +190,13 @@ export default function LanguageSwitcher() {
 ### useRouter
 
 The API reference for `useRouter` is being worked on.
+
+## Async Server Components
+
+Since ESLint has a rule which disallows calling hooks in async server components, the package also exports `get`-prefixed aliases of the hooks that can be used in async server components.
+
+These aliases are included:
+
+- [`getLocale`](#uselocale)
+- [`getHref`](#usehref)
+- [`getTranslations`](#usetranslations)

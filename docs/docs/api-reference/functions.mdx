@@ -4,9 +4,13 @@ sidebar_position: 3
 
 # Functions
 
-These functions can only be used in server context. There is various functions for different purposes, so check out all functions separately what they are used for.
+These functions can only be used in server context. There is various functions for different purposes, so check out separately what each function is used for.
 
 ## createTranslator
+
+The `createTranslator` function returns a translator function which can be used to get translated messages for the given locale and namespace.
+
+This function can be used outside of components where the current `locale` cannot be inferred through the rendering context. As so this function could be used for example in [`generateMetadata`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) or in Server Actions.
 
 ```tsx
 import { Metadata } from "next";
@@ -18,7 +22,7 @@ export function generateMetadata({ locale }: { locale: Locale }): Metadata {
 }
 ```
 
-#### Parameters
+### Parameters
 
 ```tsx
 createTranslator(locale: Locale, namespace?: Namespace);
@@ -35,9 +39,15 @@ Namespace of some deeply nested messages object is it's full object dot notation
 
 :::
 
-#### Returns
+### Returns
 
-`createTranslator` returns a `t` function which is used to translate the messages in the given locale and namespace. The `t` function returns the final translated and formatted message.
+`createTranslator` returns a [`t`](#t-function) function.
+
+## `t` function
+
+`t` function is returned by the [`useTranslations`](./hooks.mdx#usetranslations) hook and the [`createTranslator`](#createtranslator) function. It is used to translate the messages in the given namespace.
+
+### Parameters
 
 ```tsx
 t<N extends Namespace, K extends NamespaceKey<N>>(key: K, args?: MessageArguments<Message<N, K>>);
@@ -45,10 +55,14 @@ t<N extends Namespace, K extends NamespaceKey<N>>(key: K, args?: MessageArgument
 
 | Param  | Type                              | Required | Description                                      |
 | ------ | --------------------------------- | -------- | ------------------------------------------------ |
-| `key`  | `NamespaceKey<N>`                 | Yes      | Access message by a key in the given namespace   |
+| `key`  | `NamespaceKey<N>`                 | Yes      | Access a message by a key in the given namespace |
 | `args` | `MessageArguments<Message<N, K>>` | \*       | Arguments for the message interpolation patterns |
 
 **\*** args param is required only if the given message has interpolation patterns.
+
+### Returns
+
+`t` function returns a translated and interpolated message.
 
 ## redirect
 
