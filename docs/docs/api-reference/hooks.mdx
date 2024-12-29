@@ -217,9 +217,22 @@ export default function Page() {
 `useRouter` returns a `router` instance. Check out from Next.js [`useRouter`](https://nextjs.org/docs/app/api-reference/functions/use-router#userouter) docs what each function does. You can see from [`useHref`](#3-with-an-options-object) section what values should be given in the `HrefOptions` object.
 
 ```tsx
-router.push<R extends Route>(opts: HrefOptions<R>, { scroll: boolean })
-router.replace<R extends Route>(opts: HrefOptions<R>, { scroll: boolean })
-router.prefetch<R extends Route>(opts: HrefOptions<R>, { kind: string })
+/* 1. With static route */
+router.push<R extends StaticRoute>(route: R, opts?: { locale?: Locale, scroll?: boolean })
+router.replace<R extends StaticRoute>(route: R, opts?: { locale?: Locale, scroll?: boolean })
+router.prefetch<R extends StaticRoute>(route: R, opts?: { locale?: Locale, kind?: string })
+
+/* 2. With dynamic route */
+router.push<R extends DynamicRoute>(route: R, opts: { params: RouteParams<R>, locale?: Locale, scroll?: boolean })
+router.replace<R extends DynamicRoute>(route: R, opts: { params: RouteParams<R>, locale?: Locale, scroll?: boolean })
+router.prefetch<R extends DynamicRoute>(route: R, opts: { params: RouteParams<R>, locale?: Locale, kind?: string })
+
+/* 3. With route options object */
+router.push<R extends HrefOptions<Route>>(route: R, opts?: { scroll?: boolean })
+router.replace<R extends HrefOptions<Route>>(route: R, opts?: { scroll?: boolean })
+router.prefetch<R extends HrefOptions<Route>>(route: R, opts?: { kind?: string })
+
+/* Calls forwarded to Next.js router instance */
 router.refresh()
 router.back()
 router.forward()
