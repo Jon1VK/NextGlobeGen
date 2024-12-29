@@ -5,7 +5,11 @@ import { NextResponse, type NextRequest } from "next/server";
 import { compile } from "path-to-regexp";
 import { extractLocaleAndRoutePathname, matchRoute } from "~/utils/routes";
 
-export function middleware(request: NextRequest) {
+type MiddlewareOptions = {
+  skipAlternateLinkHeader?: boolean;
+};
+
+export function middleware(request: NextRequest, opts?: MiddlewareOptions) {
   const pathname = request.nextUrl.pathname;
   const [locale_, routePathname] = extractLocaleAndRoutePathname(pathname);
 
@@ -27,8 +31,12 @@ export function middleware(request: NextRequest) {
   // It there is no locale at this point, we have to be on default locale site
   if (!locale) locale = schema.defaultLocale;
 
-  // Apply alternative localized links
   const response = NextResponse.next();
+
+  // User wants to skip alternate link header, just return a response
+  if (opts?.skipAlternateLinkHeader) return response;
+
+  // Apply alternative localized links
   const alternativeLinks = getAlternativeLinks(locale, request);
   if (!alternativeLinks) return response;
   response.headers.set("Link", alternativeLinks);
@@ -44,8 +52,8 @@ function localeMatcher(request: NextRequest) {
 function getAlternativeLinks(locale: Locale, request: NextRequest) {
   const routeMatch = matchRoute(locale, request.nextUrl.pathname);
   if (!routeMatch) return undefined;
-  const { localizedPaths, params } = routeMatch;
-  return schema.locales
+  const { route, localizedPaths, params } = routeMatch;
+  const localeAlternates = schema.locales
     .map((locale) => {
       const alternatePath = compile(localizedPaths[locale]!)(params);
       const alternateURL = new URL(alternatePath, request.url);
@@ -53,4 +61,10 @@ function getAlternativeLinks(locale: Locale, request: NextRequest) {
       return `<${alternateURL}>; rel="alternate"; hreflang="${locale}"`;
     })
     .join(", ");
+  if (route !== "/") return localeAlternates;
+  const defaultURL = new URL(route, request.url);
+  defaultURL.search = "";
+  return localeAlternates.concat(
+    `, <${defaultURL}>; rel="alternate"; hreflang="x-default"`,
+  );
 }
