@@ -6,10 +6,6 @@ sidebar_position: 5
 
 The NextGlobeGen middleware can be enabled in [`middleware.ts`](https://nextjs.org/docs/app/building-your-application/routing/middleware) file. The middleware handles locale negotiation and adds alternate links of the page to the response headers.
 
-## No other middleware logic
-
-If you are not using any other middleware logic, you can just export the middleware from the NextGlobeGen package. Matcher should be altered to fit your needs.
-
 ```tsx title="src/middleware.ts"
 export { middleware } from "next-globe-gen/middleware";
 
@@ -19,9 +15,24 @@ export const config = {
 };
 ```
 
+## Parameters
+
+```tsx
+middleware(request: NextRequest, opts?: { skipAlternateLinkHeader?: boolean });
+```
+
+| Param                          | Type          | Required | Description                                                            |
+| ------------------------------ | ------------- | -------- | ---------------------------------------------------------------------- |
+| `request`                      | `NextRequest` | Yes      | The request that is passed to Next.js middleware function              |
+| `opts.skipAlternateLinkHeader` | `boolean`     | -        | If the alternate link header should be skipped or not (default: false) |
+
+## Returns
+
+`middleware` returns a `NextResponse` instance, which can be further modified.
+
 ## With other middleware logic
 
-If you need to use custom middleware logic, you can call the middleware yourself with the given request instance. The `middleware` function returns a response instance which can be further modified.
+If you need to use custom middleware logic, you can call the middleware yourself with the given request instance and modify the returned response instance.
 
 ```tsx title="src/middleware.ts"
 export { middleware as nextGlobeGenMiddleware } from "next-globe-gen/middleware";
@@ -29,7 +40,7 @@ export { middleware as nextGlobeGenMiddleware } from "next-globe-gen/middleware"
 export function middleware(request: NextRequest) {
   const response = nextGlobeGenMiddleware(request);
   /**
-   * Other custom logic
+   * Other custom logic that possibly modify the response
    */
   return response;
 }
