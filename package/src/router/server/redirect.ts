@@ -1,4 +1,4 @@
-import type { Route } from "next-globe-gen/schema";
+import type { Locale, Route, StaticRoute } from "next-globe-gen/schema";
 import {
   type RedirectType,
   permanentRedirect as nextPermanentRedirect,
@@ -6,30 +6,36 @@ import {
 } from "next/navigation";
 import { useHref } from ".";
 import {
+  type HrefOptions,
+  type ParamsOption,
   type UseHrefArgs,
   extractUseHrefOptions,
 } from "../shared/useHrefFactory";
 
-export function redirect<R extends Route>(...args: UseHrefArgs<R>) {
-  const useHrefOptions = extractUseHrefOptions(args);
-  nextRedirect(useHref(useHrefOptions));
+type RedirectArgs<
+  R extends Route,
+  O = { type?: RedirectType; locale?: Locale } & ParamsOption<R>,
+> =
+  | (R extends StaticRoute ? [route: R, opts?: O] : [route: R, opts: O])
+  | [
+      options: HrefOptions<R>,
+      opts?: { type?: RedirectType; params?: undefined; locale?: undefined },
+    ];
+
+export function redirect<R extends Route>(...args: RedirectArgs<R>) {
+  const { hrefOpts, type } = extractRedirectOptions(...args);
+  nextRedirect(useHref(hrefOpts), type);
 }
 
-redirect.type = (type: "push" | "replace") => {
-  return function redirectWithType<R extends Route>(...args: UseHrefArgs<R>) {
-    const useHrefOptions = extractUseHrefOptions(args);
-    nextRedirect(useHref(useHrefOptions), type as RedirectType);
-  };
-};
-
-export function permanentRedirect<R extends Route>(...args: UseHrefArgs<R>) {
-  const useHrefOptions = extractUseHrefOptions(args);
-  nextPermanentRedirect(useHref(useHrefOptions));
+export function permanentRedirect<R extends Route>(...args: RedirectArgs<R>) {
+  const { hrefOpts, type } = extractRedirectOptions(...args);
+  nextPermanentRedirect(useHref(hrefOpts), type);
 }
 
-permanentRedirect.type = (type: "push" | "replace") => {
-  return function redirectWithType<R extends Route>(...args: UseHrefArgs<R>) {
-    const useHrefOptions = extractUseHrefOptions(args);
-    nextPermanentRedirect(useHref(useHrefOptions), type as RedirectType);
-  };
-};
+function extractRedirectOptions<R extends Route>(...args: RedirectArgs<R>) {
+  const [route, opts] = args;
+  const [params, locale, type] = [opts?.params, opts?.locale, opts?.type];
+  const hrefArgs = [route, params ?? locale, locale] as UseHrefArgs<R>;
+  const hrefOpts = extractUseHrefOptions(hrefArgs);
+  return { hrefOpts, type };
+}
