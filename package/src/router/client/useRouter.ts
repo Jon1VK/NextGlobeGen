@@ -1,4 +1,4 @@
-import type { Route } from "next-globe-gen/schema";
+import type { Locale, Route, StaticRoute } from "next-globe-gen/schema";
 import type {
   AppRouterInstance,
   NavigateOptions,
@@ -6,29 +6,57 @@ import type {
 } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter as useNextRouter } from "next/navigation";
 import { useHref } from ".";
-import { type HrefOptions } from "../shared/useHrefFactory";
+import {
+  extractUseHrefOptions,
+  type HrefOptions,
+  type ParamsOption,
+  type UseHrefArgs,
+} from "../shared/useHrefFactory";
+
+type RouterArgs<
+  R extends Route,
+  N extends NavigateOptions | PrefetchOptions,
+  O = N & { locale?: Locale } & ParamsOption<R>,
+> =
+  | (R extends StaticRoute ? [route: R, opts?: O] : [route: R, opts: O])
+  | [
+      options: HrefOptions<R>,
+      opts?: N & { params?: undefined; locale?: undefined },
+    ];
 
 export function useRouter() {
   const router = useNextRouter();
 
-  function push<R extends Route>(
-    hrefOptions: HrefOptions<R>,
-    opts?: NavigateOptions,
-  ) {
+  function push<R extends Route>(...args: RouterArgs<R, NavigateOptions>) {
+    const [route, opts] = args;
+    const hrefArgs = [
+      route,
+      opts?.params ?? opts?.locale,
+      opts?.locale,
+    ] as UseHrefArgs<R>;
+    const hrefOptions = extractUseHrefOptions(hrefArgs);
     router.push(useHref(hrefOptions), opts);
   }
 
-  function replace<R extends Route>(
-    hrefOptions: HrefOptions<R>,
-    opts?: NavigateOptions,
-  ) {
+  function replace<R extends Route>(...args: RouterArgs<R, NavigateOptions>) {
+    const [route, opts] = args;
+    const hrefArgs = [
+      route,
+      opts?.params ?? opts?.locale,
+      opts?.locale,
+    ] as UseHrefArgs<R>;
+    const hrefOptions = extractUseHrefOptions(hrefArgs);
     router.replace(useHref(hrefOptions), opts);
   }
 
-  function prefetch<R extends Route>(
-    hrefOptions: HrefOptions<R>,
-    opts?: PrefetchOptions,
-  ) {
+  function prefetch<R extends Route>(...args: RouterArgs<R, PrefetchOptions>) {
+    const [route, opts] = args;
+    const hrefArgs = [
+      route,
+      opts?.params ?? opts?.locale,
+      opts?.locale,
+    ] as UseHrefArgs<R>;
+    const hrefOptions = extractUseHrefOptions(hrefArgs);
     router.prefetch(useHref(hrefOptions), opts);
   }
 
