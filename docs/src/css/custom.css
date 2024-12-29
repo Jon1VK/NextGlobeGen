@@ -63,3 +63,7 @@ table th {
 code {
   text-wrap: nowrap;
 }
+
+dd {
+  margin: 0;
+}
