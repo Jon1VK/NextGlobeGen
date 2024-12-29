@@ -20,7 +20,9 @@ type RouterArgs<
   >,
   O = N & { locale?: Locale } & ParamsOption<R>,
 > =
-  | (R extends StaticRoute ? [route: R, opts?: O] : [route: R, opts: O])
+  | (R extends StaticRoute
+      ? [route: R | (string & {}), opts?: O]
+      : [route: R | (string & {}), opts: O])
   | [
       options: HrefOptions<R>,
       opts?: N & { params?: undefined; locale?: undefined },

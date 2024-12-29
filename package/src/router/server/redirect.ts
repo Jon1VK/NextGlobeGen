@@ -16,7 +16,9 @@ type RedirectArgs<
   R extends Route,
   O = { type?: RedirectType; locale?: Locale } & ParamsOption<R>,
 > =
-  | (R extends StaticRoute ? [route: R, opts?: O] : [route: R, opts: O])
+  | (R extends StaticRoute
+      ? [route: R | (string & {}), opts?: O]
+      : [route: R | (string & {}), opts: O])
   | [
       options: HrefOptions<R>,
       opts?: { type?: RedirectType; params?: undefined; locale?: undefined },
