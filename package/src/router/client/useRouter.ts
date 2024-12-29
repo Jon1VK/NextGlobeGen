@@ -15,7 +15,9 @@ import {
 
 type RouterArgs<
   R extends Route,
-  N extends NavigateOptions | PrefetchOptions,
+  N extends NavigateOptions | PrefetchOptions = Partial<
+    NavigateOptions & PrefetchOptions
+  >,
   O = N & { locale?: Locale } & ParamsOption<R>,
 > =
   | (R extends StaticRoute ? [route: R, opts?: O] : [route: R, opts: O])
@@ -28,36 +30,18 @@ export function useRouter() {
   const router = useNextRouter();
 
   function push<R extends Route>(...args: RouterArgs<R, NavigateOptions>) {
-    const [route, opts] = args;
-    const hrefArgs = [
-      route,
-      opts?.params ?? opts?.locale,
-      opts?.locale,
-    ] as UseHrefArgs<R>;
-    const hrefOptions = extractUseHrefOptions(hrefArgs);
-    router.push(useHref(hrefOptions), opts);
+    const { hrefOpts, scroll } = extractRouterOptions(...args);
+    router.push(useHref(hrefOpts), { scroll });
   }
 
   function replace<R extends Route>(...args: RouterArgs<R, NavigateOptions>) {
-    const [route, opts] = args;
-    const hrefArgs = [
-      route,
-      opts?.params ?? opts?.locale,
-      opts?.locale,
-    ] as UseHrefArgs<R>;
-    const hrefOptions = extractUseHrefOptions(hrefArgs);
-    router.replace(useHref(hrefOptions), opts);
+    const { hrefOpts, scroll } = extractRouterOptions(...args);
+    router.replace(useHref(hrefOpts), { scroll });
   }
 
   function prefetch<R extends Route>(...args: RouterArgs<R, PrefetchOptions>) {
-    const [route, opts] = args;
-    const hrefArgs = [
-      route,
-      opts?.params ?? opts?.locale,
-      opts?.locale,
-    ] as UseHrefArgs<R>;
-    const hrefOptions = extractUseHrefOptions(hrefArgs);
-    router.prefetch(useHref(hrefOptions), opts);
+    const { hrefOpts, kind } = extractRouterOptions(...args);
+    router.prefetch(useHref(hrefOpts), kind && { kind });
   }
 
   return {
@@ -69,4 +53,17 @@ export function useRouter() {
     prefetch,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } satisfies Record<keyof AppRouterInstance, (...args: any) => void>;
+}
+
+function extractRouterOptions<R extends Route>(...args: RouterArgs<R>) {
+  const [route, opts] = args;
+  const [params, locale, scroll, kind] = [
+    opts?.params,
+    opts?.locale,
+    opts?.scroll,
+    opts?.kind,
+  ];
+  const hrefArgs = [route, params ?? locale, locale] as UseHrefArgs<R>;
+  const hrefOpts = extractUseHrefOptions(hrefArgs);
+  return { hrefOpts, scroll, kind };
 }
