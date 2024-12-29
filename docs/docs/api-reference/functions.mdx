@@ -66,8 +66,58 @@ t<N extends Namespace, K extends NamespaceKey<N>>(key: K, args?: MessageArgument
 
 ## redirect
 
-The API reference for `redirect` is being worked on.
+The `redirect` function extends the Next.js [`redirect`](https://nextjs.org/docs/app/api-reference/functions/redirect) function to allow you to redirect the user to localized pathnames with 307 status code.
+
+### Parameters
+
+```tsx
+/* 1. With static route */
+redirect<R extends StaticRoute>(route: R, opts?: { locale?: Locale, type?: string })
+
+/* 2. With dynamic route */
+redirect<R extends DynamicRoute>(route: R, opts: { params: RouteParams<R>, locale?: Locale, type?: string })
+
+/* 3. With route options object */
+redirect<R extends HrefOptions<Route>>(route: R, opts?: { type?: string })
+```
+
+You can see from [`useHref`](./hooks.mdx#3-with-an-options-object) section what values should be given in the `HrefOptions` object.
+
+:::warning `redirect` in Route Handlers and Server Actions
+
+When `redirect` is used in Route Handlers or Server Actions, the locale needs to be provided explicitly in options, since it cannot be inferred through the rendering context as in Server Components.
+
+:::
+
+### Returns
+
+`redirect` does not return a value.
 
 ## permanentRedirect
 
-The API reference for `permanentRedirect` is being worked on.
+The `permanentRedirect` function extends the Next.js [`permanentRedirect`](https://nextjs.org/docs/app/api-reference/functions/permanentRedirect) function to allow you to redirect the user to localized pathnames with 308 status code.
+
+### Parameters
+
+```tsx
+/* 1. With static route */
+permanentRedirect<R extends StaticRoute>(route: R, opts?: { locale?: Locale, type?: string })
+
+/* 2. With dynamic route */
+permanentRedirect<R extends DynamicRoute>(route: R, opts: { params: RouteParams<R>, locale?: Locale, type?: string })
+
+/* 3. With route options object */
+permanentRedirect<R extends HrefOptions<Route>>(route: R, opts?: { type?: string })
+```
+
+You can see from [`useHref`](./hooks.mdx#3-with-an-options-object) section what values should be given in the `HrefOptions` object.
+
+:::warning `permanentRedirect` in Route Handlers and Server Actions
+
+When `permanentRedirect` is used in Route Handlers or Server Actions, the locale needs to be provided explicitly in options, since it cannot be inferred through the rendering context as in Server Components.
+
+:::
+
+### Returns
+
+`permanentRedirect` does not return a value.
