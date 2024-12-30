@@ -4,6 +4,7 @@
   "description": "Internationalization (i18n) library for Next.js App Router",
   "author": "Joni Vainio-Kaila",
   "license": "MIT",
+  "homepage": "https://next-globe-gen.dev",
   "repository": {
     "url": "https://github.com/Jon1VK/NextGlobeGen"
   },
