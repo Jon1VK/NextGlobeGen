@@ -7,6 +7,7 @@ import type {
   NamespaceKey,
 } from "next-globe-gen/messages";
 import type { DefaultLocale, Locale } from "next-globe-gen/schema";
+import { cloneElement, isValidElement, type ReactNode } from "react";
 
 export function useTranslationsFactory(
   useLocale: () => Locale,
@@ -49,8 +50,23 @@ export function tImpl<
   args?: A;
 }) {
   const fullKey = namespace ? `${namespace}.${key}` : key;
+  const localeFullKey = `${locale}.${fullKey}`;
   const message = messages?.[fullKey];
-  if (!message) return fullKey;
-  const msgFormat = new IntlMessageFormat(message, locale);
-  return msgFormat.format(args) as string;
+  if (!message) return localeFullKey;
+  try {
+    const msgFormat = new IntlMessageFormat(message, locale);
+    const formatted = msgFormat.format(args) as string | ReactNode[];
+    if (!Array.isArray(formatted)) return formatted;
+    return toKeyedChildren(formatted);
+  } catch (error) {
+    console.error(error);
+    return localeFullKey;
+  }
+}
+
+function toKeyedChildren(children: ReactNode[]) {
+  return children.map((node, i): ReactNode => {
+    if (!isValidElement<{ children: ReactNode[] }>(node)) return node;
+    return cloneElement(node, { key: i }, toKeyedChildren(node.props.children));
+  });
 }
