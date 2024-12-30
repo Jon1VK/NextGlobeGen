@@ -53,6 +53,8 @@ export function tImpl<
   const localeFullKey = `${locale}.${fullKey}`;
   const message = messages?.[fullKey];
   if (!message) return localeFullKey;
+  const isLiteralMessage = !/['{<]/.test(message);
+  if (isLiteralMessage) return message;
   try {
     const msgFormat = new IntlMessageFormat(message, locale);
     const formatted = msgFormat.format(args) as string | ReactNode[];
