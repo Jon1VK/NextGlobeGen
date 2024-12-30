@@ -10,7 +10,7 @@ const features = [
   {
     name: "TypeScript support",
     description:
-      "All hooks and functions are strictly typed. Even the available routes and message interpolation patterns are type-safe",
+      "All hooks and functions are strictly typed. Even the available routes and message interpolation patterns are type-safe.",
     icon: TSLogo,
   },
   {
@@ -22,7 +22,7 @@ const features = [
   {
     name: "ICU message format",
     description:
-      "The package supports ICU formatted interpolation patterns in messages. Write for example different pluralization patterns to messages.",
+      "The package supports ICU formatted interpolation patterns in messages. Include for example pluralizations and rich text in messages.",
     icon: MessagesLogo,
   },
   {
@@ -34,13 +34,13 @@ const features = [
   {
     name: "Context aware APIs",
     description:
-      "Package APIs can be used interchangeably in Server and Client Components. The current locale is inferred through the rendering context.",
+      "Package APIs work interchangeably in Server and Client Components. The current locale is inferred through the rendering context.",
     icon: SwitchLogo,
   },
   {
     name: "Pre-configured middleware",
     description:
-      "The package middleware handles locale detection, redirection and adding alternate link header to responses for improved SEO",
+      "The package middleware handles locale detection, redirection and adding alternate link header to responses for improved SEO.",
     icon: ArrowPathLogo,
   },
 ];
@@ -60,7 +60,7 @@ export default function FeaturesSection() {
         </p>
         <p className="mt-6 sm:text-lg">
           When using NextGlobeGen for localizing your app, you barely even
-          notice it's existence. Everything Next.js App Router supports is
+          notice it's existence. Every functionality of Next.js App Router is
           supported out of the box.
         </p>
       </div>

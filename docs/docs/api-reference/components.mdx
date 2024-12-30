@@ -32,7 +32,7 @@ The following props can be passed to the `<Link>` component:
 
 :::info Good to know
 
-In addition to the listed props, all of the Next.js `Link` component props can also be passed as props to the component.
+In addition to the listed props, all of the Next.js `Link` component props can be passed as props to the component.
 
 :::
 
@@ -54,7 +54,7 @@ The route, pathname or URL to navigate to. If the given `href` matches to a rout
 
 #### `locale`
 
-To switch to another language, one can pass a `locale` as a prop. It will also set the `hreflang` attribute to the anchor tag.
+To switch to another language, pass a `locale` as a prop. It will also set the `hreflang` attribute to the anchor tag.
 
 ```tsx title="Using locale prop"
 // Will point to `/fi/hallintapaneeli`
@@ -93,7 +93,7 @@ import { Form } from "next-globe-gen";
 
 export default function Page() {
   return (
-    {/* On submission, the URL will change to /en/search?query=abc */}
+    {/* On submit, the URL will change to /en/search?query=abc */}
     <Form action="/search">
       <input name="query" />
       <button type="submit">Submit</button>
@@ -116,7 +116,7 @@ The following props can be passed to the `<Form>` component:
 
 :::info Good to know
 
-In addition to the listed props, all of the Next.js `Form` component props can also be passed as props to the component.
+In addition to the listed props, all of the Next.js `Form` component props can be passed as props to the component.
 
 :::
 
@@ -131,7 +131,7 @@ The route, pathname or URL to navigate to. If the given `action` matches to a ro
 
 #### `locale`
 
-To switch to another language, one can pass a `locale` as a prop.
+To switch to another language, pass a `locale` as a prop.
 
 ```tsx title="Using locale prop"
 // Form will navigate to `/fi/haku?query=abc`

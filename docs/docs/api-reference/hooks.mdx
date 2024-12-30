@@ -4,17 +4,17 @@ sidebar_position: 2
 
 # Hooks
 
-NextGlobeGen provides multiple hooks that help you with the internationalization requirements of the application. Some of the hooks work interchangeably in client and server components but some can be used only in client components.
+NextGlobeGen provides multiple hooks that help you with the internationalization requirements of the application. Most of the hooks work interchangeably in Client and Server Components but some can be used only in Client Components.
 
 ## Client & Server Components
 
-These hooks work on both server and client components. As so, the developer does not need to know if a component will be used in a client or server context when building components with these hooks.
+These hooks work on both Server and Client Components. The developer does not need to know if a component will be used in a client or server context when building components with these hooks.
 
 ### useLocale
 
 The `useLocale` hook returns the current locale.
 
-:::info
+:::info Alias
 
 An alias `getLocale` is also available for async server components.
 
@@ -46,7 +46,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
 The `useTranslations` hook is used to render messages in the current locale.
 
-:::info
+:::info Alias
 
 An alias `getTranslations` is also available for async server components.
 
@@ -78,7 +78,7 @@ useTranslations(namespace?: Namespace);
 
 :::info Namespace
 
-Namespace of some deeply nested messages object is it's full object dot notation syntax as a string, possibly prefixed with a filename namespace.
+Namespace of some deeply nested messages object is it's full object dot notation syntax as a string, possibly prefixed with a filename namespace. (i.e. `filename.deeply.nested.object`)
 
 :::
 
@@ -88,9 +88,9 @@ Namespace of some deeply nested messages object is it's full object dot notation
 
 ### useHref
 
-If you need to construct a localized href of a route, you can use the `useHref` hook. This hook is used under the hood in some other components and functions, such as the [`Link`](components.mdx#link) component.
+If you need to construct a localized href of a route, you can use the `useHref` hook. This hook is used under the hood in other components and functions, such as the [`Link`](components.mdx#link) component.
 
-:::info
+:::info Alias
 
 An alias `getHref` is also available for async server components.
 
@@ -108,7 +108,7 @@ useHref<R extends StaticRoute>(route: R, locale?: Locale);
 
 | Param    | Type          | Required | Description                                                                     |
 | -------- | ------------- | -------- | ------------------------------------------------------------------------------- |
-| `route`  | `StaticRoute` | Yes      | A static route for which to construct the href for (ie. `/dashboard`)           |
+| `route`  | `StaticRoute` | Yes      | A static route for which to construct the href for, i.e. `/dashboard`           |
 | `locale` | `Locale`      | -        | In which locale the href should be constructed. Uses current locale by default. |
 
 ##### 2. With a dynamic route
@@ -119,8 +119,8 @@ useHref<R extends DynamicRoute>(route: R, params: RouteParams<R>, locale?: Local
 
 | Param    | Type             | Required | Description                                                                     |
 | -------- | ---------------- | -------- | ------------------------------------------------------------------------------- |
-| `route`  | `DynamicRoute`   | Yes      | A dynamic route for which to construct the href for, ie. `/blog/[user]`         |
-| `params` | `RouteParams<R>` | Yes      | The params for the dynamic segments of the route, ie. `{ user: "Jon1VK" }`      |
+| `route`  | `DynamicRoute`   | Yes      | A dynamic route for which to construct the href for, i.e. `/blog/[user]`        |
+| `params` | `RouteParams<R>` | Yes      | The params for the dynamic segments of the route, i.e. `{ user: "Jon1VK" }`     |
 | `locale` | `Locale`         | -        | In which locale the href should be constructed. Uses current locale by default. |
 
 ##### 3. With an options object
@@ -131,8 +131,8 @@ useHref<R extends HrefOptions<Route>>({ pathname, params, locale, query }: R);
 
 | Option     | Type                     | Required | Description                                                                     |
 | ---------- | ------------------------ | -------- | ------------------------------------------------------------------------------- |
-| `pathname` | `Route`                  | Yes      | A route for which to construct the href for, ie. `/blog/[user]`                 |
-| `params`   | `RouteParams<Route>`     | \*       | The params for the dynamic segments of the route, ie. `{ user: "Jon1VK" }`      |
+| `pathname` | `Route`                  | Yes      | A route for which to construct the href for, i.e. `/blog/[user]`                |
+| `params`   | `RouteParams<Route>`     | \*       | The params for the dynamic segments of the route, i.e. `{ user: "Jon1VK" }`     |
 | `locale`   | `Locale`                 | -        | In which locale the href should be constructed. Uses current locale by default. |
 | `query`    | `Record<string, string>` | -        | URL search params that should be included in the href                           |
 
@@ -144,7 +144,7 @@ useHref<R extends HrefOptions<Route>>({ pathname, params, locale, query }: R);
 
 ## Client Components
 
-These hooks can only be called in client components, since they use internally Next.js hooks which work only in client components.
+These hooks are restricted to Client Components as they depend on Next.js hooks that are functional only within Client Components.
 
 ### useRoute
 
@@ -193,7 +193,7 @@ The `useRouter` hook extends the Next.js [`useRouter`](https://nextjs.org/docs/a
 
 :::info Recommendation
 
-Use the [`<Link>`](./components.mdx#link) component for navigation unless you have a specific requirement for using useRouter.
+Use the [`<Link>`](./components.mdx#link) component for navigation unless you have a specific requirement for using `useRouter`.
 
 :::
 
@@ -214,7 +214,7 @@ export default function Page() {
 
 #### Returns
 
-`useRouter` returns a `router` instance. Check out from Next.js [`useRouter`](https://nextjs.org/docs/app/api-reference/functions/use-router#userouter) docs what each function does. You can see from [`useHref`](#3-with-an-options-object) section what values should be given in the `HrefOptions` object.
+`useRouter` returns a `router` instance. See Next.js [`useRouter`](https://nextjs.org/docs/app/api-reference/functions/use-router#userouter) docs what each function is made for. Check the [`useHref`](#3-with-an-options-object) section what values should be given in the `HrefOptions` object.
 
 ```tsx
 /* 1. With static route */
@@ -240,7 +240,7 @@ router.forward()
 
 ## Async Server Components
 
-Since ESLint has a rule which disallows calling hooks in async server components, the package also exports `get`-prefixed aliases of the hooks that can be used in async server components.
+Since ESLint has a rule which disallows calling hooks in async server components, the package also exports `get`-prefixed aliases of the hooks for usage in async server components.
 
 These aliases are included:
 

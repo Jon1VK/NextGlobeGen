@@ -9,7 +9,7 @@ import Tabs from "@theme/Tabs";
 
 Let's see how you can use the NextGlobeGen package to setup i18n for your Next.js app.
 
-If you haven’t done so already, [create a new Next.js app](https://nextjs.org/docs/app/getting-started/installation) that uses the App Router.
+If you haven't done so already, [create a new Next.js app](https://nextjs.org/docs/app/getting-started/installation) that uses the App Router.
 
 ## Installation
 
@@ -21,7 +21,7 @@ npm install next-globe-gen
 
 ## Setup
 
-We will create the following file structure on the following steps. The default directory and file locations can be altered by configuration, but let's use the defaults for now.
+To setup the package we will be creating the following file structure. The default directory and file locations can be altered by configuration, but let's use the defaults for now.
 
 ```treeview title="File structure"
 ./
@@ -44,7 +44,7 @@ We will create the following file structure on the following steps. The default 
 
 ### <span className="text-[#e3116c] dark:text-[#addb67]">1)</span> Configuration
 
-Create an `i18n.config.ts` file to the application root directory and export your configuration as a default export. You have to at least configure what locales the application supports and what is the default locale.
+Create an `i18n.config.ts` file to the application root directory and export your configuration as a default export. At least the supported locales and the default locale needs to be configured.
 
 ```ts title="i18n.config.ts"
 import type { Config } from "next-globe-gen";
@@ -80,13 +80,13 @@ Create message translations to the `src/messages` directory. There should be one
 
 :::tip Dividing messages to multiple files
 
-You can also divide the messages to namespaced `<locale>/<namespace>.json` files.
+Messages can be divided to namespaced `<locale>/<namespace>.json` files.
 
 :::
 
 :::tip YAML Support
 
-You can also create the message translations to `.yaml` or `.yml` files.
+The package has also support for messages in YAML files using `.yaml` or `.yml` extensions.
 
 :::
 
@@ -125,7 +125,7 @@ Create or move your Next.js file-system based routing files into the `_app` dire
 
 :::info [API Reference](./api-reference)
 
-You can use the APIs NextGlobeGen package provides to handle navigation and rendering translations.
+NextGlobeGen APIs can be used to handle navigation and rendering translations.
 
 :::
 
@@ -138,9 +138,9 @@ You can use the APIs NextGlobeGen package provides to handle navigation and rend
 import { Link, useRoute } from "next-globe-gen";
 
 /**
- * If you have dynamic route segments in your routes (ie. "/images/[id]"),
- * you have to also pass the params provided by the Next.js useParams function
- * as a prop to Link components so that the language switching works properly.
+ * If there is dynamic route segments in some of the application routes (ie. "/images/[id]"),
+ * the params provided by Next.js useParams function have to be passed as a prop to
+ * Link components for language switching to work properly.
  */
 export default function LanguageSwitcher() {
   const route = useRoute();
@@ -312,13 +312,13 @@ src/
 
 :::warning
 
-You should not modify the generated files yourself. The package re-generates these files when necessary. Create and modify your routes in the `_app` directory.
+Do not modify the generated files yourself. The package re-generates the files when necessary. Create and modify your routes in the `_app` directory.
 
 :::
 
 :::tip
 
-You can inspect what each generated file has eaten, if you would like to know how the package works underneath the hood.
+You can inspect what each generated file has eaten, if you would like to know how the package works under the hood.
 
 :::
 

@@ -2,7 +2,7 @@
 
 NextGlobeGen is a TypeScript package designed to streamline the process of adding internationalization (i18n) to your Next.js application. It is specifically tailored for projects using the Next.js App Router. By leveraging generative programming techniques, NextGlobeGen automates the creation of locale-based routes, enabling a seamless developer experience for the developers.
 
-Whether you're building a blog, an e-commerce platform, or an enterprise application, NextGlobeGen is your go-to tool for making your Next.js app globally ready.
+Whether you're building a blog, an e-commerce platform, or an enterprise application, NextGlobeGen is your go-to tool for making your Next.js app globally available.
 
 [Check out the Docs](https://jon1vk.github.io/NextGlobeGen/)
 

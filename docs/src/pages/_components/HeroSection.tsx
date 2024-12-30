@@ -14,7 +14,7 @@ export default function HeroSection() {
         </Heading>
         <p className="mt-6 text-lg/8 text-gray-700 dark:text-gray-300">
           Localize your Next.js App Router routes and content to serve your
-          application for all the users around the world.
+          application for all users around the world.
         </p>
         <div className="mt-10 flex flex-wrap items-center gap-6 font-semibold">
           <Link

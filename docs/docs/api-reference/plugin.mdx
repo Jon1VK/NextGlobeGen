@@ -4,17 +4,16 @@ sidebar_position: 4
 
 # Plugin
 
-The NextGlobeGen Plugin needs to be enabled in `next.config.ts` file. It sets up the required import aliases for the package to work correctly. It also and handles regenerating the localized routes and types for routes and messages when some changes are made in the source code.
+The NextGlobeGen Plugin needs to be enabled in `next.config.ts` file. It sets up the required import aliases for the package to work correctly. It also regenerates the localized routes, messages and the types for the package when changes are made in the source code.
 
 ## withNextGlobeGenPlugin
 
-This function is used to create the wrapper function for your Next.js config object.
+This function creates the wrapper function for your Next.js config object.
 
 ```tsx title="next.config.ts"
 import type { NextConfig } from "next";
 import { withNextGlobeGenPlugin } from "next-globe-gen/plugin";
 
-// highlight-next-line
 const withNextGlobeGen = withNextGlobeGenPlugin();
 
 const nextConfig: NextConfig = {
@@ -36,4 +35,4 @@ withNextGlobeGenPlugin(configPath?: string);
 
 ### Returns
 
-`withNextGlobeGenPlugin` returns a `withNextGlobeGen` function, which should be called with your Next.js config object. It returns the given config object with few added import aliases.
+`withNextGlobeGenPlugin` returns a function, which should be called with your Next.js config object. It returns the given config object with few added import aliases.

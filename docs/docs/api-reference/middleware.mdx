@@ -32,7 +32,7 @@ middleware(request: NextRequest, opts?: { skipAlternateLinkHeader?: boolean });
 
 ## With other middleware logic
 
-If you need to use custom middleware logic, you can call the middleware yourself with the given request instance and modify the returned response instance.
+If you need to use custom middleware logic, call the middleware yourself with the given request instance and modify the returned response.
 
 ```tsx title="src/middleware.ts"
 export { middleware as nextGlobeGenMiddleware } from "next-globe-gen/middleware";
