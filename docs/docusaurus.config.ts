@@ -37,6 +37,11 @@ const config: Config = {
   ],
 
   themeConfig: {
+    algolia: {
+      appId: "E11EWTG4EM",
+      apiKey: "12b2ce7193b489c2f29f5db53d6964f8",
+      indexName: "next-globe-gen",
+    },
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.nightOwl,
