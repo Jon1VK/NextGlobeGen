@@ -1,4 +1,5 @@
 import type { DefaultLocale, Locale } from "next-globe-gen/schema";
+import type { ReactNode } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface MessagesRegister {}
@@ -91,10 +92,13 @@ type ExtractArguments<S extends string> =
   /* Handle {arg0,selectordinal,...}} since it has nested {} */
   S extends `${infer A}{${infer B}}}${infer C}`
     ? ExtractArguments<A> | _ExtractComplexArguments<B> | ExtractArguments<C>
-    : /* Handle remaining arguments {arg0}, {arg0, number}, {arg0, date, short}, etc. */
+    : /* Handle interpolation arguments {arg}, {arg, number}, {arg, date, short}, etc. */
       S extends `${infer A}{${infer B}}${infer C}`
       ? ExtractArguments<A> | B | ExtractArguments<C>
-      : never;
+      : /* Handle tags <tag> */
+        S extends `${infer A}</${infer B}>${infer C}`
+        ? ExtractArguments<A> | `${B},tag` | ExtractArguments<C>
+        : never;
 
 /**
  * Handle complex type argument extraction (i.e plural, select, and selectordinal) which
@@ -132,11 +136,7 @@ type NormalizeArguments<TArg extends string> =
   /* Handle "name,type,other args" */
   TArg extends `${infer Name},${infer Type},${string}`
     ? `${Name},${Type}`
-    : /* Handle "name,type" */
-      TArg extends `${infer Name},${infer Type}`
-      ? `${Name},${Type}`
-      : /* Handle "name" */
-        TArg;
+    : TArg;
 
 /**
  * Convert ICU type to TS type.
@@ -145,7 +145,9 @@ type Value<T extends string> = T extends "number" | "plural" | "selectordinal"
   ? number
   : T extends "date" | "time"
     ? Date
-    : string;
+    : T extends "tag"
+      ? (children: ReactNode) => ReactNode
+      : string;
 
 /**
  * Create an object mapping the extracted key to its type.
