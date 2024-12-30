@@ -7,7 +7,7 @@ import type {
   NamespaceKey,
 } from "next-globe-gen/messages";
 import type { DefaultLocale, Locale } from "next-globe-gen/schema";
-import { cloneElement, isValidElement, type ReactNode } from "react";
+import { cloneElement, type ReactNode } from "react";
 
 export function useTranslationsFactory(
   useLocale: () => Locale,
@@ -57,18 +57,25 @@ export function tImpl<
   if (isLiteralMessage) return message;
   try {
     const msgFormat = new IntlMessageFormat(message, locale);
-    const formatted = msgFormat.format(args) as string | ReactNode[];
-    if (!Array.isArray(formatted)) return formatted;
-    return toKeyedChildren(formatted);
+    const keyedTagArgs = injectKeysToTagArgs(args);
+    return msgFormat.format(keyedTagArgs) as string | ReactNode[];
   } catch (error) {
     console.error(error);
     return localeFullKey;
   }
 }
 
-function toKeyedChildren(children: ReactNode[]) {
-  return children.map((node, i): ReactNode => {
-    if (!isValidElement<{ children: ReactNode[] }>(node)) return node;
-    return cloneElement(node, { key: i }, toKeyedChildren(node.props.children));
-  });
+function injectKeysToTagArgs(args?: Record<string, unknown>) {
+  if (!args) return;
+  let index = 0;
+  return Object.fromEntries(
+    Object.entries(args).map(([key, value]) => {
+      if (typeof value !== "function") return [key, value];
+      const keyedTag = (children: ReactNode) => {
+        const node = value(children);
+        return cloneElement(node, { key: index++ });
+      };
+      return [key, keyedTag];
+    }),
+  );
 }
