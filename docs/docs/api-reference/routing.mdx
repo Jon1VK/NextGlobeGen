@@ -1,0 +1,59 @@
+---
+sidebar_position: 0
+---
+
+# Routing
+
+With NextGlobeGen, the application routes are created to a special `src/_app` directory. In this directory all Next.js file-system based routing rules apply and all Next.js specific routing files work exactly the same as in `src/app` directory. Localized routes are generated to `src/app/(i18n)` directory based on the contents in the `src/_app` origin directory.
+
+The localized route directory `src/app/(i18n)` should not be modified. Other non-localized routes, such as `api` routes, can still be added to the root of the `src/app` directory.
+
+In addition to Next.js specific routing files, NextGlobeGen adds a few routing file conventions of its own. NextGlobeGen also passes the current locale to all functions starting with the `generate` word.
+
+:::info Configuring directory locations
+
+Default directory locations can be altered through [configuration](./configuration.mdx#routes).
+
+:::
+
+## Localized pathnames
+
+The pathnames in the url often need to be translated to improve SEO. In NextGlobeGen this is done for each route segment (directory) separately with special `i18n.ts` files. With this approach the route segment and it's localizations can be colocated.
+
+### Static translations
+
+The simplest way to translate a route segment is to export as a default export an object which includes localized versions of the route segment for each locale.
+
+```ts title="src/_app/dashboard/i18n.ts"
+const segmentTranslations = {
+  en: "dashboard", // If omitted, the directory name is used
+  fi: "hallintapaneeli",
+};
+
+export default segmentTranslations;
+```
+
+### With an async function
+
+Another way to localize a route segment is to export as a default export an async function that returns the route segment localizations as an object.
+
+```ts title="src/_app/dashboard/i18n.ts"
+export default async function generateSegmentTranslations() {
+  /* Fetch translations for example from an external source  */
+  return {
+    en: "dashboard", // If omitted, the directory name is used
+    fi: "hallintapaneeli",
+  };
+}
+```
+
+:::info
+
+- Each [parallel route](https://nextjs.org/docs/app/building-your-application/routing/parallel-routes) segment needs to be localized separately.
+- [Intercepted route](https://nextjs.org/docs/app/building-your-application/routing/parallel-routes) segments have to include the segment matcher in the translations. For example a Finnish translation of `(..)photo` would be `(..)kuva`.
+
+:::
+
+## Markdown
+
+## `generate` functions
