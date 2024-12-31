@@ -9,7 +9,7 @@ const PATTERNS = Object.fromEntries(
   PATTERN_KEYS.map((key) => [key, `{{${key}}}`]),
 ) as Record<PatternKey, string>;
 
-const baseTemplate = "".concat(
+const componentTemplate = "".concat(
   "/* eslint-disable */\n",
   "// @ts-nocheck\n\n",
   'import { setLocale } from "next-globe-gen";\n',
@@ -44,21 +44,29 @@ const errorTemplate = "".concat(
   `\treturn <Origin${PATTERNS.routeType} {...props} />;\n}`,
 );
 
+const functionTemplate = "".concat(
+  "/* eslint-disable */\n",
+  "// @ts-nocheck\n\n",
+  `import Origin${PATTERNS.routeType} from "${PATTERNS.relativePath}";\n\n`,
+  `export default function ${PATTERNS.routeType}(params) {\n`,
+  `\treturn Origin${PATTERNS.routeType}({ ...params, locale: "${PATTERNS.locale});\n}`,
+);
+
 const routeTypeTemplates: Record<Exclude<RouteType, "copy">, string> = {
-  layout: baseTemplate,
-  template: baseTemplate,
-  page: baseTemplate,
-  default: baseTemplate,
-  loading: withoutProps(baseTemplate),
-  "not-found": withoutProps(baseTemplate),
-  forbidden: withoutProps(baseTemplate),
-  unauthorized: withoutProps(baseTemplate),
+  layout: componentTemplate,
+  template: componentTemplate,
+  page: componentTemplate,
+  default: componentTemplate,
+  loading: withoutProps(componentTemplate),
+  "not-found": withoutProps(componentTemplate),
+  forbidden: withoutProps(componentTemplate),
+  unauthorized: withoutProps(componentTemplate),
   error: errorTemplate,
-  sitemap: baseTemplate,
-  icon: baseTemplate,
-  "apple-icon": baseTemplate,
-  "opengraph-image": baseTemplate,
-  "twitter-image": baseTemplate,
+  sitemap: functionTemplate,
+  icon: functionTemplate,
+  "apple-icon": functionTemplate,
+  "opengraph-image": functionTemplate,
+  "twitter-image": functionTemplate,
 };
 
 export function getTemplateCompiler(config: Config, originRoute: OriginRoute) {
