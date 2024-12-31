@@ -25,7 +25,7 @@ jobs:
           cache-dependency-path: "**/pnpm-lock.yaml"
           registry-url: "https://registry.npmjs.org"
       - run: pnpm install
-      - run: cp ../README.md ./
+      - run: cp ../README.md ../LICENSE ./
       - run: pnpm publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
