@@ -16,7 +16,7 @@ const componentTemplate = "".concat(
   `import Origin${PATTERNS.routeType} from "${PATTERNS.relativePath}";\n\n`,
   `export default function ${PATTERNS.routeType}(props) {\n`,
   `\tsetLocale("${PATTERNS.locale}");\n`,
-  `\treturn <Origin${PATTERNS.routeType} {...props} />;\n}`,
+  `\treturn <Origin${PATTERNS.routeType} {...props} locale="${PATTERNS.locale}" />;\n}`,
 );
 
 const rootLayoutTemplate = "".concat(
@@ -30,7 +30,7 @@ const rootLayoutTemplate = "".concat(
   `\tsetLocale("${PATTERNS.locale}");\n`,
   "\treturn (\n",
   `\t\t<IntlProvider locale="${PATTERNS.locale}" messages={clientMessages["${PATTERNS.locale}"]}>\n`,
-  `\t\t\t<Origin${PATTERNS.routeType} {...props} />\n`,
+  `\t\t\t<Origin${PATTERNS.routeType} {...props} locale="${PATTERNS.locale}" />\n`,
   "\t\t</IntlProvider>\n",
   "\t);\n}",
 );
@@ -41,7 +41,7 @@ const errorTemplate = "".concat(
   '"use client"\n\n',
   `import Origin${PATTERNS.routeType} from "${PATTERNS.relativePath}";\n\n`,
   `export default function ${PATTERNS.routeType}(props) {\n`,
-  `\treturn <Origin${PATTERNS.routeType} {...props} />;\n}`,
+  `\treturn <Origin${PATTERNS.routeType} {...props} locale="${PATTERNS.locale}" />;\n}`,
 );
 
 const functionTemplate = "".concat(
