@@ -10,15 +10,30 @@ These functions are designed for server context only. Since there are different 
 
 The `createTranslator` function returns a translator function which is used to get translated messages for the given locale and namespace.
 
-This function can be used outside of components where the current `locale` cannot be inferred through the rendering context, for example in [`generateMetadata`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) or Server Actions.
+This function can be used outside of components where the current `locale` cannot be inferred through the rendering context, such as in Server Actions.
 
-```tsx
-import { Metadata } from "next";
+```tsx title="Server Action"
+"use server";
+
 import { createTranslator, Locale } from "next-globe-gen";
 
-export function generateMetadata({ locale }: { locale: Locale }): Metadata {
+export async function serverAction(locale: Locale, formData: FormData) {
   const t = createTranslator(locale, "dashboard");
-  return { title: t("title") };
+  /* Other server action logic*/
+}
+```
+
+```tsx title="Using action in component"
+"use client";
+
+import { useLocale } from "next-globe-gen";
+import { serverAction } from "./actions";
+
+export function ServerActionForm() {
+  const locale = useLocale();
+  const serverActionWithLocale = serverAction.bind(null, locale);
+
+  return <form action={serverActionWithLocale}>{/* Inputs */}</form>;
 }
 ```
 

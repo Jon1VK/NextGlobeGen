@@ -207,10 +207,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
 ```tsx title="src/_app/page.tsx"
 import { Metadata } from "next";
-import { createTranslator, Locale, useTranslations } from "next-globe-gen";
+import { getTranslations, useTranslations } from "next-globe-gen";
 
-export function generateMetadata({ locale }: { locale: Locale }): Metadata {
-  const t = createTranslator(locale);
+export function generateMetadata(): Metadata {
+  const t = getTranslations();
   return { description: t("description", { name: "NextGlobeGen" }) };
 }
 
@@ -230,10 +230,10 @@ export default function Home() {
 
 ```tsx title="src/_app/dashboard/page.tsx"
 import { Metadata } from "next";
-import { createTranslator, Locale, useTranslations } from "next-globe-gen";
+import { getTranslations, useTranslations } from "next-globe-gen";
 
-export function generateMetadata({ locale }: { locale: Locale }): Metadata {
-  const t = createTranslator(locale, "dashboard");
+export function generateMetadata(): Metadata {
+  const t = getTranslations("dashboard");
   return { title: t("title") };
 }
 
@@ -252,7 +252,7 @@ export default function Dashboard() {
 
 ### <span className="text-[#e3116c] dark:text-[#addb67]">5)</span> Localized pathnames (optional)
 
-The pathnames in the url often need to be translated to improve SEO. In NextGlobeGen this is done for each route segment (directory) separately with special `i18n.ts` files. With this approach the route segment and it's localizations can be colocated.
+In NextGlobeGen pathnames are localized by translating each route segment (directory) separately using `i18n.ts` file convention.
 
 The simplest way to add the localizations is to export an object with localized versions of the route segment for each locale as a default export.
 
