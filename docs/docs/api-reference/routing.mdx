@@ -2,13 +2,16 @@
 sidebar_position: 0
 ---
 
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
 # Routing
 
 With NextGlobeGen, the application routes are created to a special `src/_app` directory. In this directory all Next.js file-system based routing rules apply and all Next.js specific routing files work exactly the same as in `src/app` directory. Localized routes are generated to `src/app/(i18n)` directory based on the contents in the `src/_app` origin directory.
 
 The localized route directory `src/app/(i18n)` should not be modified. Other non-localized routes, such as `api` routes, can still be added to the root of the `src/app` directory.
 
-In addition to Next.js specific routing files, NextGlobeGen adds a few routing file conventions of its own. NextGlobeGen also passes the current locale to all functions starting with the `generate` word.
+In addition to Next.js specific routing files, NextGlobeGen adds a few routing file conventions of its own. NextGlobeGen also passes the current locale to all functions that cannot infer it from the rendering context.
 
 :::info Configuring directory locations
 
@@ -35,7 +38,7 @@ export default segmentTranslations;
 
 ### With an async function
 
-Another way to localize a route segment is to export as a default export an async function that returns the route segment localizations as an object.
+Another way to translate a route segment is to export as a default export an async function that returns the route segment localizations as an object.
 
 ```ts title="src/_app/dashboard/i18n.ts"
 export default async function generateSegmentTranslations() {
@@ -54,6 +57,31 @@ export default async function generateSegmentTranslations() {
 
 :::
 
-## Markdown
+## Markdown pages
 
-## `generate` functions
+NextGlobeGen has a support for markdown and MDX pages by using a locale specific file convention. To use markdown pages, first follow [Next.js MDX docs](https://nextjs.org/docs/app/building-your-application/configuring/mdx) on how to configure Next.js so it can process markdown and MDX.
+
+Then create a `page.<locale>.md` or `page.<locale>.mdx` file for each configured locale in the route segment directory from where the markdown page should be served. NextGlobeGen will use the correct markdown page for each locale based on the `<locale>` part of the filename.
+
+<Tabs>
+<TabItem value="English MDX Page" >
+
+```mdx title="./src/_app/markdown/page.en.mdx"
+# Markdown page
+
+This content is shown on `/en/markdown` path.
+```
+
+</TabItem >
+<TabItem value="Finnish MDX Page">
+
+```mdx title="./src/_app/markdown/page.fi.mdx"
+# Markdown sivu
+
+Tämä sisältö näytetään `/fi/markdown` polussa.
+```
+
+</TabItem >
+</Tabs>
+
+## Locale passed as an argument
