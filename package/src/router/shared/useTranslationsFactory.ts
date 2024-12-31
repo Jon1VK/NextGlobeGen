@@ -29,7 +29,10 @@ export function useTranslationsFactory(
     ) {
       const [key, args] = params;
       const messages = useMessages();
-      return tImpl({ messages, locale, namespace, key, args });
+      type TReturnType = ((children: ReactNode) => ReactNode) extends A[keyof A]
+        ? ReactNode
+        : string;
+      return tImpl({ messages, locale, namespace, key, args }) as TReturnType;
     };
   };
 }
@@ -60,7 +63,7 @@ export function tImpl<
   try {
     const msgFormat = new IntlMessageFormat(message, locale);
     const keyedTagArgs = injectKeysToTagArgs(args);
-    return msgFormat.format(keyedTagArgs) as string | ReactNode[];
+    return msgFormat.format(keyedTagArgs);
   } catch (error) {
     console.error(error);
     return localeFullKey;
