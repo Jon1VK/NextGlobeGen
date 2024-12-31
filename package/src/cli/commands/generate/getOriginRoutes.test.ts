@@ -27,14 +27,14 @@ export const getExpectedOriginRoutes = (
       },
     },
     {
-      type: "copy",
+      type: "markdown",
       path: "/(static)/privacy-policy/page.en.mdx",
       localizedPaths: {
         en: "/en/(static)/privacy-policy/page.mdx",
       },
     },
     {
-      type: "copy",
+      type: "markdown",
       path: "/(static)/privacy-policy/page.fi.md",
       localizedPaths: {
         fi: `${prefix}/(static)/tietosuojaseloste/page.md`,

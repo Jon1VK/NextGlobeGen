@@ -64,15 +64,12 @@ export async function getOriginRoutes({
 }
 
 function isDifferentLocaleMarkdownPageFile(file: File, locale: string) {
-  return (
-    file.type === "copy" &&
-    /^page\.[^.]*\.mdx?$/.test(file.name) &&
-    !file.name.includes(`.${locale}.`)
-  );
+  return file.type === "markdown" && !file.name.includes(`.${locale}.`);
 }
 
 const APP_ROUTER_FILE_REGEXPS = {
   page: /^page\.(j|t)sx?$/,
+  markdown: /^page\.[^.]*\.mdx?$/,
   layout: /^layout\.(j|t)sx?$/,
   template: /^template\.(j|t)sx?$/,
   default: /^default\.(j|t)sx?$/,
@@ -86,7 +83,7 @@ const APP_ROUTER_FILE_REGEXPS = {
   "apple-icon": /^apple-icon\.(j|t)sx?$/,
   "opengraph-image": /^opengraph-image\.(j|t)sx?$/,
   "twitter-image": /^opengraph-image\.(j|t)sx?$/,
-  copy: /^(page\.[^.]*\.mdx?|sitemap\.xml|icon\d*\.(ico|jpg|jpeg|png|svg)|apple-icon\d*\.(jpg|jpeg|png)|(opengraph|twitter)-image\.(jpg|jpeg|png|gif|alt\.txt))$/,
+  copy: /^(sitemap\.xml|icon\d*\.(ico|jpg|jpeg|png|svg)|apple-icon\d*\.(jpg|jpeg|png)|(opengraph|twitter)-image\.(jpg|jpeg|png|gif|alt\.txt))$/,
 };
 
 type File = { name: string; type: FileType };

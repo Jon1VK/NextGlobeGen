@@ -95,10 +95,7 @@ export async function generateMessagesFile(config: Config) {
 }
 
 function isPageOriginRoute(originRoute: OriginRoute) {
-  return (
-    originRoute.type === "page" ||
-    (originRoute.type === "copy" && /page\.[^.]*\.mdx?$/.test(originRoute.path))
-  );
+  return originRoute.type === "page" || originRoute.type === "markdown";
 }
 
 function getRouteName(originPath: string) {

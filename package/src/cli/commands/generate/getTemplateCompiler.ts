@@ -56,6 +56,7 @@ const routeTypeTemplates: Record<Exclude<RouteType, "copy">, string> = {
   layout: componentTemplate,
   template: componentTemplate,
   page: componentTemplate,
+  markdown: componentTemplate,
   default: componentTemplate,
   loading: withoutProps(componentTemplate),
   "not-found": withoutProps(componentTemplate),

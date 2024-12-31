@@ -36,8 +36,11 @@ export function generateLocalizedRoutes(
         if (originRoute.type === "copy") {
           return copyFileSync(originPath, localizedPath);
         }
+        const originFilename = path.basename(originPath);
+        const relativeFilename =
+          originRoute.type === "markdown" ? originFilename : originRoute.type;
         const relativeDirPath = path.relative(localizedPathDir, originPathDir);
-        const relativePath = path.join(relativeDirPath, originRoute.type);
+        const relativePath = path.join(relativeDirPath, relativeFilename);
         const compiledContents = compileTemplate({
           routeType: toPascalCase(originRoute.type),
           relativePath: toPosixPath(relativePath),
