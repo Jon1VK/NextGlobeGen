@@ -79,11 +79,11 @@ export function getTemplateCompiler(config: Config, originRoute: OriginRoute) {
     : routeTypeTemplates[originRoute.type];
   template = withReExport(template, contents, "metadata");
   template = withReExport(template, contents, "viewport");
-  template = withLocaleInjectedFn(template, contents, "generateMetadata");
-  template = withLocaleInjectedFn(template, contents, "generateViewport");
-  template = withLocaleInjectedFn(template, contents, "generateStaticParams");
-  template = withLocaleInjectedFn(template, contents, "generateSitemaps");
-  template = withLocaleInjectedFn(template, contents, "generateImageMetadata");
+  template = withGenerateFn(template, contents, "generateMetadata");
+  template = withGenerateFn(template, contents, "generateViewport");
+  template = withGenerateFn(template, contents, "generateStaticParams");
+  template = withGenerateFn(template, contents, "generateSitemaps");
+  template = withGenerateFn(template, contents, "generateImageMetadata");
   template = withRouteSegmentConfig(template, contents);
   return (params: Record<PatternKey, string>) => {
     return PATTERN_KEYS.reduce(
@@ -109,7 +109,7 @@ function withReExport(template: string, originContents: string, name: string) {
   );
 }
 
-function withLocaleInjectedFn(
+function withGenerateFn(
   template: string,
   originContents: string,
   fnName: string,
@@ -117,9 +117,12 @@ function withLocaleInjectedFn(
   const regExp = new RegExp(`export ((async )?function|const) ${fnName}`);
   if (!regExp.test(originContents)) return template;
   const additionalParams = fnName === "generateMetadata" ? ", parent" : "";
+  const shouldSetLocale =
+    fnName === "generateMetadata" || fnName === "generateViewport";
   return template.concat(
     `\n\nimport { ${fnName} as ${fnName}Origin } from "${PATTERNS.relativePath}";`,
     `\n\nexport function ${fnName}(props${additionalParams}) {`,
+    shouldSetLocale ? `\n\tsetLocale("${PATTERNS.locale}");` : "",
     `\n\treturn ${fnName}Origin({ ...props, locale: "${PATTERNS.locale}" }${additionalParams});\n}`,
   );
 }
