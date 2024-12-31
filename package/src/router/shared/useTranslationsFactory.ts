@@ -13,7 +13,9 @@ export function useTranslationsFactory(
   useLocale: () => Locale,
   useMessages: () => Messages[Locale] | undefined,
 ) {
-  return function useTranslations<N extends Namespace>(namespace?: N) {
+  return function useTranslations<N extends Namespace = undefined>(
+    namespace?: N,
+  ) {
     const locale = useLocale();
     return function t<
       K extends NamespaceKey<N>,

@@ -8,7 +8,7 @@ import {
 import type { Locale } from "next-globe-gen/schema";
 import { tImpl } from "../shared/useTranslationsFactory";
 
-export function createTranslator<N extends Namespace>(
+export function createTranslator<N extends Namespace = undefined>(
   locale: Locale,
   namespace?: N,
 ) {
