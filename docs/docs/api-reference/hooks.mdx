@@ -16,7 +16,7 @@ The `useLocale` hook returns the current locale.
 
 :::info Alias
 
-An alias `getLocale` is also available for async server components.
+An alias `getLocale` is also available for async server components and `generateMetadata` function.
 
 :::
 
@@ -48,7 +48,7 @@ The `useTranslations` hook is used to render messages in the current locale.
 
 :::info Alias
 
-An alias `getTranslations` is also available for async server components.
+An alias `getTranslations` is also available for async server components and `generateMetadata` function.
 
 :::
 
@@ -92,7 +92,7 @@ If you need to construct a localized href of a route, you can use the `useHref` 
 
 :::info Alias
 
-An alias `getHref` is also available for async server components.
+An alias `getHref` is also available for async server components and `generateMetadata` function.
 
 :::
 
@@ -240,7 +240,7 @@ router.forward()
 
 ## Async Server Components
 
-Since ESLint has a rule which disallows calling hooks in async server components, the package also exports `get`-prefixed aliases of the hooks for usage in async server components and [`generateMetadata`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) function.
+Since ESLint has a rule which disallows calling hooks in async server components and [`generateMetadata`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) function, the package also exports `get`-prefixed aliases which can be used instead.
 
 These aliases are included:
 
