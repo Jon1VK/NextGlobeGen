@@ -7,6 +7,7 @@ import { useLocale } from "./LocaleStore";
 import { notSupported } from "./notSupported";
 
 export { createHref } from "../shared/useHrefFactory";
+export * from "../shared/withLanguageAlternates";
 export * from "./createTranslator";
 export * from "./LocaleStore";
 export * from "./redirect";

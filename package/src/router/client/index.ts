@@ -14,6 +14,7 @@ export type * from "~/types/messages";
 export type * from "~/types/schema";
 export type { UserConfig as Config } from "../../cli/types";
 export { createHref } from "../shared/useHrefFactory";
+export * from "../shared/withLanguageAlternates";
 export { IntlProvider, useLocale } from "./IntlProvider";
 export * from "./useRoute";
 export * from "./useRouter";
