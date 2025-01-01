@@ -13,6 +13,7 @@ import { notSupported } from "./notSupported";
 export type * from "~/types/messages";
 export type * from "~/types/schema";
 export type { UserConfig as Config } from "../../cli/types";
+export { createHref } from "../shared/useHrefFactory";
 export { IntlProvider, useLocale } from "./IntlProvider";
 export * from "./useRoute";
 export * from "./useRouter";

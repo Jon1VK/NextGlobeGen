@@ -7,7 +7,7 @@ import type {
 import { useRouter as useNextRouter } from "next/navigation";
 import { useHref } from ".";
 import {
-  extractUseHrefOptions,
+  extractHrefOptions,
   type HrefOptions,
   type ParamsOption,
   type UseHrefArgs,
@@ -66,6 +66,6 @@ function extractRouterOptions<R extends Route>(...args: RouterArgs<R>) {
     opts?.kind,
   ];
   const hrefArgs = [route, params ?? locale, locale] as UseHrefArgs<R>;
-  const hrefOpts = extractUseHrefOptions(hrefArgs);
+  const hrefOpts = extractHrefOptions(hrefArgs);
   return { hrefOpts, scroll, kind };
 }

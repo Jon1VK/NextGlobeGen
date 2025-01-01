@@ -25,15 +25,38 @@ export type UseHrefArgs<R extends Route> =
 
 export function useHrefFactory(useLocale: () => Locale) {
   return function useHref<R extends Route>(...args: UseHrefArgs<R>) {
-    const { pathname, params, query, locale } = extractUseHrefOptions(args);
-    const localizedPaths = schema.routes[pathname];
-    if (!localizedPaths) return withQuery(pathname, query);
-    const path = localizedPaths[locale ?? useLocale()];
-    if (!path) return withQuery(pathname, query);
-    const compliedPath = compile(path)(params);
-    if (!query) return compliedPath;
-    return withQuery(compliedPath, query);
+    const { pathname, params, query, locale } = extractHrefOptions(args);
+    return createHref<Route>({
+      pathname,
+      params,
+      query,
+      locale: locale ?? useLocale(),
+    });
   };
+}
+
+type CreateHrefOptions<R extends Route> = Omit<HrefOptions<R>, "locale"> & {
+  locale: Locale;
+};
+
+type CreateHrefArgs<R extends Route> =
+  | (R extends StaticRoute
+      ? [route: R, locale: Locale, _?: undefined]
+      : [route: R, params: RouteParams<R>, locale: Locale])
+  | [options: CreateHrefOptions<R>, _?: undefined, __?: undefined];
+
+export function createHref<R extends Route>(...args: CreateHrefArgs<R>) {
+  const { pathname, params, query, locale } = extractHrefOptions(
+    args as UseHrefArgs<R>,
+  );
+  if (!locale) return withQuery(pathname, query);
+  const localizedPaths = schema.routes[pathname];
+  if (!localizedPaths) return withQuery(pathname, query);
+  const path = localizedPaths[locale];
+  if (!path) return withQuery(pathname, query);
+  const compiledPath = compile(path)(params);
+  if (!query) return compiledPath;
+  return withQuery(compiledPath, query);
 }
 
 function withQuery(pathname: string, query?: Record<string, string>) {
@@ -42,7 +65,7 @@ function withQuery(pathname: string, query?: Record<string, string>) {
   return `${pathname}?${searchParams}`;
 }
 
-export function extractUseHrefOptions<R extends Route>(args: UseHrefArgs<R>) {
+export function extractHrefOptions<R extends Route>(args: UseHrefArgs<R>) {
   const [arg1, arg2, arg3] = args;
   if (typeof arg1 === "object") return arg1;
   const pathname = arg1;

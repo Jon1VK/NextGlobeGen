@@ -2,7 +2,7 @@ import type { Locale, Route } from "next-globe-gen/schema";
 import { default as NextLink } from "next/link";
 import { type ComponentProps } from "react";
 import {
-  extractUseHrefOptions,
+  extractHrefOptions,
   type HrefOptions,
   type ParamsOption,
   type UseHrefArgs,
@@ -25,7 +25,7 @@ export function LinkFactory(useHref: ReturnType<typeof useHrefFactory>) {
     ...linkProps
   }: LinkProps<R>) {
     const useHrefArgs = [href, params ?? locale, locale] as UseHrefArgs<R>;
-    const options = extractUseHrefOptions(useHrefArgs);
+    const options = extractHrefOptions(useHrefArgs);
     return (
       <NextLink
         {...linkProps}

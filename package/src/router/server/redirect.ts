@@ -9,7 +9,7 @@ import {
   type HrefOptions,
   type ParamsOption,
   type UseHrefArgs,
-  extractUseHrefOptions,
+  extractHrefOptions,
 } from "../shared/useHrefFactory";
 
 type RedirectArgs<
@@ -38,6 +38,6 @@ function extractRedirectOptions<R extends Route>(...args: RedirectArgs<R>) {
   const [route, opts] = args;
   const [params, locale, type] = [opts?.params, opts?.locale, opts?.type];
   const hrefArgs = [route, params ?? locale, locale] as UseHrefArgs<R>;
-  const hrefOpts = extractUseHrefOptions(hrefArgs);
+  const hrefOpts = extractHrefOptions(hrefArgs);
   return { hrefOpts, type };
 }
