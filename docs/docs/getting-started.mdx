@@ -98,7 +98,8 @@ The package supports also messages in YAML files using `.yaml` or `.yml` extensi
   "title": "Homepage",
   "description": "{name} package provides seamless internationalization experience for Next.js App Router devs.",
   "dashboard": {
-    "title": "Dashboard"
+    "title": "Dashboard",
+    "projects": "You have {count, plural, =0 {no projects} =1 {<b>one</b> project} other {<b>#</b> projects}}."
   }
 }
 ```
@@ -111,7 +112,8 @@ The package supports also messages in YAML files using `.yaml` or `.yml` extensi
   "title": "Kotisivu",
   "description": "{name} paketti tarjoaa saumattoman kansainvälistämiskokemuksen Next.js App Router kehittäjille.",
   "dashboard": {
-    "title": "Hallintapaneeli"
+    "title": "Hallintapaneeli",
+    "projects": "Sinulla {count, plural, =0 {ei ole projekteja} =1 {on <b>yksi</b> projekti} other {on <b>#</b> projektia}}."
   }
 }
 ```
@@ -206,12 +208,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 <TabItem value="Home">
 
 ```tsx title="src/_app/page.tsx"
-import { Metadata } from "next";
-import { getTranslations, useTranslations } from "next-globe-gen";
+import {
+  getTranslations,
+  useTranslations,
+  withLanguageAlternates,
+} from "next-globe-gen";
 
-export function generateMetadata(): Metadata {
+export function generateMetadata() {
   const t = getTranslations();
-  return { description: t("description", { name: "NextGlobeGen" }) };
+  return withLanguageAlternates("/")({
+    description: t("description", { name: "NextGlobeGen" }),
+  });
 }
 
 export default function Home() {
@@ -229,12 +236,17 @@ export default function Home() {
 <TabItem value="Dashboard">
 
 ```tsx title="src/_app/dashboard/page.tsx"
-import { Metadata } from "next";
-import { getTranslations, useTranslations } from "next-globe-gen";
+import {
+  getTranslations,
+  useTranslations,
+  withLanguageAlternates,
+} from "next-globe-gen";
 
-export function generateMetadata(): Metadata {
+export function generateMetadata() {
   const t = getTranslations("dashboard");
-  return { title: t("title") };
+  return withLanguageAlternates("/dashboard")({
+    title: t("title"),
+  });
 }
 
 export default function Dashboard() {
@@ -242,6 +254,7 @@ export default function Dashboard() {
   return (
     <section>
       <h1>{t("title")}</h1>
+      <p>{t("projects", { count: 1, b: (children) => <b>{children}</b> })}</p>
     </section>
   );
 }
