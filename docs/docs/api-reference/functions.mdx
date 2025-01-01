@@ -85,6 +85,29 @@ Key of the message is it's full object dot notation syntax as a string, possibly
 
 `t` function returns a translated and interpolated message.
 
+## createHref
+
+The `createHref` function can be used to construct a localized href of a route outside of components. This function is almost equivalent to the [`useHref`](./hooks.mdx#usehref) hook, but the locale is required to be passed since it cannot be inferred from rendering context.
+
+### Parameters
+
+```tsx
+/* 1. With static route */
+createHref<R extends StaticRoute>(route: R, locale: Locale);
+
+/* 2. With dynamic route */
+createHref<R extends StaticRoute>(route: R, params: RouteParams<R>, locale: Locale);
+
+/* 3. With route options object */
+createHref<R extends CreateHrefOptions<Route>>({ pathname, params, locale, query }: R);
+```
+
+Check [`useHref`](./hooks.mdx#3-with-an-options-object) section what values should be given in the `CreateHrefOptions` object accepts the same options as the `HrefOptions` but locale is required.
+
+### Returns
+
+`createHref` returns the localized version of the given route.
+
 ## redirect
 
 The `redirect` function extends the Next.js [`redirect`](https://nextjs.org/docs/app/api-reference/functions/redirect) function to allow you to redirect the user to localized pathnames with 307 status code.
