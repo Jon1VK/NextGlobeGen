@@ -6,43 +6,6 @@ sidebar_position: 3
 
 These functions are designed for server context only. Since there are different functions for various purposes, make sure to check each one to understand its specific application.
 
-## withLanguageAlternates
-
-This function creates a wrapper function for a Next.js page metadata object. The wrapper function injects [alternate language links](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#alternates) of the given route to the metadata object.
-
-```tsx title="./src/_app/dashboard/page.tsx"
-import { withLanguageAlternates } from "next-globe-gen";
-
-export function generateMetadata() {
-  return withLanguageAlternates("/dashboard")({
-    /* other metadata values here  */
-  });
-}
-```
-
-:::warning
-
-If the application is not hosted on Vercel, the [`metadataBase`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase) should be set on the root layout so that the URLs are constructed properly.
-
-:::
-
-### Parameters
-
-```tsx
-withLanguageAlternates<R extends Route>(route: R, params?: RouteParams<R>);
-```
-
-| Param    | Type                 | Required | Description                                                |
-| -------- | -------------------- | -------- | ---------------------------------------------------------- |
-| `route`  | `Route`              | Yes      | A route for which to generate the alternate language links |
-| `params` | `RouteParams<Route>` | \*       | The params for the dynamic segments of the route           |
-
-**\*** params are only required if the given route has dynamic segments.
-
-### Returns
-
-`withLanguageAlternates` returns a function, which should be called with a metadata object. It returns the given metadata object with injected language alternate links.
-
 ## createTranslator
 
 The `createTranslator` function returns a translator function which is used to get translated messages for the given locale and namespace.

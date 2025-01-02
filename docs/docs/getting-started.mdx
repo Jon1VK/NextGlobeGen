@@ -174,17 +174,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 <TabItem value="Home">
 
 ```tsx title="src/_app/page.tsx"
-import {
-  getTranslations,
-  useTranslations,
-  withLanguageAlternates,
-} from "next-globe-gen";
+import type { Metadata } from "next";
+import { getTranslations, useTranslations } from "next-globe-gen";
 
-export function generateMetadata() {
+export function generateMetadata(): Metadata {
   const t = getTranslations();
-  return withLanguageAlternates("/")({
-    description: t("description", { name: "NextGlobeGen" }),
-  });
+  return { description: t("description", { name: "NextGlobeGen" }) };
 }
 
 export default function Home() {
@@ -202,17 +197,12 @@ export default function Home() {
 <TabItem value="Dashboard">
 
 ```tsx title="src/_app/dashboard/page.tsx"
-import {
-  getTranslations,
-  useTranslations,
-  withLanguageAlternates,
-} from "next-globe-gen";
+import type { Metadata } from "next";
+import { getTranslations, useTranslations } from "next-globe-gen";
 
-export function generateMetadata() {
+export function generateMetadata(): Metadata {
   const t = getTranslations("dashboard");
-  return withLanguageAlternates("/dashboard")({
-    title: t("title"),
-  });
+  return { title: t("title") };
 }
 
 export default function Dashboard() {

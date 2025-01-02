@@ -102,6 +102,21 @@ const config: Config = {
 };
 ```
 
+#### skipLanguageAlternatesMetadata
+
+NextGlobeGen package injects [language alternates](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#alternates) to the metadata objects exported or returned by `generateMetadata` functions for all page routing files.
+
+Option `skipLanguageAlternatesMetadata` is used to configure if the automatic alternate language URLs metadata generation should be skipped or not.
+
+```tsx
+const config: Config = {
+  routes: {
+    // highlight-next-line
+    skipLanguageAlternatesMetadata: true, // Default: false
+  },
+};
+```
+
 ### Messages
 
 Options under `messages` namespace affect how messages are loaded and handled in the application.

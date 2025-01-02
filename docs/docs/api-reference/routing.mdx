@@ -67,6 +67,8 @@ Then create a `page.<locale>.md` or `page.<locale>.mdx` file for each configured
 <TabItem value="English MDX Page" >
 
 ```mdx title="./src/_app/markdown/page.en.mdx"
+export const metadata = { title: "Markdown page" };
+
 # Markdown page
 
 This content is shown on `/en/markdown` path.
@@ -76,6 +78,8 @@ This content is shown on `/en/markdown` path.
 <TabItem value="Finnish MDX Page">
 
 ```mdx title="./src/_app/markdown/page.fi.mdx"
+export const metadata = { title: "Markdown sivu" };
+
 # Markdown sivu
 
 Tämä sisältö näytetään `/fi/markdown` polussa.
