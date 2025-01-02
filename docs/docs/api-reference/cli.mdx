@@ -1,0 +1,27 @@
+---
+sidebar_position: 7
+---
+
+# CLI
+
+NextGlobeGen comes with a Command Line Interface (CLI) tool `next-globe-gen`. To see all the available commands run the CLI tool with the `-h` or `--help` option.
+
+```bash title="Basic usage"
+npx next-globe-gen [command] [options]
+```
+
+## `generate` command
+
+The `next-globe-gen generate` command runs the generator which generates the localized routes, messages and the types for the package. The [`plugin`](./plugin.mdx) uses this CLI command internally.
+
+```bash
+npx next-globe-gen generate [options]
+```
+
+### Options
+
+| Option                  | Description                                                    |
+| ----------------------- | -------------------------------------------------------------- |
+| `-c`, `--config <path>` | custom path to a configuration file (default: `i18n.config.ts) |
+| `-w`, `--watch`         | enables watch mode                                             |
+| `-h`, `--help`          | display help for command                                       |
