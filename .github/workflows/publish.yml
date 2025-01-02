@@ -26,7 +26,9 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - run: pnpm install
       - run: cp ../README.md ../LICENSE ./
-      - run: pnpm publish --no-git-checks --access public
+      - run: sed -i "s/0.0.0-placeholder/$GITHUB_REF_NAME/" package.json
+      - run: if [ github.event.release.prerelease ]; then echo "TAG=canary" >> "$GITHUB_ENV"; else echo "TAG=latest" >> "$GITHUB_ENV"; fi
+      - run: pnpm publish --no-git-checks --access public --tag $TAG
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
