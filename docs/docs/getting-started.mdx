@@ -132,40 +132,6 @@ NextGlobeGen APIs can be used to handle navigation and rendering translations.
 :::
 
 <Tabs>
-<TabItem value="LanguageSwitcher" >
-
-```tsx title="src/_app/LanguageSwitcher"
-"use client";
-
-import { Link, useRoute } from "next-globe-gen";
-
-/**
- * If there is dynamic route segments in some of the application routes (i.e. "/images/[id]"),
- * the params provided by Next.js useParams function have to be passed as a prop to
- * Link components for language switching to work properly.
- */
-export default function LanguageSwitcher() {
-  const route = useRoute();
-  return (
-    <nav>
-      <ul>
-        <li>
-          <Link href={route} locale="en">
-            In English
-          </Link>
-        </li>
-        <li>
-          <Link href={route} locale="fi">
-            Suomeksi
-          </Link>
-        </li>
-      </ul>
-    </nav>
-  );
-}
-```
-
-</TabItem >
 <TabItem value="RootLayout">
 
 ```tsx title="src/_app/layout.tsx"
@@ -256,6 +222,40 @@ export default function Dashboard() {
       <h1>{t("title")}</h1>
       <p>{t("projects", { count: 1, b: (children) => <b>{children}</b> })}</p>
     </section>
+  );
+}
+```
+
+</TabItem >
+<TabItem value="LanguageSwitcher" >
+
+```tsx title="src/_app/LanguageSwitcher"
+"use client";
+
+import { Link, useRoute } from "next-globe-gen";
+
+/**
+ * If there is dynamic route segments in some of the application routes (i.e. "/images/[id]"),
+ * the params provided by Next.js useParams function have to be passed as a prop to
+ * Link components for language switching to work properly.
+ */
+export default function LanguageSwitcher() {
+  const route = useRoute();
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link href={route} locale="en">
+            In English
+          </Link>
+        </li>
+        <li>
+          <Link href={route} locale="fi">
+            Suomeksi
+          </Link>
+        </li>
+      </ul>
+    </nav>
   );
 }
 ```
