@@ -30,14 +30,14 @@ export const getExpectedOriginRoutes = (
       type: "markdown",
       path: "/(static)/privacy-policy/page.en.mdx",
       localizedPaths: {
-        en: "/en/(static)/privacy-policy/page.mdx",
+        en: "/en/(static)/privacy-policy/page.tsx",
       },
     },
     {
       type: "markdown",
-      path: "/(static)/privacy-policy/page.fi.md",
+      path: "/(static)/privacy-policy/page.fi.mdx",
       localizedPaths: {
-        fi: `${prefix}/(static)/tietosuojaseloste/page.md`,
+        fi: `${prefix}/(static)/tietosuojaseloste/page.tsx`,
       },
     },
     {

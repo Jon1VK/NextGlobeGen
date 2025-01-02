@@ -38,7 +38,7 @@ export async function getOriginRoutes({
             parentRoute?.localizedPaths[locale] ?? `/${localePrefix}`;
           const localizedSegment =
             routeTranslations?.[locale] ??
-            file.name.replace(`.${locale}.`, ".");
+            file.name.replace(`.${locale}.mdx`, ".tsx");
           const localizedPath = `${localizedDir}/${localizedSegment}`;
           return [locale, localizedPath];
         })
@@ -69,7 +69,7 @@ function isDifferentLocaleMarkdownPageFile(file: File, locale: string) {
 
 const APP_ROUTER_FILE_REGEXPS = {
   page: /^page\.(j|t)sx?$/,
-  markdown: /^page\.[^.]*\.mdx?$/,
+  markdown: /^page\.[^.]*\.mdx$/,
   layout: /^layout\.(j|t)sx?$/,
   template: /^template\.(j|t)sx?$/,
   default: /^default\.(j|t)sx?$/,
