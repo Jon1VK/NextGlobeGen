@@ -23,7 +23,10 @@ export function withLanguageAlternates<R extends Route>(
   );
   return function injectLanguageAlternates(metadata: Metadata) {
     metadata.alternates ??= {};
-    metadata.alternates.languages = languages;
+    metadata.alternates.languages = {
+      ...languages,
+      ...metadata.alternates.languages,
+    };
     return metadata;
   };
 }
