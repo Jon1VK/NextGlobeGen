@@ -18,7 +18,7 @@ export const generateCommand = new Command("generate")
   .summary("generate localized routes")
   .description("generate localizes routes")
   .option(
-    "-c, --config [path]",
+    "-c, --config <path>",
     "custom path to a configuration file",
     "i18n.config.ts",
   )
