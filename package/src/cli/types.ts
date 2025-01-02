@@ -7,6 +7,7 @@ export type Config<L extends string[] = string[]> = {
     prefixDefaultLocale: boolean;
     originDir: string;
     localizedDir: string;
+    skipLanguageAlternatesMetadata?: boolean;
   };
   messages: {
     originDir: string;

@@ -2,6 +2,11 @@ import { writeFileSync } from "fs";
 import path from "path";
 import type { Config, OriginRoute } from "~/cli/types";
 import { makeDirectory } from "~/cli/utils/fs-utils";
+import {
+  getRouteName,
+  getRoutePath,
+  isPageOriginRoute,
+} from "~/cli/utils/route-utils";
 import { toPascalCase } from "~/cli/utils/string-utils";
 import { getMessages } from "./getMessages";
 
@@ -92,61 +97,4 @@ export async function generateMessagesFile(config: Config) {
     .replace("{clientMessages}", JSONClientMessages);
   const messagesFilePath = path.join(OUT_DIR, "messages.ts");
   writeFileSync(messagesFilePath, messagesFile);
-}
-
-function isPageOriginRoute(originRoute: OriginRoute) {
-  return originRoute.type === "page" || originRoute.type === "markdown";
-}
-
-function getRouteName(originPath: string) {
-  return [
-    removePageSegment,
-    removeGroupSegments,
-    removeParallelSegments,
-    removeInterceptedSegments,
-    asRootPath,
-  ].reduce((result, next) => next(result), originPath);
-}
-
-function getRoutePath(localizedPath: string) {
-  return [
-    removePageSegment,
-    removeGroupSegments,
-    removeParallelSegments,
-    removeInterceptedSegments,
-    formatDynamicSegments,
-    asRootPath,
-  ].reduce((result, next) => next(result), localizedPath);
-}
-
-function removePageSegment(input: string) {
-  return input.replace(/\/page(\.[^.]+)?\.(js|ts|md)x?$/, "");
-}
-
-function removeGroupSegments(input: string) {
-  return input.replace(/\/\([^)/]+\)/g, "");
-}
-
-function removeParallelSegments(input: string) {
-  return input.replace(/\/@[^/]+/g, "");
-}
-
-function removeInterceptedSegments(input: string) {
-  let result = input.replace(/\(\.\)/g, "");
-  const twoDotsRegExp = /[^/]+\/\(\.{2}\)/g;
-  while (twoDotsRegExp.test(result)) {
-    result = result.replace(twoDotsRegExp, "");
-  }
-  return result.replace(/.*\(\.{3}\)/g, "/");
-}
-
-function formatDynamicSegments(input: string) {
-  return input
-    .replace(/\/\[{2}\.{3}([^\]]+)\]{2}/g, "{/*$1}") // /[[...slug]] -> {/*slug}
-    .replace(/\/\[\.{3}([^\]]+)\]/g, "/*$1") // /[...slug] -> /*slug
-    .replace(/\/\[([^\]]+)\]/g, "/:$1"); // /[slug] -> /:slug
-}
-
-function asRootPath(input: string) {
-  return input.startsWith("/") ? input : `/${input}`;
 }

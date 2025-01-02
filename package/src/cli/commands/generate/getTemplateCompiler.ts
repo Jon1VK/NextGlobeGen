@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import path from "path";
 import type { Config, OriginRoute } from "~/cli/types";
+import { getRouteName, isPageOriginRoute } from "~/cli/utils/route-utils";
 import type { RouteType } from "./getOriginRoutes";
 
 type PatternKey = (typeof PATTERN_KEYS)[number];
@@ -78,9 +79,8 @@ export function getTemplateCompiler(config: Config, originRoute: OriginRoute) {
   let template = originIsRootLayout
     ? rootLayoutTemplate
     : routeTypeTemplates[originRoute.type];
-  template = withReExport(template, contents, "metadata");
+  template = withMetadata(template, originRoute, contents, config);
   template = withReExport(template, contents, "viewport");
-  template = withGenerateFn(template, contents, "generateMetadata");
   template = withGenerateFn(template, contents, "generateViewport");
   template = withGenerateFn(template, contents, "generateStaticParams");
   template = withGenerateFn(template, contents, "generateSitemaps");
@@ -102,11 +102,62 @@ function withoutProps(template: string) {
   return template.replace(" {...props}", "").replace("props", "");
 }
 
+function withMetadata(
+  template: string,
+  originRoute: OriginRoute,
+  originContents: string,
+  config: Config,
+) {
+  const regExp = new RegExp(`export const metadata`);
+  if (!regExp.test(originContents)) {
+    return withGenerateMetadata(template, originRoute, originContents, config);
+  }
+  if (
+    !isPageOriginRoute(originRoute) ||
+    config.routes.skipLanguageAlternatesMetadata
+  ) {
+    return withReExport(template, originContents, "metadata");
+  }
+  const routeName = getRouteName(originRoute.path);
+  return template.concat(
+    '\n\nimport { withLanguageAlternates } from "next-globe-gen";',
+    `\nimport { metadata as metadataOrigin } from "${PATTERNS.relativePath}";`,
+    `\n\nexport const metadata = withLanguageAlternates("${routeName}")(metadataOrigin);`,
+  );
+}
+
 function withReExport(template: string, originContents: string, name: string) {
   const regExp = new RegExp(`export const ${name}`);
   if (!regExp.test(originContents)) return template;
   return template.concat(
     `\n\nexport { ${name} } from "${PATTERNS.relativePath}";`,
+  );
+}
+
+function withGenerateMetadata(
+  template: string,
+  originRoute: OriginRoute,
+  originContents: string,
+  config: Config,
+) {
+  const regExp = new RegExp(
+    `export ((async )?function|const) generateMetadata`,
+  );
+  if (!regExp.test(originContents)) return template;
+  if (
+    !isPageOriginRoute(originRoute) ||
+    config.routes.skipLanguageAlternatesMetadata
+  ) {
+    return withGenerateFn(template, originContents, "generateMetadata");
+  }
+  const routeName = getRouteName(originRoute.path);
+  return template.concat(
+    '\n\nimport { withLanguageAlternates } from "next-globe-gen";',
+    `\nimport { generateMetadata as generateMetadataOrigin } from "${PATTERNS.relativePath}";`,
+    "\n\nexport async function generateMetadata(props, parent) {",
+    `\n\tsetLocale("${PATTERNS.locale}");`,
+    `\n\tconst metadata = await generateMetadataOrigin({ ...props, locale: "${PATTERNS.locale}" }, parent);`,
+    `\n\treturn withLanguageAlternates("${routeName}", await props.params)(metadata);\n}`,
   );
 }
 
