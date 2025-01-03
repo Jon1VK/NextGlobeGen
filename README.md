@@ -1,4 +1,13 @@
-# NextGlobeGen
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/static/img/logo.dark.svg">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/static/img/logo.svg">
+    <img alt="next-intl" src="docs/static/img/logo.svg" width="32">
+  </picture>
+  NextGlobeGen
+</h1>
+
+![NPM Version](https://img.shields.io/npm/v/next-globe-gen?style=for-the-badge&color=%23CC3534&logo=npm&logoColor=%23CC3534&labelColor=%23eee) ![Static Badge](https://img.shields.io/badge/App%20Router-%23000000?style=for-the-badge&logo=nextdotjs&logoColor=%23000000&label=Next.js&labelColor=%23eee) ![Static Badge](https://img.shields.io/badge/%20Type--safe-%233178C6?style=for-the-badge&logo=typescript&label=TypeScript&labelColor=%23eee)
 
 NextGlobeGen is a TypeScript package designed to streamline the process of adding internationalization (i18n) to your Next.js application. It is specifically tailored for projects using the Next.js App Router. By leveraging generative programming techniques, NextGlobeGen automates the creation of locale-based routes, enabling a seamless developer experience for the developers.
 
