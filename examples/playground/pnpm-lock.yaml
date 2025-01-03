@@ -18,8 +18,8 @@ importers:
         specifier: 15.1.3
         version: 15.1.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       next-globe-gen:
-        specifier: ^1.2.0
-        version: 1.2.0(jiti@1.21.7)(next@15.1.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(postcss@8.4.49)(react@19.0.0)(typescript@5.7.2)
+        specifier: file:../../package
+        version: file:../../package(jiti@1.21.7)(next@15.1.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(postcss@8.4.49)(react@19.0.0)(typescript@5.7.2)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -1530,8 +1530,8 @@ packages:
     resolution: {integrity: sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==}
     engines: {node: '>= 0.6'}
 
-  next-globe-gen@1.2.0:
-    resolution: {integrity: sha512-p93aUlgMv+Q6TS4bcXQ/q8Ge/uJWxHV7LrjehlxcI7K4dLlITPXHIhc6AwUsfO4ucWAD9s8SjOBInj1UQ6DlSw==}
+  next-globe-gen@file:../../package:
+    resolution: {directory: ../../package, type: directory}
     hasBin: true
     peerDependencies:
       next: ^15.0.0
@@ -3646,7 +3646,7 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  next-globe-gen@1.2.0(jiti@1.21.7)(next@15.1.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(postcss@8.4.49)(react@19.0.0)(typescript@5.7.2):
+  next-globe-gen@file:../../package(jiti@1.21.7)(next@15.1.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(postcss@8.4.49)(react@19.0.0)(typescript@5.7.2):
     dependencies:
       '@formatjs/intl-localematcher': 0.5.10
       commander: 12.1.0
