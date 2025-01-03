@@ -1,0 +1,27 @@
+common:
+  docs: Dokumentaatio
+  code: Koodi
+  client:
+    menu: Valikko
+home:
+  title: NextGlobeGen Leikkipaikka
+  description: Leikkipaikka NextGlobeGen-ominaisuuksien tutkimiseen.
+demos:
+  client:
+    titles:
+      routing: Reititys
+      messages: Viestit
+      components: Komponentit
+      hooks: Hooksit
+      misc: Sekalaista
+      localized-pathnames: Lokalisoidut polut
+  descriptions:
+    localized-pathnames: Käännä sivujen URL-osoitteessa olevat polut.
+content:
+  localized-pathnames: >-
+    <p>URL-osoitteiden polut täytyy usein kääntää hakukoneoptimoinnin (SEO)
+    parantamiseksi. NextGlobeGenissä tämä tehdään jokaiselle polun segmentille
+    (hakemistolle) erikseen erityisillä i18n.ts-tiedostoilla. Tämän
+    lähestymistavan avulla polun segmenttihakemisto ja sen paikalliset
+    käännökset voivat sijaita samassa paikassa.</p>
+    <p>Kokeile vaihtaa kielten välillä ja tarkista osoiterivi.</p>
