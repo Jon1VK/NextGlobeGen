@@ -1,5 +1,7 @@
 import Link from "@docusaurus/Link";
 import Heading from "@theme/Heading";
+import LogoDark from "../../../static/img/logo.dark.svg";
+import Logo from "../../../static/img/logo.svg";
 import CodeExample from "./CodeExample";
 
 export default function HeroSection() {
@@ -10,7 +12,9 @@ export default function HeroSection() {
           as="h1"
           className="text-4xl font-semibold tracking-tight sm:text-6xl"
         >
-          NextGlobeGen
+          <Logo className="w-9 align-bottom sm:w-14 dark:hidden" />
+          <LogoDark className="hidden w-9 align-bottom sm:w-14 dark:inline" />
+          <span> NextGlobeGen</span>
         </Heading>
         <p className="mt-6 text-lg/8 text-gray-700 dark:text-gray-300">
           Localize your Next.js App Router routes and content to serve your
