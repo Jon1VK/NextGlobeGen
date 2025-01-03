@@ -23,15 +23,15 @@ export default function HeroSection() {
         <div className="mt-10 flex flex-wrap items-center gap-6 font-semibold">
           <Link
             href="./docs/getting-started"
-            className="rounded-xl bg-sky-700/70 px-6 py-3 text-white hover:bg-sky-700/90 hover:text-white"
+            className="rounded-xl bg-sky-700/90 px-6 py-3 text-white hover:text-white"
           >
             Get Started <span aria-hidden="true">→</span>
           </Link>
           <Link
-            href="https://github.com/Jon1VK/NextGlobeGen"
-            className="whitespace-nowrap rounded-xl bg-sky-300/10 px-6 py-3 text-gray-900 hover:bg-sky-300/20 hover:text-gray-900 dark:text-white dark:hover:text-white"
+            href="https://next-globe-gen-playground.vercel.app"
+            className="whitespace-nowrap rounded-xl bg-sky-300/20 px-6 py-3 text-gray-900 hover:text-gray-900 dark:text-white dark:hover:text-white"
           >
-            View on GitHub <span aria-hidden="true">→</span>
+            Playground Example <span aria-hidden="true">→</span>
           </Link>
         </div>
       </div>
