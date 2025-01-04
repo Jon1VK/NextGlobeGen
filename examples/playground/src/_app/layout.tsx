@@ -1,9 +1,9 @@
+import AddressBar from "@/components/AddressBar";
+import GlobalNav from "@/components/GlobalNav";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { getTranslations, useLocale } from "next-globe-gen";
 import type { ReactNode } from "react";
-import AddressBar from "./components/AddressBar";
-import GlobalNav from "./components/GlobalNav";
 
 export function generateMetadata(): Metadata {
   const t = getTranslations("home");

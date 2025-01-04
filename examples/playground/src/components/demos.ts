@@ -18,6 +18,11 @@ export const demos: {
         titleKey: "localized-pathnames",
         descriptionKey: "localized-pathnames",
       },
+      {
+        route: "/markdown",
+        titleKey: "markdown",
+        descriptionKey: "markdown",
+      },
     ],
   },
   {

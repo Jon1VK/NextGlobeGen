@@ -1,5 +1,5 @@
+import { demos } from "@/components/demos";
 import { Link, useTranslations } from "next-globe-gen";
-import { demos } from "./components/demos";
 
 export default function Page() {
   const homeT = useTranslations("home");

@@ -15,12 +15,14 @@ demos:
       hooks: Hooks
       misc: Misc
       localized-pathnames: Localized Pathnames
+      markdown: Markdown Pages
   descriptions:
     localized-pathnames: Translate the pathnames in the URL for the pages.
-content:
-  localized-pathnames: >-
-    <p>The pathnames in the url often need to be translated to improve SEO. In
-    NextGlobeGen this is done for each route segment (directory) separately
-    with special i18n.ts files. With this approach the route segment and
-    it's localizations can be colocated.</p>
-    <p>Try changing between languages and check the address bar.</p>
+    markdown: Write the localized content of the pages as MDX.
+  content:
+    localized-pathnames: >-
+      <p>The pathnames in the url often need to be translated to improve SEO. In
+      NextGlobeGen this is done for each route segment (directory) separately
+      with special i18n.ts files. With this approach the route segment and
+      it's localizations can be colocated.</p>
+      <p>Try changing between languages and check the address bar.</p>
