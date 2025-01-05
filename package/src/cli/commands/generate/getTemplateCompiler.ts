@@ -50,7 +50,7 @@ const functionTemplate = "".concat(
   "// @ts-nocheck\n\n",
   `import Origin${PATTERNS.routeType} from "${PATTERNS.relativePath}";\n\n`,
   `export default function ${PATTERNS.routeType}(params) {\n`,
-  `\treturn Origin${PATTERNS.routeType}({ ...params, locale: "${PATTERNS.locale});\n}`,
+  `\treturn Origin${PATTERNS.routeType}({ ...params, locale: "${PATTERNS.locale}" });\n}`,
 );
 
 const routeTypeTemplates: Record<Exclude<RouteType, "copy">, string> = {
