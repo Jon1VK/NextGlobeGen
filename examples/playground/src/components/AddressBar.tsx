@@ -1,11 +1,9 @@
 "use client";
 
 import clsx from "clsx";
-import { Link, useLocale, useRoute } from "next-globe-gen";
+import { Link, schema, useLocale, useRoute } from "next-globe-gen";
 import { usePathname, useSearchParams } from "next/navigation";
 import React, { Fragment, Suspense } from "react";
-
-const locales = ["en", "fi"] as const;
 
 function LanguageSwitcher() {
   const activeLocale = useLocale();
@@ -13,7 +11,7 @@ function LanguageSwitcher() {
 
   return (
     <div className="flex gap-x-2">
-      {locales.map((locale) => (
+      {schema.locales.map((locale) => (
         <Link
           key={locale}
           href={route}
@@ -24,7 +22,8 @@ function LanguageSwitcher() {
             "bg-vercel-blue text-white": locale === activeLocale,
           })}
         >
-          {locale === "en" ? "In English" : "Suomeksi"}
+          {locale === "en" && "In English"}
+          {locale === "fi" && "Suomeksi"}
         </Link>
       ))}
     </div>
