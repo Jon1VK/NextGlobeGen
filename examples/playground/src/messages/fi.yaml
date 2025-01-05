@@ -16,9 +16,11 @@ demos:
       misc: Sekalaista
       localized-pathnames: Lokalisoidut polut
       markdown: Markdown-sivut
+      locale-param: Locale parametri
   descriptions:
     localized-pathnames: Käännä sivujen URL-osoitteessa olevat polut.
     markdown: Kirjoita sivujen lokalisoitu sisältö MDX-muodossa.
+    locale-param: Käytä locale-parametria renderöintikontekstien ulkopuolella.
   content:
     localized-pathnames: >-
       <p>URL-osoitteiden polut täytyy usein kääntää hakukoneoptimoinnin (SEO)

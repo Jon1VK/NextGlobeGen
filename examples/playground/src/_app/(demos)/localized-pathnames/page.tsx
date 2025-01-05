@@ -15,13 +15,10 @@ export default function Page() {
   const tDemos = useTranslations("demos");
   return (
     <>
-      <h1 className="text-xl font-bold">
-        {tDemos("client.titles.localized-pathnames")}
-      </h1>
+      <h1>{tDemos("client.titles.localized-pathnames")}</h1>
       {tDemos("content.localized-pathnames", {
         p: (children) => <p>{children}</p>,
       })}
-
       <div className="flex gap-2">
         <ExternalLink href="https://next-globe-gen.dev/docs/api-reference/routing#localized-pathnames">
           {tCommon("docs")}

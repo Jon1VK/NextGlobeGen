@@ -88,19 +88,11 @@ Tämä sisältö näytetään `/fi/markdown` polussa.
 </TabItem >
 </Tabs>
 
-## `locale` prop/param
+## `locale` param
 
-In rendering contexts the primary way to access the current locale is with [`useLocale`](./hooks.mdx#uselocale) hook. The locale is also passed as a prop to routing components.
+Hooks such as `useLocale` cannot be used in functions that are executed outside of rendering contexts. Such functions are for example all metadata routing files and `generateStaticParams` and `generateSitemap` functions.
 
-```tsx title="src/_app/page.tsx"
-import type { Locale } from "next-globe-gen";
-
-export default function Home({ locale }: { locale: Locale }) {
-  /* Component rendering logic */
-}
-```
-
-Hooks cannot be used in functions exported from metadata routing files, such as `icon.tsx` or `sitemap.ts`, or in most of the generate functions such as `generateStaticParams` or `generateSitemaps`. For these functions the locale is included in the first argument object.
+For these functions the locale is included in the first argument object.
 
 ```tsx title="src/_app/sitemap.ts"
 import type { Locale } from "next-globe-gen";
@@ -115,3 +107,9 @@ export default function sitemap({ id, locale }: SitemapParams) {
   /* Sitemap generation logic */
 }
 ```
+
+:::info Routing Components
+
+In rendering contexts the primary way to access the current locale is with [`useLocale`](./hooks.mdx#uselocale) hook, but the locale is also passed as a prop to routing components.
+
+:::

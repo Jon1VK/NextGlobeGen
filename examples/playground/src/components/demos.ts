@@ -23,6 +23,11 @@ export const demos: {
         titleKey: "markdown",
         descriptionKey: "markdown",
       },
+      {
+        route: "/locale-param",
+        titleKey: "locale-param",
+        descriptionKey: "locale-param",
+      },
     ],
   },
   {

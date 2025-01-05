@@ -16,9 +16,11 @@ demos:
       misc: Misc
       localized-pathnames: Localized Pathnames
       markdown: Markdown Pages
+      locale-param: Locale Param
   descriptions:
     localized-pathnames: Translate the pathnames in the URL for the pages.
     markdown: Write the localized content of the pages as MDX.
+    locale-param: Use the locale param outside of rendering contexts.
   content:
     localized-pathnames: >-
       <p>The pathnames in the url often need to be translated to improve SEO. In

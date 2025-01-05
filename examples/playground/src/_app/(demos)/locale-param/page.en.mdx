@@ -1,0 +1,3 @@
+Hooks such as `useLocale` cannot be used in functions that are executed outside of rendering contexts. Such functions are for example all metadata routing files and `generateStaticParams` and `generateSitemap` functions.
+
+For these functions the locale is included in the first argument object.
