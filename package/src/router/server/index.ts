@@ -6,6 +6,8 @@ import { useTranslationsFactory } from "../shared/useTranslationsFactory";
 import { useLocale } from "./LocaleStore";
 import { notSupported } from "./notSupported";
 
+export { messages } from "next-globe-gen/messages";
+export { schema } from "next-globe-gen/schema";
 export { createHref } from "../shared/useHrefFactory";
 export * from "../shared/withLanguageAlternates";
 export * from "./createTranslator";
