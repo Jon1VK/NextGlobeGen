@@ -75,7 +75,7 @@ export default function AddressBar() {
 
   return (
     <div className="flex text-nowrap items-center justify-between flex-wrap overflow-x-auto gap-4 p-3.5 lg:px-5 lg:py-3">
-      <div className="flex gap-x-2">
+      <div className="flex items-center gap-x-2">
         <div className="text-gray-600">
           <svg
             xmlns="http://www.w3.org/2000/svg"
