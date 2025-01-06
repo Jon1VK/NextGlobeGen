@@ -16,10 +16,12 @@ demos:
       misc: Sekalaista
       localized-pathnames: Lokalisoidut polut
       markdown: Markdown-sivut
+      not-found: Lokalisoitu 404 sivu
       locale-param: Locale parametri
   descriptions:
     localized-pathnames: Käännä sivujen URL-osoitteessa olevat polut.
     markdown: Kirjoita sivujen lokalisoitu sisältö MDX-muodossa.
+    not-found: Tutustu dokumentaatioon ja koodiesimerkkiin lokalisoidun 404-sivun toteuttamiseksi.
     locale-param: Käytä locale-parametria renderöintikontekstien ulkopuolella.
   content:
     localized-pathnames: >-

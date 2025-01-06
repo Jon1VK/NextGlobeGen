@@ -24,6 +24,11 @@ export const demos: {
         descriptionKey: "markdown",
       },
       {
+        route: "/[...catchAll]",
+        titleKey: "not-found",
+        descriptionKey: "not-found",
+      },
+      {
         route: "/locale-param",
         titleKey: "locale-param",
         descriptionKey: "locale-param",

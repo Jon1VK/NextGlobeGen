@@ -26,6 +26,7 @@ export default function Page() {
                     <Link
                       href={item.route}
                       key={item.route}
+                      params={{ catchAll: ["404"] }}
                       className="group block space-y-1.5 rounded-lg bg-gray-900 px-5 py-3 hover:bg-gray-800"
                     >
                       <div className="font-medium text-gray-200 group-hover:text-gray-50">

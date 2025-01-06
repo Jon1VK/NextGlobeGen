@@ -83,12 +83,13 @@ function GlobalNavItem({
 }) {
   const t = useTranslations("demos.client.titles");
   const route = useRoute();
-  const isActive = route.startsWith(item.route);
+  const isActive = route.startsWith(item.route) || !route;
 
   return (
     <Link
       onClick={close}
       href={item.route}
+      params={{ catchAll: ["404"] }}
       className={clsx(
         "block rounded-md px-3 py-2 text-sm font-medium hover:text-gray-300",
         {

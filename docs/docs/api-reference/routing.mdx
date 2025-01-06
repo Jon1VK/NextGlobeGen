@@ -88,6 +88,40 @@ Tämä sisältö näytetään `/fi/markdown` polussa.
 </TabItem >
 </Tabs>
 
+## Localized 404 page
+
+To catch unmatched `/<locale>/**/*` URLs, two files are required:
+
+1. `src/_app/[...catchAll]/page.tsx`
+2. `src/_app/not-found.tsx`
+
+The `[...catchAll]/page.tsx` is rendered for all unmatched URLs and `not-found.tsx` catches all `notFound()` calls.
+
+Now by calling `notFound()` in `[...catchAll]/page.tsx` the UI defined in the `not-found.tsx` file will be rendered.
+
+<Tabs>
+<TabItem value="Catch-all page" >
+
+```tsx title="./src/_app/[...catchAll]/page.tsx"
+import { notFound } from "next/navigation";
+
+export default function CatchAllPage() {
+  notFound();
+}
+```
+
+</TabItem >
+<TabItem value="Localized 404 page">
+
+```tsx title="./src/_app/not-found.tsx"
+export default function NotFound() {
+  /* Return localized UI using next-globe-gen APIs */
+}
+```
+
+</TabItem >
+</Tabs>
+
 ## `locale` param
 
 Hooks such as `useLocale` cannot be used in functions that are executed outside of rendering contexts. Such functions are for example all metadata routing files and `generateStaticParams` and `generateSitemap` functions.

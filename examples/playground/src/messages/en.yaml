@@ -16,10 +16,12 @@ demos:
       misc: Misc
       localized-pathnames: Localized Pathnames
       markdown: Markdown Pages
+      not-found: Localized 404 page
       locale-param: Locale Param
   descriptions:
     localized-pathnames: Translate the pathnames in the URL for the pages.
     markdown: Write the localized content of the pages as MDX.
+    not-found: Check out the docs and code example for how to implement a localized 404 page.
     locale-param: Use the locale param outside of rendering contexts.
   content:
     localized-pathnames: >-
