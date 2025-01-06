@@ -5,7 +5,6 @@ import {
   type RouteParams,
   type Schema,
 } from "next-globe-gen/schema";
-
 import { match as pathMatcher } from "path-to-regexp";
 
 export function extractLocaleAndRoutePathname(pathname: string) {

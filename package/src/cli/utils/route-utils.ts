@@ -7,9 +7,9 @@ export function isPageOriginRoute(originRoute: OriginRoute) {
 export function getRouteName(originPath: string) {
   return [
     removePageSegment,
+    removeInterceptedSegments,
     removeGroupSegments,
     removeParallelSegments,
-    removeInterceptedSegments,
     asRootPath,
   ].reduce((result, next) => next(result), originPath);
 }
@@ -17,9 +17,9 @@ export function getRouteName(originPath: string) {
 export function getRoutePath(localizedPath: string) {
   return [
     removePageSegment,
+    removeInterceptedSegments,
     removeGroupSegments,
     removeParallelSegments,
-    removeInterceptedSegments,
     formatDynamicSegments,
     asRootPath,
   ].reduce((result, next) => next(result), localizedPath);

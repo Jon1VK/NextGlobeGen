@@ -47,6 +47,8 @@
     "check:lint": "eslint .",
     "check:format": "prettier --check .",
     "test": "vitest --no-watch",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
@@ -64,6 +66,7 @@
     "@types/negotiator": "^0.6.3",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.2",
+    "@vitest/coverage-v8": "^2.1.8",
     "eslint": "^9.17.0",
     "next": "^15.1.2",
     "prettier": "^3.4.2",
