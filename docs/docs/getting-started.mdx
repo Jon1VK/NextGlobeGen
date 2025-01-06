@@ -78,15 +78,10 @@ export default withNextGlobeGen(nextConfig);
 
 Create message translations to the `src/messages` directory. There should be one `<locale>.json` file for each configured `locale`.
 
-:::tip Dividing messages to multiple files
+:::info Organizing messages
 
-Messages can be divided to namespaced `<locale>/<namespace>.json` files.
-
-:::
-
-:::tip YAML Support
-
-The package supports also messages in YAML files using `.yaml` or `.yml` extensions.
+- Messages can be divided to namespaced `<locale>/<namespace>.json` files.
+- The package also supports messages in YAML files using `.yaml` or `.yml` extensions.
 
 :::
 
@@ -327,5 +322,6 @@ You can inspect what each generated file has eaten, if you would like to know ho
 
 ## What Next?
 
+- [NextGlobeGen Playground](https://next-globe-gen-playground.vercel.app): Check out the example app.
 - [Configuration](./api-reference/configuration.mdx): Check out how you can modify the default functionality.
 - [API Reference](./api-reference/): See everything this package is capable of.
