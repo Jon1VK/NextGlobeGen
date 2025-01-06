@@ -108,21 +108,59 @@ function withMetadata(
   originContents: string,
   config: Config,
 ) {
-  const regExp = new RegExp(`export const metadata`);
-  if (!regExp.test(originContents)) {
-    return withGenerateMetadata(template, originRoute, originContents, config);
+  const staticMetadataRegExp = new RegExp(`export const metadata`);
+  const generateMetadataRegExp = new RegExp(
+    `export ((async )?function|const) generateMetadata`,
+  );
+  const hasStaticMetadata = staticMetadataRegExp.test(originContents);
+  const hasGenerateMetadata = generateMetadataRegExp.test(originContents);
+  const injectLanguageAlternatesMetadata =
+    isPageOriginRoute(originRoute) &&
+    !config.routes.skipLanguageAlternatesMetadata;
+  if (injectLanguageAlternatesMetadata) {
+    return withLanguageAlternatesMetadata(
+      template,
+      originRoute,
+      hasStaticMetadata,
+      hasGenerateMetadata,
+    );
   }
-  if (
-    !isPageOriginRoute(originRoute) ||
-    config.routes.skipLanguageAlternatesMetadata
-  ) {
+  if (hasGenerateMetadata) {
+    return withGenerateFn(template, originContents, "generateMetadata");
+  }
+  if (hasStaticMetadata) {
     return withReExport(template, originContents, "metadata");
   }
+  return template;
+}
+
+function withLanguageAlternatesMetadata(
+  template: string,
+  originRoute: OriginRoute,
+  hasStaticMetadata: boolean,
+  hasGenerateMetadata: boolean,
+) {
+  const [staticMetadataImport, staticMetadata] = [
+    hasStaticMetadata && "metadata as metadataOrigin",
+    hasStaticMetadata && "metadataOrigin",
+  ];
+  const [generateMetadataImport, generatedMetadata] = [
+    hasGenerateMetadata && "generateMetadata as generateMetadataOrigin",
+    hasGenerateMetadata &&
+      `await generateMetadataOrigin({ ...props, locale: "${PATTERNS.locale}" }, parent)`,
+  ];
+  const metadataImport = generateMetadataImport || staticMetadataImport;
+  const metadata = generatedMetadata || staticMetadata || "{}";
   const routeName = getRouteName(originRoute.path);
   return template.concat(
     '\n\nimport { withLanguageAlternates } from "next-globe-gen";',
-    `\nimport { metadata as metadataOrigin } from "${PATTERNS.relativePath}";`,
-    `\n\nexport const metadata = withLanguageAlternates("${routeName}")(metadataOrigin);`,
+    metadataImport
+      ? `\nimport { ${metadataImport} } from "${PATTERNS.relativePath}";`
+      : "",
+    "\n\nexport async function generateMetadata(props, parent) {",
+    `\n\tsetLocale("${PATTERNS.locale}");`,
+    `\n\tconst metadata = ${metadata};`,
+    `\n\treturn withLanguageAlternates("${routeName}", await props.params)(metadata);\n}`,
   );
 }
 
@@ -131,33 +169,6 @@ function withReExport(template: string, originContents: string, name: string) {
   if (!regExp.test(originContents)) return template;
   return template.concat(
     `\n\nexport { ${name} } from "${PATTERNS.relativePath}";`,
-  );
-}
-
-function withGenerateMetadata(
-  template: string,
-  originRoute: OriginRoute,
-  originContents: string,
-  config: Config,
-) {
-  const regExp = new RegExp(
-    `export ((async )?function|const) generateMetadata`,
-  );
-  if (!regExp.test(originContents)) return template;
-  if (
-    !isPageOriginRoute(originRoute) ||
-    config.routes.skipLanguageAlternatesMetadata
-  ) {
-    return withGenerateFn(template, originContents, "generateMetadata");
-  }
-  const routeName = getRouteName(originRoute.path);
-  return template.concat(
-    '\n\nimport { withLanguageAlternates } from "next-globe-gen";',
-    `\nimport { generateMetadata as generateMetadataOrigin } from "${PATTERNS.relativePath}";`,
-    "\n\nexport async function generateMetadata(props, parent) {",
-    `\n\tsetLocale("${PATTERNS.locale}");`,
-    `\n\tconst metadata = await generateMetadataOrigin({ ...props, locale: "${PATTERNS.locale}" }, parent);`,
-    `\n\treturn withLanguageAlternates("${routeName}", await props.params)(metadata);\n}`,
   );
 }
 
