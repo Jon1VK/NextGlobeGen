@@ -1,5 +1,5 @@
 const segmentTranslations = {
-  fi: "lokale-parametri",
+  fi: "locale-parametri",
 };
 
 export default segmentTranslations;
