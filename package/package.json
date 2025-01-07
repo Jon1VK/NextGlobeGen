@@ -8,6 +8,16 @@
   "repository": {
     "url": "https://github.com/Jon1VK/NextGlobeGen"
   },
+  "keywords": [
+    "react",
+    "i18n",
+    "internationalization",
+    "localization",
+    "translate",
+    "translation",
+    "next",
+    "next.js"
+  ],
   "files": [
     "dist",
     "README.md",
