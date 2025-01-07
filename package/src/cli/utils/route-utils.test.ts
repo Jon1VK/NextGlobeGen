@@ -1,17 +1,15 @@
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test } from "vitest";
 import type { RouteType } from "../commands/generate/getOriginRoutes";
 import type { OriginRoute } from "../types";
 import { getRouteName, getRoutePath, isPageOriginRoute } from "./route-utils";
 
-const mocks = vi.hoisted((): { originRoute: OriginRoute } => {
-  return {
-    originRoute: {
-      type: "page",
-      path: "",
-      localizedPaths: {},
-    },
-  };
-});
+const mocks: { originRoute: OriginRoute } = {
+  originRoute: {
+    type: "page",
+    path: "",
+    localizedPaths: {},
+  },
+};
 
 describe("isPageOriginRoute()", () => {
   afterEach(() => {

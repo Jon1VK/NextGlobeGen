@@ -27,7 +27,7 @@ const rootLayoutTemplate = "".concat(
   'import { IntlProvider } from "next-globe-gen/client";\n',
   'import { clientMessages } from "next-globe-gen/messages";\n',
   `import Origin${PATTERNS.routeType} from "${PATTERNS.relativePath}";\n\n`,
-  `export default async function ${PATTERNS.routeType}(props) {\n`,
+  `export default function ${PATTERNS.routeType}(props) {\n`,
   `\tsetLocale("${PATTERNS.locale}");\n`,
   "\treturn (\n",
   `\t\t<IntlProvider locale="${PATTERNS.locale}" messages={clientMessages["${PATTERNS.locale}"]}>\n`,
@@ -202,12 +202,15 @@ const routeSegmentConfigs = [
   "alt",
   "size",
   "contentType",
-];
+] as const;
 
 function withRouteSegmentConfig(template: string, originContents: string) {
   let configs = "";
   routeSegmentConfigs.forEach((key) => {
-    const regExp = new RegExp(`export const ${key} = .*`);
+    const regExp =
+      key === "size"
+        ? new RegExp(`export const size = {[^}]*};?`)
+        : new RegExp(`export const ${key} = .*`);
     const match = originContents.match(regExp);
     if (!match) return;
     const config = match[0];

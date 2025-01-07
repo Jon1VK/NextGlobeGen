@@ -8,7 +8,7 @@ import { DEFAULT_CONFIG, mergeConfigs } from "./config";
 import { configNotFoundError, originDirNotFoundError } from "./errors";
 import {
   generateMessagesFile,
-  generateOutdirs,
+  generateOutDirs,
   generateSchemaFile,
 } from "./generateDistFiles";
 import { generateLocalizedRoutes } from "./generateLocalizedRoutes";
@@ -33,7 +33,7 @@ async function generateAction(args: { config: string; watch: boolean }) {
     throw originDirNotFoundError(config);
   }
   rmDirectory(config.routes.localizedDir);
-  generateOutdirs(config.routes.localizedDir);
+  generateOutDirs(config.routes.localizedDir);
   await generateMessages(config);
   await generateRoutes(config);
   if (args.watch) {

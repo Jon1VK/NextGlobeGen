@@ -10,7 +10,8 @@ import {
 import { toPascalCase } from "~/cli/utils/string-utils";
 import { getMessages } from "./getMessages";
 
-const OUT_DIR = "./.next-globe-gen";
+export const OUT_DIR = "./.next-globe-gen";
+export const TYPES_DECLARATION_FILE = "next-globe-gen.d.ts";
 
 const template = (type: "schema" | "messages") => {
   return "".concat(
@@ -24,7 +25,7 @@ const template = (type: "schema" | "messages") => {
   );
 };
 
-export function generateOutdirs(localizedDir: string) {
+export function generateOutDirs(localizedDir: string) {
   makeDirectory(OUT_DIR);
   writeFileSync(path.join(OUT_DIR, ".gitignore"), "*");
   writeFileSync(path.join(OUT_DIR, ".prettierignore"), "*");
@@ -40,8 +41,7 @@ function generateDeclarationFile() {
     '/// <reference path="./.next-globe-gen/schema.ts" />\n',
     '/// <reference path="./.next-globe-gen/messages.ts" />\n',
   );
-  const declarationFilePath = "next-globe-gen.d.ts";
-  writeFileSync(declarationFilePath, declarationFileContent);
+  writeFileSync(TYPES_DECLARATION_FILE, declarationFileContent);
 }
 
 export function generateSchemaFile(
