@@ -2,15 +2,21 @@
 sidebar_position: 4
 ---
 
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
 # Plugin
 
-The NextGlobeGen Plugin needs to be enabled in `next.config.ts` file. It sets up the required import aliases for the package to work correctly. It also regenerates the localized routes, messages and the types for the package when changes are made in the source code.
+The NextGlobeGen Plugin needs to be enabled in Next.js configuration file. It sets up the required import aliases for the package to work correctly. It also regenerates the localized routes, messages and the types for the package when changes are made in the source code.
 
 ## withNextGlobeGenPlugin
 
 This function creates the wrapper function for your Next.js config object.
 
-```tsx title="next.config.ts"
+<Tabs>
+<TabItem value="next.config.ts">
+
+```ts
 import type { NextConfig } from "next";
 import { withNextGlobeGenPlugin } from "next-globe-gen/plugin";
 
@@ -22,6 +28,43 @@ const nextConfig: NextConfig = {
 
 export default withNextGlobeGen(nextConfig);
 ```
+
+</TabItem>
+<TabItem value="next.config.mjs">
+
+```ts
+// @ts-check
+import { withNextGlobeGenPlugin } from "next-globe-gen/plugin";
+
+const withNextGlobeGen = withNextGlobeGenPlugin();
+
+/** @type {import('next').NextConfig} */
+const nextConfig: NextConfig = {
+  /* Next.js config options here */
+};
+
+export default withNextGlobeGen(nextConfig);
+```
+
+</TabItem>
+<TabItem value="next.config.js">
+
+```ts
+// @ts-check
+const { withNextGlobeGenPlugin } = require("next-globe-gen/plugin");
+
+const withNextGlobeGen = withNextGlobeGenPlugin();
+
+/** @type {import('next').NextConfig} */
+const nextConfig: NextConfig = {
+  /* Next.js config options here */
+};
+
+module.exports = withNextGlobeGen(nextConfig);
+```
+
+</TabItem>
+</Tabs>
 
 ### Parameters
 
