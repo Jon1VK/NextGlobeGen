@@ -1,8 +1,0 @@
-{
-  "extends": "@docusaurus/tsconfig",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "verbatimModuleSyntax": true
-  },
-  "exclude": [".docusaurus", "build"]
-}
