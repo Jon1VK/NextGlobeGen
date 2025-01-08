@@ -1,9 +1,9 @@
 import { readdir } from "fs/promises";
 import { afterEach, describe, expect, test } from "vitest";
+import { getExpectedOriginRoutes } from "~/__mocks__/getExpectedOriginRoutes";
 import { rmDirectory } from "~/cli/utils/fs-utils";
 import { DEFAULT_CONFIG, mergeConfigs } from "./config";
 import { generateLocalizedRoutes } from "./generateLocalizedRoutes";
-import { getExpectedOriginRoutes } from "./getOriginRoutes.test";
 
 const LOCALIZED_DIR = "./generate-localized-routes-test";
 

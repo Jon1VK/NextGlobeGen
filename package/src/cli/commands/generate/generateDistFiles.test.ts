@@ -1,6 +1,7 @@
 import { readFileSync, rmSync } from "fs";
 import path from "path";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { getExpectedOriginRoutes } from "~/__mocks__/getExpectedOriginRoutes";
 import { isDirectory, isFile, rmDirectory } from "~/cli/utils/fs-utils";
 import { DEFAULT_CONFIG, mergeConfigs } from "./config";
 import {
@@ -10,7 +11,6 @@ import {
   OUT_DIR,
   TYPES_DECLARATION_FILE,
 } from "./generateDistFiles";
-import { getExpectedOriginRoutes } from "./getOriginRoutes.test";
 
 const LOCALIZED_DIR = `.generate-dist-files-test`;
 
