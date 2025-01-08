@@ -41,7 +41,13 @@ export const demos: {
   },
   {
     titleKey: "components",
-    items: [],
+    items: [
+      {
+        route: "/link-component",
+        titleKey: "link-component",
+        descriptionKey: "link-component",
+      },
+    ],
   },
   {
     titleKey: "hooks",

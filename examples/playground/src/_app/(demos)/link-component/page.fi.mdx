@@ -1,0 +1,14 @@
+import { Link } from "next-globe-gen";
+
+# Link-komponentti
+
+`<Link>` on React-komponentti, joka laajentaa Next.js:n [`<Link>`](https://nextjs.org/docs/app/api-reference/components/link)-komponenttia mahdollistaen kielitietoisen navigoinnin paikallistettuihin polkunimiin. Se on ensisijainen tapa navigoida paikallistettujen reittien välillä.
+
+Kokeile seuraavia esimerkkejä:
+
+{/* prettier-ignore */}
+- <Link href="/">Etusivu</Link>
+- <Link href="/" locale="en">Etusivu (englanniksi)</Link>
+- <Link href={{ pathname: "/link-component", query: { q: "query" } }}>Kyselyparametrilla</Link>
+- <Link href="/[...catchAll]" params={{ catchAll: ["a", "b", "c"] }}>Dynaamisilla parametreilla</Link>
+{/* prettier-ignore-end */}
