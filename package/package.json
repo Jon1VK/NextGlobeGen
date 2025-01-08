@@ -26,6 +26,7 @@
   "bin": {
     "next-globe-gen": "./dist/cli.js"
   },
+  "types": "./dist/index.client.d.ts",
   "exports": {
     ".": {
       "react-server": {
