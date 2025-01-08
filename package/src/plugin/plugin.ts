@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import {
+import type {
   PHASE_DEVELOPMENT_SERVER,
   PHASE_EXPORT,
   PHASE_PRODUCTION_BUILD,
