@@ -76,18 +76,20 @@
     "@types/figlet": "^1.7.0",
     "@types/negotiator": "^0.6.3",
     "@types/node": "^22.10.2",
-    "@types/react": "^19.0.2",
+    "@types/react": "18.2.0",
     "@vitest/coverage-v8": "^2.1.8",
     "eslint": "^9.17.0",
-    "next": "^15.1.2",
+    "next": "14.0.0",
     "prettier": "^3.4.2",
-    "react": "^19.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.2",
     "vitest": "^2.1.8"
   },
   "peerDependencies": {
-    "next": "^15.0.0",
-    "react": "^19.0.0"
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

@@ -28,9 +28,9 @@ jobs:
       - run: cp ../README.md ../LICENSE ./
       - run: sed -i "s/0.0.0-placeholder/$GITHUB_REF_NAME/" package.json
       - if: ${{ github.event.release.prerelease == true }}
-        run: echo "TAG=canary" >> "$GITHUB_ENV"
+        run: echo "TAG=next-14-canary" >> "$GITHUB_ENV"
       - if: ${{ github.event.release.prerelease == false }}
-        run: echo "TAG=latest" >> "$GITHUB_ENV"
+        run: echo "TAG=next-14" >> "$GITHUB_ENV"
       - run: pnpm publish --no-git-checks --access public --tag $TAG
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
