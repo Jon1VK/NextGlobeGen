@@ -8,7 +8,7 @@ export default function Page() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-xl font-medium ">{homeT("title")}</h1>
+        <h1 className="text-xl font-medium text-white">{homeT("title")}</h1>
         <p className="mt-4 text-sm text-gray-300">{homeT("description")}</p>
       </div>
 
