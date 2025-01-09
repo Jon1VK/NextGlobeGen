@@ -16,7 +16,19 @@ type Phase =
   | typeof PHASE_DEVELOPMENT_SERVER
   | typeof PHASE_TEST;
 
-export function withNextGlobeGenPlugin(configPath = "./i18n.config.ts") {
+/**
+ * This function creates the wrapper function for your Next.js config object.
+ *
+ * @example
+ * import createNextGlobeGenPlugin from "next-globe-gen/middleware";
+ * const withNextGlobeGen = createNextGlobeGenPlugin();
+ * export default withNextGlobeGen({
+ *   // Next.js config options here
+ * });
+ */
+export default function createNextGlobeGenPlugin(
+  configPath = "./i18n.config.ts",
+) {
   return function withNextGlobeGen(config: NextConfig) {
     return (phase: Phase) => {
       useGenerator(configPath, phase);
@@ -84,3 +96,8 @@ function addAliases(nextConfig: NextConfig, aliases: Record<string, string>) {
     };
   }
 }
+
+/**
+ * @deprecated Will be removed in the next major release. Use default export instead.
+ */
+export const withNextGlobeGenPlugin = createNextGlobeGenPlugin;
