@@ -11,7 +11,6 @@ import { useLocale, useMessages } from "./IntlProvider";
 import { notSupported } from "./notSupported";
 
 export type * from "next-globe-gen/messages";
-export { messages } from "next-globe-gen/messages";
 export type * from "next-globe-gen/schema";
 export { schema } from "next-globe-gen/schema";
 export type { UserConfig as Config } from "../../cli/types";
