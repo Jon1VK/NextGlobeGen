@@ -47,6 +47,11 @@ export const demos: {
         titleKey: "link-component",
         descriptionKey: "link-component",
       },
+      {
+        route: "/form-component",
+        titleKey: "form-component",
+        descriptionKey: "form-component",
+      },
     ],
   },
   {

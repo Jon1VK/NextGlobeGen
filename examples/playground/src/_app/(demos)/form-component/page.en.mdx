@@ -1,0 +1,30 @@
+import { Form } from "next-globe-gen";
+
+# Form Component
+
+`<Form>` is a React component that extends the Next.js [`<Form>`](https://nextjs.org/docs/app/api-reference/components/form) component so that the Next.js Form component enhancements work also with localized pathnames.
+
+Try the following example:
+
+{/* prettier-ignore */}
+<Form href="/form-component">
+  <div className="flex flex-col gap-4">
+    <input
+      type="text"
+      name="q"
+      placeholder="Search query"
+      className="bg-gray-200 text-gray-900 rounded-lg"
+    />
+    <div className="flex gap-2">
+      <button
+        type="submit"
+        className="rounded-lg bg-gray-700 px-3 py-1 text-sm font-medium text-gray-100 no-underline hover:bg-gray-500 hover:text-white"
+      >Submit</button>
+      <button
+        type="reset"
+        className="rounded-lg bg-gray-700 px-3 py-1 text-sm font-medium text-gray-100 no-underline hover:bg-gray-500 hover:text-white"
+      >Reset</button>
+    </div>
+  </div>
+</Form>
+{/* prettier-ignore-end */}

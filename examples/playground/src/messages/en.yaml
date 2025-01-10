@@ -1,6 +1,7 @@
 common:
   docs: Docs
   code: Code
+  loading: Loading
   client:
     menu: Menu
 home:
@@ -19,12 +20,14 @@ demos:
       not-found: Localized 404 page
       locale-param: Locale Param
       link-component: Link Component
+      form-component: Form Component
   descriptions:
     localized-pathnames: Translate the pathnames in the URL for the pages.
     markdown: Write the localized content of the pages as MDX.
     not-found: Check out the docs and code example for how to implement a localized 404 page.
     locale-param: Use the locale param outside of rendering contexts.
     link-component: Navigate to localized pathnames with '<Link>' component.
+    form-component: Use '<Form>' component to navigate to localized pathnames with inputs as a query.
   content:
     localized-pathnames: >-
       <p>The pathnames in the url often need to be translated to improve SEO. In

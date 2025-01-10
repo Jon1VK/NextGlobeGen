@@ -1,6 +1,7 @@
 common:
   docs: Dokumentaatio
   code: Koodi
+  loading: Ladataan
   client:
     menu: Valikko
 home:
@@ -19,12 +20,14 @@ demos:
       not-found: Lokalisoitu 404 sivu
       locale-param: Locale parametri
       link-component: Link komponentti
+      form-component: Form komponentti
   descriptions:
     localized-pathnames: Käännä sivujen URL-osoitteessa olevat polut.
     markdown: Kirjoita sivujen lokalisoitu sisältö MDX-muodossa.
     not-found: Tutustu dokumentaatioon ja koodiesimerkkiin lokalisoidun 404-sivun toteuttamiseksi.
     locale-param: Käytä locale-parametria renderöintikontekstien ulkopuolella.
     link-component: Navigoi lokalisoituihin polkuihin '<Link>' komponentin avulla.
+    form-component: Käytä '<Form>'-komponenttia navigoidaksesi paikallistettuihin polkunimiin syötteet kyselynä.
   content:
     localized-pathnames: >-
       <p>URL-osoitteiden polut täytyy usein kääntää hakukoneoptimoinnin (SEO)
