@@ -3,7 +3,7 @@ import Negotiator from "negotiator";
 import { schema, type Locale } from "next-globe-gen/schema";
 import { NextResponse, type NextRequest } from "next/server";
 import { compile } from "path-to-regexp";
-import { extractLocaleAndRoutePathname, matchRoute } from "~/utils/routes";
+import { matchRouteFactory } from "~/utils/matchRouteFactory";
 
 type MiddlewareOptions = {
   skipAlternateLinkHeader?: boolean;
@@ -61,11 +61,20 @@ export default function middleware(
   return response;
 }
 
+function extractLocaleAndRoutePathname(pathname: string) {
+  const regexp = new RegExp(`\\/(${schema.locales.join("|")})(\\/?.*)`);
+  const match = pathname.match(regexp);
+  if (!match) return [undefined, pathname] as const;
+  return [match[1] as Locale, match[2] || "/"] as const;
+}
+
 function localeMatcher(request: NextRequest) {
   const headers = Object.fromEntries(request.headers);
   const negotiator = new Negotiator({ headers });
   return match(negotiator.languages(), schema.locales, schema.defaultLocale);
 }
+
+const matchRoute = matchRouteFactory(() => schema);
 
 function getAlternativeLinks(locale: Locale, request: NextRequest) {
   const routeMatch = matchRoute(locale, request.nextUrl.pathname);

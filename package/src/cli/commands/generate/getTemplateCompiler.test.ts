@@ -41,12 +41,13 @@ const rootLayoutCompileResult = `
 import { setLocale } from "next-globe-gen";
 import { IntlProvider } from "next-globe-gen/client";
 import { clientMessages } from "next-globe-gen/messages";
+import { schema } from "next-globe-gen/schema";
 import OriginLayout from "../_app/layout";
 
 export default function Layout(props) {
 \tsetLocale("en");
 \treturn (
-\t\t<IntlProvider locale="en" messages={clientMessages["en"]}>
+\t\t<IntlProvider locale="en" schema={schema} messages={clientMessages["en"]}>
 \t\t\t<OriginLayout {...props} locale="en" />
 \t\t</IntlProvider>
 \t);

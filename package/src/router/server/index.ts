@@ -1,20 +1,22 @@
 import { messages } from "next-globe-gen/messages";
+import { schema } from "next-globe-gen/schema";
 import { FormFactory } from "../shared/FormFactory";
 import { LinkFactory } from "../shared/LinkFactory";
-import { useHrefFactory } from "../shared/useHrefFactory";
+import { createHrefFactory, useHrefFactory } from "../shared/useHrefFactory";
 import { useTranslationsFactory } from "../shared/useTranslationsFactory";
 import { useLocale } from "./LocaleStore";
 import { notSupported } from "./notSupported";
 
 export { messages } from "next-globe-gen/messages";
 export { schema } from "next-globe-gen/schema";
-export { createHref } from "../shared/useHrefFactory";
 export * from "./createTranslator";
 export * from "./LocaleStore";
 export * from "./redirect";
 export * from "./withLanguageAlternates";
 
-export const useHref = useHrefFactory(useLocale);
+export const useSchema = () => schema;
+export const useHref = useHrefFactory(useLocale, useSchema);
+export const createHref = createHrefFactory(schema);
 export const Link = LinkFactory(useHref);
 export const Form = FormFactory(useHref);
 const useMessages = () => messages[useLocale()];
@@ -22,6 +24,7 @@ export const useTranslations = useTranslationsFactory(useLocale, useMessages);
 
 // Export get versions of functions for async server usage
 export const getLocale = useLocale;
+export const getSchema = useSchema;
 export const getHref = useHref;
 export const getTranslations = useTranslations;
 
