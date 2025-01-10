@@ -7,24 +7,25 @@ import { FormFactory } from "../shared/FormFactory";
 import { LinkFactory } from "../shared/LinkFactory";
 import { useHrefFactory } from "../shared/useHrefFactory";
 import { useTranslationsFactory } from "../shared/useTranslationsFactory";
-import { useLocale, useMessages } from "./IntlProvider";
+import { useLocale, useMessages, useSchema } from "./IntlProvider";
 import { notSupported } from "./notSupported";
+import { useRouteFactory } from "./useRoute";
 
 export type * from "next-globe-gen/messages";
 export type * from "next-globe-gen/schema";
-export { schema } from "next-globe-gen/schema";
 export type { UserConfig as Config } from "../../cli/types";
-export { IntlProvider, useLocale } from "./IntlProvider";
-export * from "./useRoute";
+export { IntlProvider, useLocale, useSchema } from "./IntlProvider";
 export * from "./useRouter";
 
-export const useHref = useHrefFactory(useLocale);
+export const useHref = useHrefFactory(useLocale, useSchema);
+export const useRoute = useRouteFactory(useSchema);
 export const Link = LinkFactory(useHref);
 export const Form = FormFactory(useHref);
 export const useTranslations = useTranslationsFactory(useLocale, useMessages);
 
 // Server functions that are not supported on client
 export const getLocale = notSupported("getLocale") as typeof useLocale;
+export const getSchema = notSupported("getLocale") as typeof useSchema;
 export const getHref = notSupported("getHref") as typeof useHref;
 export const createHref = notSupported("createHref") as typeof useHref;
 export const getTranslations = notSupported(

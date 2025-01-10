@@ -1,9 +1,9 @@
-import {
-  schema,
-  type Locale,
-  type Route,
-  type RouteParams,
-  type StaticRoute,
+import type {
+  Locale,
+  Route,
+  RouteParams,
+  Schema,
+  StaticRoute,
 } from "next-globe-gen/schema";
 import { compile } from "path-to-regexp";
 
@@ -23,10 +23,14 @@ export type UseHrefArgs<R extends Route> =
       : [route: R, params: RouteParams<R>, locale?: Locale])
   | [options: HrefOptions<R>, _?: undefined, __?: undefined];
 
-export function useHrefFactory(useLocale: () => Locale) {
+export function useHrefFactory(
+  useLocale: () => Locale,
+  useSchema: () => Schema,
+) {
   return function useHref<R extends Route>(...args: UseHrefArgs<R>) {
+    const schema = useSchema();
     const { pathname, params, query, locale } = extractHrefOptions(args);
-    return createHref<Route>({
+    return createHrefFactory(schema)({
       pathname,
       params,
       query,
@@ -45,18 +49,20 @@ type CreateHrefArgs<R extends Route> =
       : [route: R, params: RouteParams<R>, locale: Locale])
   | [options: CreateHrefOptions<R>, _?: undefined, __?: undefined];
 
-export function createHref<R extends Route>(...args: CreateHrefArgs<R>) {
-  const { pathname, params, query, locale } = extractHrefOptions(
-    args as UseHrefArgs<R>,
-  );
-  if (!locale) return withQuery(pathname, query);
-  const localizedPaths = schema.routes[pathname];
-  if (!localizedPaths) return withQuery(pathname, query);
-  const path = localizedPaths[locale];
-  if (!path) return withQuery(pathname, query);
-  const compiledPath = compile(path)(params);
-  if (!query) return compiledPath;
-  return withQuery(compiledPath, query);
+export function createHrefFactory(schema: Schema) {
+  return function createHref<R extends Route>(...args: CreateHrefArgs<R>) {
+    const { pathname, params, query, locale } = extractHrefOptions(
+      args as UseHrefArgs<R>,
+    );
+    if (!locale) return withQuery(pathname, query);
+    const localizedPaths = schema.routes[pathname];
+    if (!localizedPaths) return withQuery(pathname, query);
+    const path = localizedPaths[locale];
+    if (!path) return withQuery(pathname, query);
+    const compiledPath = compile(path)(params);
+    if (!query) return compiledPath;
+    return withQuery(compiledPath, query);
+  };
 }
 
 function withQuery(pathname: string, query?: Record<string, string>) {

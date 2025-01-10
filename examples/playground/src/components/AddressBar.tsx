@@ -3,9 +3,9 @@
 import clsx from "clsx";
 import {
   Link,
-  schema,
   useLocale,
   useRoute,
+  useSchema,
   type RouteParams,
 } from "next-globe-gen";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
@@ -13,6 +13,7 @@ import React, { Fragment, Suspense } from "react";
 
 function LanguageSwitcher() {
   const activeLocale = useLocale();
+  const schema = useSchema();
   const route = useRoute();
   const params = useParams<RouteParams<typeof route>>();
 
