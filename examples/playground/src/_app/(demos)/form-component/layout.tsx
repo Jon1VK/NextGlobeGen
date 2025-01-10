@@ -16,7 +16,7 @@ export default function MarkdownLayout({ children }: { children: ReactNode }) {
   return (
     <>
       {children}
-      <div className="flex gap-2">
+      <div className="flex gap-2 mt-4">
         <ExternalLink href="https://next-globe-gen.dev/docs/api-reference/components#form">
           {t("docs")}
         </ExternalLink>
