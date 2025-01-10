@@ -1,7 +1,6 @@
 common:
   docs: Dokumentaatio
   code: Koodi
-  loading: Ladataan
   client:
     menu: Valikko
 home:
