@@ -5,7 +5,7 @@ import {
   type RouteParams,
   type StaticRoute,
 } from "next-globe-gen/schema";
-import { createHref } from "./useHrefFactory";
+import { createHref } from ".";
 
 type WithLanguageAlternatesArgs<R extends Route> = R extends StaticRoute
   ? [route: R, _?: undefined]

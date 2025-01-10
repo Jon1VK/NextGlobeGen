@@ -9,10 +9,10 @@ import { notSupported } from "./notSupported";
 export { messages } from "next-globe-gen/messages";
 export { schema } from "next-globe-gen/schema";
 export { createHref } from "../shared/useHrefFactory";
-export * from "../shared/withLanguageAlternates";
 export * from "./createTranslator";
 export * from "./LocaleStore";
 export * from "./redirect";
+export * from "./withLanguageAlternates";
 
 export const useHref = useHrefFactory(useLocale);
 export const Link = LinkFactory(useHref);

@@ -14,8 +14,6 @@ export type * from "next-globe-gen/messages";
 export type * from "next-globe-gen/schema";
 export { schema } from "next-globe-gen/schema";
 export type { UserConfig as Config } from "../../cli/types";
-export { createHref } from "../shared/useHrefFactory";
-export * from "../shared/withLanguageAlternates";
 export { IntlProvider, useLocale } from "./IntlProvider";
 export * from "./useRoute";
 export * from "./useRouter";
@@ -28,6 +26,7 @@ export const useTranslations = useTranslationsFactory(useLocale, useMessages);
 // Server functions that are not supported on client
 export const getLocale = notSupported("getLocale") as typeof useLocale;
 export const getHref = notSupported("getHref") as typeof useHref;
+export const createHref = notSupported("createHref") as typeof useHref;
 export const getTranslations = notSupported(
   "getTranslations",
 ) as typeof useTranslations;
