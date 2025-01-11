@@ -84,9 +84,9 @@ Enable the NextGlobeGen plugin in the Next.js configuration file.
 
 ```ts
 import type { NextConfig } from "next";
-import { withNextGlobeGenPlugin } from "next-globe-gen/plugin";
+import createNextGlobeGenPlugin from "next-globe-gen/plugin";
 
-const withNextGlobeGen = withNextGlobeGenPlugin();
+const withNextGlobeGen = createNextGlobeGenPlugin();
 
 const nextConfig: NextConfig = {
   /* Next.js config options here */
@@ -100,9 +100,9 @@ export default withNextGlobeGen(nextConfig);
 
 ```ts
 // @ts-check
-import { withNextGlobeGenPlugin } from "next-globe-gen/plugin";
+import createNextGlobeGenPlugin from "next-globe-gen/plugin";
 
-const withNextGlobeGen = withNextGlobeGenPlugin();
+const withNextGlobeGen = createNextGlobeGenPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
@@ -117,9 +117,9 @@ export default withNextGlobeGen(nextConfig);
 
 ```ts
 // @ts-check
-const { withNextGlobeGenPlugin } = require("next-globe-gen/plugin");
+const createNextGlobeGenPlugin = require("next-globe-gen/plugin");
 
-const withNextGlobeGen = withNextGlobeGenPlugin();
+const withNextGlobeGen = createNextGlobeGenPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {

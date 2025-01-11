@@ -9,7 +9,7 @@ import Tabs from "@theme/Tabs";
 
 The NextGlobeGen Plugin needs to be enabled in Next.js configuration file. It sets up the required import aliases for the package to work correctly. It also regenerates the localized routes, messages and the types for the package when changes are made in the source code.
 
-## withNextGlobeGenPlugin
+## createNextGlobeGenPlugin
 
 This function creates the wrapper function for your Next.js config object.
 
@@ -18,9 +18,9 @@ This function creates the wrapper function for your Next.js config object.
 
 ```ts
 import type { NextConfig } from "next";
-import { withNextGlobeGenPlugin } from "next-globe-gen/plugin";
+import createNextGlobeGenPlugin from "next-globe-gen/plugin";
 
-const withNextGlobeGen = withNextGlobeGenPlugin();
+const withNextGlobeGen = createNextGlobeGenPlugin();
 
 const nextConfig: NextConfig = {
   /* Next.js config options here */
@@ -34,9 +34,9 @@ export default withNextGlobeGen(nextConfig);
 
 ```ts
 // @ts-check
-import { withNextGlobeGenPlugin } from "next-globe-gen/plugin";
+import createNextGlobeGenPlugin from "next-globe-gen/plugin";
 
-const withNextGlobeGen = withNextGlobeGenPlugin();
+const withNextGlobeGen = createNextGlobeGenPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
@@ -51,9 +51,9 @@ export default withNextGlobeGen(nextConfig);
 
 ```ts
 // @ts-check
-const { withNextGlobeGenPlugin } = require("next-globe-gen/plugin");
+const createNextGlobeGenPlugin = require("next-globe-gen/plugin");
 
-const withNextGlobeGen = withNextGlobeGenPlugin();
+const withNextGlobeGen = createNextGlobeGenPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
@@ -69,7 +69,7 @@ module.exports = withNextGlobeGen(nextConfig);
 ### Parameters
 
 ```tsx
-withNextGlobeGenPlugin(configPath?: string);
+createNextGlobeGenPlugin(configPath?: string);
 ```
 
 | Param        | Type     | Required | Description                        | Default            |
@@ -78,4 +78,4 @@ withNextGlobeGenPlugin(configPath?: string);
 
 ### Returns
 
-`withNextGlobeGenPlugin` returns a function, which should be called with your Next.js config object. It returns the given config object with few added import aliases.
+`createNextGlobeGenPlugin` returns a function, which should be called with your Next.js config object. It returns the given config object with few added import aliases.
