@@ -20,7 +20,7 @@ type Phase =
  * This function creates the wrapper function for your Next.js config object.
  *
  * @example
- * import createNextGlobeGenPlugin from "next-globe-gen/middleware";
+ * import createNextGlobeGenPlugin from "next-globe-gen/plugin";
  * const withNextGlobeGen = createNextGlobeGenPlugin();
  * export default withNextGlobeGen({
  *   // Next.js config options here
