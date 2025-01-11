@@ -5,8 +5,9 @@ import type {
   PrefetchOptions,
 } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter as useNextRouter } from "next/navigation";
-import { useHref } from ".";
+import { useLocale, useSchema } from ".";
 import {
+  createHrefFactory,
   extractHrefOptions,
   type HrefOptions,
   type ParamsOption,
@@ -15,7 +16,7 @@ import {
 
 type RouterArgs<
   R extends Route,
-  N extends NavigateOptions | PrefetchOptions = Partial<
+  N extends NavigateOptions | Partial<PrefetchOptions> = Partial<
     NavigateOptions & PrefetchOptions
   >,
   O = N & { locale?: Locale } & ParamsOption<R>,
@@ -30,20 +31,28 @@ type RouterArgs<
 
 export function useRouter() {
   const router = useNextRouter();
+  const schema = useSchema();
+  const locale = useLocale();
+  const createHref = createHrefFactory(schema);
 
   function push<R extends Route>(...args: RouterArgs<R, NavigateOptions>) {
     const { hrefOpts, scroll } = extractRouterOptions(...args);
-    router.push(useHref(hrefOpts), { scroll });
+    const opts = { ...hrefOpts, locale: hrefOpts.locale ?? locale };
+    router.push(createHref(opts), { scroll });
   }
 
   function replace<R extends Route>(...args: RouterArgs<R, NavigateOptions>) {
     const { hrefOpts, scroll } = extractRouterOptions(...args);
-    router.replace(useHref(hrefOpts), { scroll });
+    const opts = { ...hrefOpts, locale: hrefOpts.locale ?? locale };
+    router.replace(createHref(opts), { scroll });
   }
 
-  function prefetch<R extends Route>(...args: RouterArgs<R, PrefetchOptions>) {
+  function prefetch<R extends Route>(
+    ...args: RouterArgs<R, Partial<PrefetchOptions>>
+  ) {
     const { hrefOpts, kind } = extractRouterOptions(...args);
-    router.prefetch(useHref(hrefOpts), kind && { kind });
+    const opts = { ...hrefOpts, locale: hrefOpts.locale ?? locale };
+    router.prefetch(createHref(opts), kind && { kind });
   }
 
   return {
