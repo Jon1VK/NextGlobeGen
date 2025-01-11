@@ -20,6 +20,16 @@ demos:
       locale-param: Locale parametri
       link-component: Link komponentti
       form-component: Form komponentti
+      use-locale: useLocale
+      use-translations: useTranslations
+      use-href: useHref
+      use-route: useRoute
+      use-router: useRouter
+    useRouter:
+      homepage: Kotisivu
+      homepageAlt: Kotisivu (englanniksi)
+      withQuery: Kyselyparametrilla
+      withDynamicParams: Dynaamisilla parametreilla
   descriptions:
     localized-pathnames: Käännä sivujen URL-osoitteessa olevat polut.
     markdown: Kirjoita sivujen lokalisoitu sisältö MDX-muodossa.
@@ -27,6 +37,11 @@ demos:
     locale-param: Käytä locale-parametria renderöintikontekstien ulkopuolella.
     link-component: Navigoi lokalisoituihin polkuihin '<Link>' komponentin avulla.
     form-component: Käytä '<Form>'-komponenttia navigoidaksesi paikallistettuihin polkunimiin syötteet kyselynä.
+    use-locale: useLocale-hook palauttaa nykyisen kielen.
+    use-translations: Renderöi viestit nykyisellä kielellä.
+    use-href: Rakenna reittien paikallistettuja href-osoitteita.
+    use-route: useRoute-hook palauttaa sivun nykyisen reitin.
+    use-router: Navigoi paikallistettuihin polkunimiin ohjelmallisesti.
   content:
     localized-pathnames: >-
       <p>URL-osoitteiden polut täytyy usein kääntää hakukoneoptimoinnin (SEO)

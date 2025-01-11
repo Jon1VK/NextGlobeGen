@@ -56,7 +56,33 @@ export const demos: {
   },
   {
     titleKey: "hooks",
-    items: [],
+    items: [
+      {
+        route: "/use-locale",
+        titleKey: "use-locale",
+        descriptionKey: "use-locale",
+      },
+      {
+        route: "/use-translations",
+        titleKey: "use-translations",
+        descriptionKey: "use-translations",
+      },
+      {
+        route: "/use-href",
+        titleKey: "use-href",
+        descriptionKey: "use-href",
+      },
+      {
+        route: "/use-route",
+        titleKey: "use-route",
+        descriptionKey: "use-route",
+      },
+      {
+        route: "/use-router",
+        titleKey: "use-router",
+        descriptionKey: "use-router",
+      },
+    ],
   },
   {
     titleKey: "misc",

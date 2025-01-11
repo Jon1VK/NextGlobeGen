@@ -83,7 +83,7 @@ function GlobalNavItem({
 }) {
   const t = useTranslations("demos.client.titles");
   const route = useRoute();
-  const isActive = route.startsWith(item.route) || !route;
+  const isActive = route === item.route;
 
   return (
     <Link

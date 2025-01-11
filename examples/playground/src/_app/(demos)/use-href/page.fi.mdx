@@ -1,0 +1,10 @@
+import { useHref } from "next-globe-gen";
+
+# useHref
+
+Jos tarvitset paikallistetun href-osoitteen, voit käyttää `useHref`-hookia. Tätä hookia käytetään taustalla muissa komponenteissa ja funktioissa, kuten `Link`-komponentissa.
+
+- Kotisivu: <code>{useHref("/")}</code>
+- Kotisivu (englanniksi): <code>{useHref("/", "en")}</code>
+- Kyselyparametrilla: <code>{useHref({ pathname: "/localized-pathnames", query: { q: "query" } })}</code>
+- Dynaamisilla parametreilla: <code>{useHref("/[...catchAll]", { catchAll: ["a", "b", "c"] })}</code>
