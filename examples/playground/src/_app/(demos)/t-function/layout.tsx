@@ -19,7 +19,7 @@ export default function MarkdownLayout({ children }: { children: ReactNode }) {
         <ExternalLink href="https://next-globe-gen.dev/docs/api-reference/functions#t-function">
           {t("common.docs")}
         </ExternalLink>
-        <ExternalLink href="https://github.com/Jon1VK/NextGlobeGen/tree/main/examples/playground/src/_app/t-function/TranslationsExample.tsx">
+        <ExternalLink href="https://github.com/Jon1VK/NextGlobeGen/tree/main/examples/playground/src/_app/(demos)/t-function/TranslationsExample.tsx">
           {t("common.code")}
         </ExternalLink>
       </div>
