@@ -25,6 +25,7 @@ demos:
       use-href: useHref
       use-route: useRoute
       use-router: useRouter
+      t-function: Translator Function
     useRouter:
       homepage: Homepage
       homepageAlt: Homepage (In Finnish)
@@ -38,10 +39,11 @@ demos:
     link-component: Navigate to localized pathnames with '<Link>' component.
     form-component: Use '<Form>' component to navigate to localized pathnames with inputs as a query.
     use-locale: The useLocale hook returns the current locale.
-    use-translations: Render messages in the current locale.
+    use-translations: Get the translator function for the given namespace.
     use-href: Construct localized hrefs of the routes.
     use-route: The useRoute hook returns the current route of the page.
     use-router: Navigate to localized pathnames programmatically.
+    t-function: Render messages in the current locale.
   content:
     localized-pathnames: >-
       <p>The pathnames in the url often need to be translated to improve SEO. In
@@ -49,3 +51,49 @@ demos:
       with special i18n.ts files. With this approach the route segment and
       it's localizations can be colocated.</p>
       <p>Try changing between languages and check the address bar.</p>
+  t-function:
+    simple: "Simple: message without any interpolations patterns."
+    withString: "String: {value}."
+    withNumber: "Number: {value, number}."
+    withInteger: "Integer: {value, number, integer}."
+    withCurrency: "Currency: {value, number, :: currency/USD}."
+    withPercent: "Percent: {value, number, percent}."
+    withDate: "Date: {value, date}."
+    withDateShort: "Short date: {value, date, short}."
+    withDateMedium: "Medium date: {value, date, medium}."
+    withDateLong: "Long date: {value, date, long}."
+    withDateFull: "Full date: {value, date, full}."
+    withTime: "Time: {value, time}."
+    withTimeShort: "Short time: {value, time, short}."
+    withTimeMedium: "Medium time: {value, time, medium}."
+    withTimeLong: "Long time: {value, time, long}."
+    withTimeFull: "Full time: {value, time, full}."
+    withRichText: "Rich text : <b>bold</b>."
+    escaped: "Escaped: '{interpolation}' '<b>Bold</b>' ''quoted''"
+    complex: >-
+      Complex: {gender_of_host, select, 
+      female {
+          {num_guests, plural, offset:1
+            =0 {<b>{host}</b> does not give a party.}
+            =1 {<b>{host}</b> invites <b>{guest}</b> to her party.}
+            =2 {<b>{host}</b> invites <b>{guest}</b> and one other person to her party.}
+            other {<b>{host}</b> invites <b>{guest}</b> and # other people to her party.}
+          }
+        }
+        male {
+          {num_guests, plural, offset:1
+            =0 {<b>{host}</b> does not give a party.}
+            =1 {<b>{host}</b> invites <b>{guest}</b> to his party.}
+            =2 {<b>{host}</b> invites <b>{guest}</b> and one other person to his party.}
+            other {<b>{host}</b> invites <b>{guest}</b> and # other people to his party.}
+          }
+        }
+        other {
+          {num_guests, plural, offset:1
+            =0 {<b>{host}</b> does not give a party.}
+            =1 {<b>{host}</b> invites <b>{guest}</b> to their party.}
+            =2 {<b>{host}</b> invites <b>{guest}</b> and one other person to their party.}
+            other {<b>{host}</b> invites <b>{guest}</b> and # other people to their party.}
+          }
+        }
+      }

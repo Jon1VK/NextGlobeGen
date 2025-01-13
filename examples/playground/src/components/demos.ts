@@ -37,7 +37,13 @@ export const demos: {
   },
   {
     titleKey: "messages",
-    items: [],
+    items: [
+      {
+        route: "/t-function",
+        titleKey: "t-function",
+        descriptionKey: "t-function",
+      },
+    ],
   },
   {
     titleKey: "components",

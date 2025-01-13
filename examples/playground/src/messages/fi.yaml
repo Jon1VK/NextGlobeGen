@@ -25,6 +25,7 @@ demos:
       use-href: useHref
       use-route: useRoute
       use-router: useRouter
+      t-function: Kääntäjäfunktio
     useRouter:
       homepage: Kotisivu
       homepageAlt: Kotisivu (englanniksi)
@@ -38,10 +39,11 @@ demos:
     link-component: Navigoi lokalisoituihin polkuihin '<Link>' komponentin avulla.
     form-component: Käytä '<Form>'-komponenttia navigoidaksesi paikallistettuihin polkunimiin syötteet kyselynä.
     use-locale: useLocale-hook palauttaa nykyisen kielen.
-    use-translations: Renderöi viestit nykyisellä kielellä.
+    use-translations: Käytä annetun nimiavaruuden kääntäjäfunktiota.
     use-href: Rakenna reittien paikallistettuja href-osoitteita.
     use-route: useRoute-hook palauttaa sivun nykyisen reitin.
     use-router: Navigoi paikallistettuihin polkunimiin ohjelmallisesti.
+    t-function: Renderöi viestit nykyisellä kielellä.
   content:
     localized-pathnames: >-
       <p>URL-osoitteiden polut täytyy usein kääntää hakukoneoptimoinnin (SEO)
@@ -50,3 +52,29 @@ demos:
       lähestymistavan avulla polun segmenttihakemisto ja sen paikalliset
       käännökset voivat sijaita samassa paikassa.</p>
       <p>Kokeile vaihtaa kielten välillä ja tarkista osoiterivi.</p>
+  t-function:
+    simple: "Yksinkertainen: viesti ilman interpolointikuvioita."
+    withString: "Merkkijono: {value}."
+    withNumber: "Numero: {value, number}."
+    withInteger: "Kokonaisluku: {value, number, integer}."
+    withCurrency: "Valuutta: {value, number, :: currency/USD}."
+    withPercent: "Prosentti: {value, number, percent}."
+    withDate: "Päivämäärä: {value, date}."
+    withDateShort: "Lyhyt päivämäärä: {value, date, short}."
+    withDateMedium: "Keskipitkä päivämäärä: {value, date, medium}."
+    withDateLong: "Pitkä päivämäärä: {value, date, long}."
+    withDateFull: "Täydellinen päivämäärä: {value, date, full}."
+    withTime: "Aika: {value, time}."
+    withTimeShort: "Lyhyt aika: {value, time, short}."
+    withTimeMedium: "Keskipitkä aika: {value, time, medium}."
+    withTimeLong: "Pitkä aika: {value, time, long}."
+    withTimeFull: "Täydellinen aika: {value, time, full}."
+    withRichText: "Rikastettu teksti: <b>lihavoitu</b>."
+    escaped: "Escapetettu: '{interpolation}' '<b>Lihavoitu</b>' ''lainausmerkit''"
+    complex: >-
+      Monimutkainen: {num_guests, plural, offset:1
+        =0 {<b>{host}</b> ei järjestä juhlia.}
+        =1 {<b>{host}</b> kutsuu henkilön <b>{guest}</b> juhliinsa.}
+        =2 {<b>{host}</b> kutsuu henkilön <b>{guest}</b> ja yhden muun henkilön juhliinsa.}
+        other {<b>{host}</b> kutsuu henkilön <b>{guest}</b> ja # muuta henkilöä juhliinsa.}
+      }
