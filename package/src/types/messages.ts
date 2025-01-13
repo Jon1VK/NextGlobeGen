@@ -86,64 +86,48 @@ type StripEscaped<S extends string> =
       : S;
 
 /**
- * Extract ICU message arguments from the given string.
+ * Extract ICU message arguments ang tags from the given string.
  */
-type ExtractArguments<S extends string> =
-  /* Handle {arg0,selectordinal,...}} since it has nested {} */
-  S extends `${infer A}{${infer B}}}${infer C}`
-    ? ExtractArguments<A> | _ExtractComplexArguments<B> | ExtractArguments<C>
-    : /* Handle interpolation arguments {arg}, {arg, number}, {arg, date, short}, etc. */
-      S extends `${infer A}{${infer B}}${infer C}`
-      ? ExtractArguments<A> | B | ExtractArguments<C>
-      : /* Handle tags <tag> */
-        S extends `${infer A}</${infer B}>${infer C}`
-        ? ExtractArguments<A> | `${B},tag` | ExtractArguments<C>
-        : never;
+type ExtractArgumentsAngTags<S extends string> =
+  | _ExtractArguments<S>
+  | _ExtractTags<S>;
 
-/**
- * Handle complex type argument extraction (i.e plural, select, and selectordinal) which
- * can have nested arguments.
- */
-type _ExtractComplexArguments<S extends string> =
-  /* Handle arg0,plural,... */
-  S extends `${infer A},plural,${infer B}`
-    ? ExtractArguments<`{${A},plural}`> | _ExtractNestedArguments<`${B}}`>
-    : /* Handle arg0,select,... */
-      S extends `${infer A},select,${infer B}`
-      ? ExtractArguments<`{${A},select}`> | _ExtractNestedArguments<`${B}}`>
-      : /* Handle arg0,selectordinal,... */
-        S extends `${infer A},selectordinal,${infer B}`
-        ?
-            | ExtractArguments<`{${A},selectordinal}`>
-            | _ExtractNestedArguments<`${B}}`>
-        : never;
+type ArgType = NumberArgType | DateArgType | StringArgType;
+type NumberArgType = "number" | "plural" | "selectordinal";
+type DateArgType = "date" | "time";
+type StringArgType = "string" | "select";
 
-/**
- * Extract nested arguments from complex types such as plural, select, and selectordinal.
- */
-type _ExtractNestedArguments<S extends string> =
-  S extends `${infer A}{${infer B}}${infer C}`
-    ?
-        | _ExtractNestedArguments<A>
-        | ExtractArguments<`${B}}`>
-        | _ExtractNestedArguments<C>
+type _ExtractArguments<S extends string> =
+  S extends `${string}{${infer Arg},${NumberArgType}${infer Rest}`
+    ? _ExtractNestedArguments<Arg, NumberArgType> | _ExtractArguments<Rest>
+    : S extends `${string}{${infer Arg},${DateArgType}${infer Rest}`
+      ? _ExtractNestedArguments<Arg, DateArgType> | _ExtractArguments<Rest>
+      : S extends `${string}{${infer Arg},${StringArgType}${infer Rest}`
+        ? _ExtractNestedArguments<Arg, StringArgType> | _ExtractArguments<Rest>
+        : S extends `${string}{${infer Arg}}${infer Rest}`
+          ?
+              | _ExtractNestedArguments<Arg, StringArgType>
+              | _ExtractArguments<Rest>
+          : never;
+
+type _ExtractNestedArguments<
+  S extends string,
+  T extends ArgType,
+> = S extends `${infer A}{${infer B}`
+  ? _ExtractArguments<`{${A}`> | _ExtractArguments<`${B},${T}`>
+  : `${S},${T}`;
+
+type _ExtractTags<S extends string> =
+  S extends `${string}</${infer Tag}>${infer Rest}`
+    ? `${Tag},tag` | _ExtractTags<Rest>
     : never;
-
-/**
- * Normalize extract arguments to either `name` or `name,type`.
- */
-type NormalizeArguments<TArg extends string> =
-  /* Handle "name,type,other args" */
-  TArg extends `${infer Name},${infer Type},${string}`
-    ? `${Name},${Type}`
-    : TArg;
 
 /**
  * Convert ICU type to TS type.
  */
-type Value<T extends string> = T extends "number" | "plural" | "selectordinal"
+type Value<T extends string> = T extends NumberArgType
   ? number
-  : T extends "date" | "time"
+  : T extends DateArgType
     ? Date
     : T extends "tag"
       ? (children: ReactNode) => ReactNode
@@ -165,5 +149,5 @@ type ArgumentsMap<S extends string> = {
  * Create an object mapping all ICU message arguments to their types.
  */
 export type MessageArguments<T extends string> = ArgumentsMap<
-  NormalizeArguments<ExtractArguments<StripEscaped<StripWhitespace<T>>>>
+  ExtractArgumentsAngTags<StripEscaped<StripWhitespace<T>>>
 >;
