@@ -72,7 +72,7 @@ demos:
     escaped: "Escaped: '{interpolation}' '<b>Bold</b>' ''quoted''"
     complex: >-
       Complex: {gender_of_host, select, 
-      female {
+        female {
           {num_guests, plural, offset:1
             =0 {<b>{host}</b> does not give a party.}
             =1 {<b>{host}</b> invites <b>{guest}</b> to her party.}
