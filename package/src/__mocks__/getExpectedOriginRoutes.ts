@@ -22,6 +22,14 @@ export const getExpectedOriginRoutes = (
       },
     },
     {
+      type: "layout",
+      path: "/(static)/layout.jsx",
+      localizedPaths: {
+        en: "/en/(static)/layout.jsx",
+        fi: `${prefix}/(static)/layout.jsx`,
+      },
+    },
+    {
       type: "markdown",
       path: "/(static)/privacy-policy/page.en.mdx",
       localizedPaths: {
@@ -33,14 +41,6 @@ export const getExpectedOriginRoutes = (
       path: "/(static)/privacy-policy/page.fi.mdx",
       localizedPaths: {
         fi: `${prefix}/(static)/tietosuojaseloste/page.tsx`,
-      },
-    },
-    {
-      type: "layout",
-      path: "/(static)/layout.jsx",
-      localizedPaths: {
-        en: "/en/(static)/layout.jsx",
-        fi: `${prefix}/(static)/layout.jsx`,
       },
     },
     {
@@ -57,6 +57,14 @@ export const getExpectedOriginRoutes = (
       localizedPaths: {
         en: "/en/[...catchAll]/page.jsx",
         fi: `${prefix}/[...catchAll]/page.jsx`,
+      },
+    },
+    {
+      type: "error",
+      path: "/error.tsx",
+      localizedPaths: {
+        en: "/en/error.tsx",
+        fi: `${prefix}/error.tsx`,
       },
     },
     {
@@ -100,6 +108,22 @@ export const getExpectedOriginRoutes = (
       },
     },
     {
+      type: "forbidden",
+      path: "/forbidden.tsx",
+      localizedPaths: {
+        en: "/en/forbidden.tsx",
+        fi: `${prefix}/forbidden.tsx`,
+      },
+    },
+    {
+      type: "icon",
+      path: "/icon.tsx",
+      localizedPaths: {
+        en: "/en/icon.tsx",
+        fi: `${prefix}/icon.tsx`,
+      },
+    },
+    {
       type: "not-found",
       path: "/images/[id]/not-found.tsx",
       localizedPaths: {
@@ -121,30 +145,6 @@ export const getExpectedOriginRoutes = (
       localizedPaths: {
         en: "/en/images/page.tsx",
         fi: `${prefix}/kuvat/page.tsx`,
-      },
-    },
-    {
-      type: "error",
-      path: "/error.tsx",
-      localizedPaths: {
-        en: "/en/error.tsx",
-        fi: `${prefix}/error.tsx`,
-      },
-    },
-    {
-      type: "forbidden",
-      path: "/forbidden.tsx",
-      localizedPaths: {
-        en: "/en/forbidden.tsx",
-        fi: `${prefix}/forbidden.tsx`,
-      },
-    },
-    {
-      type: "icon",
-      path: "/icon.tsx",
-      localizedPaths: {
-        en: "/en/icon.tsx",
-        fi: `${prefix}/icon.tsx`,
       },
     },
     {

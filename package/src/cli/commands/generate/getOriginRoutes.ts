@@ -98,9 +98,7 @@ function getAppRouterFiles(directory: string) {
     }
   };
   const filterFn = (v?: File) => !!v;
-  const priorityFn = (file: File): number => Number(file.type === "dir");
-  const sorterFn = (a: File, b: File) => priorityFn(b) - priorityFn(a);
-  return readdirSync(directory).map(mapFn).filter(filterFn).sort(sorterFn);
+  return readdirSync(directory).map(mapFn).filter(filterFn);
 }
 
 const I18N_FILE_NAMES = ["i18n.js", "i18n.ts"];
