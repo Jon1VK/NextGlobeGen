@@ -7,7 +7,12 @@ import { FormFactory } from "../shared/FormFactory";
 import { LinkFactory } from "../shared/LinkFactory";
 import { useHrefFactory } from "../shared/useHrefFactory";
 import { useTranslationsFactory } from "../shared/useTranslationsFactory";
-import { useLocale, useMessages, useSchema } from "./IntlProvider";
+import {
+  useFormatters,
+  useLocale,
+  useMessages,
+  useSchema,
+} from "./IntlProvider";
 import { notSupported } from "./notSupported";
 import { useRouteFactory } from "./useRoute";
 
@@ -21,7 +26,11 @@ export const useHref = useHrefFactory(useLocale, useSchema);
 export const useRoute = useRouteFactory(useSchema);
 export const Link = LinkFactory(useHref);
 export const Form = FormFactory(useHref);
-export const useTranslations = useTranslationsFactory(useLocale, useMessages);
+export const useTranslations = useTranslationsFactory(
+  useLocale,
+  useMessages,
+  useFormatters,
+);
 
 // Server functions that are not supported on client
 export const getLocale = notSupported("getLocale") as typeof useLocale;
