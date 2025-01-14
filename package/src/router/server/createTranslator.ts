@@ -7,6 +7,7 @@ import {
 } from "next-globe-gen/messages";
 import type { Locale } from "next-globe-gen/schema";
 import type { ReactNode } from "react";
+import { formatters } from "../shared/formatters";
 import { tImpl } from "../shared/useTranslationsFactory";
 
 export function createTranslator<N extends Namespace = undefined>(
@@ -26,6 +27,13 @@ export function createTranslator<N extends Namespace = undefined>(
     type TReturnType = ((children: ReactNode) => ReactNode) extends A[keyof A]
       ? ReactNode
       : string;
-    return tImpl({ messages, locale, namespace, key, args }) as TReturnType;
+    return tImpl({
+      messages,
+      formatters,
+      locale,
+      namespace,
+      key,
+      args,
+    }) as TReturnType;
   };
 }

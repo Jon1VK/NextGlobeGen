@@ -1,4 +1,4 @@
-import IntlMessageFormat from "intl-messageformat";
+import IntlMessageFormat, { type Options } from "intl-messageformat";
 import type {
   Message,
   MessageArguments,
@@ -12,11 +12,14 @@ import { cloneElement, type ReactNode } from "react";
 export function useTranslationsFactory(
   useLocale: () => Locale,
   useMessages: () => Messages[Locale] | undefined,
+  useFormatters: () => Options["formatters"],
 ) {
   return function useTranslations<N extends Namespace = undefined>(
     namespace?: N,
   ) {
     const locale = useLocale();
+    const messages = useMessages();
+    const formatters = useFormatters();
     return function t<
       K extends NamespaceKey<N>,
       A extends MessageArguments<Message<N, K>> = MessageArguments<
@@ -28,11 +31,17 @@ export function useTranslationsFactory(
         : [key: K, args: A]
     ) {
       const [key, args] = params;
-      const messages = useMessages();
       type TReturnType = ((children: ReactNode) => ReactNode) extends A[keyof A]
         ? ReactNode
         : string;
-      return tImpl({ messages, locale, namespace, key, args }) as TReturnType;
+      return tImpl({
+        messages,
+        formatters,
+        locale,
+        namespace,
+        key,
+        args,
+      }) as TReturnType;
     };
   };
 }
@@ -43,12 +52,14 @@ export function tImpl<
   A extends MessageArguments<Message<N, K>> = MessageArguments<Message<N, K>>,
 >({
   messages,
+  formatters,
   locale,
   namespace,
   key,
   args,
 }: {
   messages: Messages[DefaultLocale] | undefined;
+  formatters: Options["formatters"];
   locale: Locale;
   namespace: N;
   key: K;
@@ -61,7 +72,9 @@ export function tImpl<
   const isLiteralMessage = !/['{<]/.test(message);
   if (isLiteralMessage) return message;
   try {
-    const msgFormat = new IntlMessageFormat(message, locale);
+    const msgFormat = new IntlMessageFormat(message, locale, undefined, {
+      formatters,
+    });
     const keyedTagArgs = injectKeysToTagArgs(args);
     return msgFormat.format(keyedTagArgs);
   } catch (error) {

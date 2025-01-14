@@ -1,5 +1,6 @@
 import { messages } from "next-globe-gen/messages";
 import { schema } from "next-globe-gen/schema";
+import { formatters } from "../shared/formatters";
 import { FormFactory } from "../shared/FormFactory";
 import { LinkFactory } from "../shared/LinkFactory";
 import { createHrefFactory, useHrefFactory } from "../shared/useHrefFactory";
@@ -20,7 +21,12 @@ export const createHref = createHrefFactory(schema);
 export const Link = LinkFactory(useHref);
 export const Form = FormFactory(useHref);
 const useMessages = () => messages[useLocale()];
-export const useTranslations = useTranslationsFactory(useLocale, useMessages);
+const useFormatters = () => formatters;
+export const useTranslations = useTranslationsFactory(
+  useLocale,
+  useMessages,
+  useFormatters,
+);
 
 // Export get versions of functions for async server usage
 export const getLocale = useLocale;
