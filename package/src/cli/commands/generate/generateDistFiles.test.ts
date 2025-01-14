@@ -57,7 +57,48 @@ describe("generateOutDirs()", () => {
 });
 
 const expectedSchemaFileContents = `
-export const schema = {"locales":["fi","en"],"defaultLocale":"fi","prefixDefaultLocale":true,"routes":{"/about":{"en":"/en/about-the-site","fi":"/fi/tietoa-sivustosta"},"/privacy-policy":{"en":"/en/privacy-policy","fi":"/fi/tietosuojaseloste"},"/[...catchAll]":{"en":"/en/*catchAll","fi":"/fi/*catchAll"},"/feed/images/[id]":{"en":"/en/feed/images/:id","fi":"/fi/syote/kuvat/:id"},"/feed":{"en":"/en/feed","fi":"/fi/syote"},"/images/[id]":{"en":"/en/images/:id","fi":"/fi/kuvat/:id"},"/images":{"en":"/en/images","fi":"/fi/kuvat"},"/":{"en":"/en","fi":"/fi"}}} as const;
+export const schema = {
+	"locales": [
+		"fi",
+		"en"
+	],
+	"defaultLocale": "fi",
+	"prefixDefaultLocale": true,
+	"routes": {
+		"/": {
+			"en": "/en",
+			"fi": "/fi"
+		},
+		"/about": {
+			"en": "/en/about-the-site",
+			"fi": "/fi/tietoa-sivustosta"
+		},
+		"/feed": {
+			"en": "/en/feed",
+			"fi": "/fi/syote"
+		},
+		"/images": {
+			"en": "/en/images",
+			"fi": "/fi/kuvat"
+		},
+		"/privacy-policy": {
+			"en": "/en/privacy-policy",
+			"fi": "/fi/tietosuojaseloste"
+		},
+		"/feed/images/[id]": {
+			"en": "/en/feed/images/:id",
+			"fi": "/fi/syote/kuvat/:id"
+		},
+		"/images/[id]": {
+			"en": "/en/images/:id",
+			"fi": "/fi/kuvat/:id"
+		},
+		"/[...catchAll]": {
+			"en": "/en/*catchAll",
+			"fi": "/fi/*catchAll"
+		}
+	}
+} as const;
 
 declare module "next-globe-gen" {
 	interface SchemaRegister {
@@ -91,9 +132,24 @@ describe("generateSchemaFile()", () => {
 });
 
 const expectedMessagesFileContents = `
-export const messages = {"fi":{"hello.world":"Hei maailma","hello.name":"Hei {name}","projects":"{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}","message":"Ei nimiavaruutta viesti","namespace.message":"Nimiavaruus viesti"},"en":{"hello.world":"Hello world","hello.name":"Hello {name}","projects":"{count, plural, =0 {No project} one {One project} other {# projects}}","message":"No namespace message","namespace.message":"Namespaced message"}} as const;
+export const messages = {
+	"fi": {
+		"hello.world": "Hei maailma",
+		"hello.name": "Hei {name}",
+		"projects": "{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}",
+		"message": "Ei nimiavaruutta viesti",
+		"namespace.message": "Nimiavaruus viesti"
+	},
+	"en": {
+		"hello.world": "Hello world",
+		"hello.name": "Hello {name}",
+		"projects": "{count, plural, =0 {No project} one {One project} other {# projects}}",
+		"message": "No namespace message",
+		"namespace.message": "Namespaced message"
+	}
+} as const;
 
-export const clientMessages = {"fi":{"hello.world":"Hei maailma","hello.name":"Hei {name}","projects":"{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}","message":"Ei nimiavaruutta viesti","namespace.message":"Nimiavaruus viesti"},"en":{"hello.world":"Hello world","hello.name":"Hello {name}","projects":"{count, plural, =0 {No project} one {One project} other {# projects}}","message":"No namespace message","namespace.message":"Namespaced message"}};
+export const clientMessages = messages;
 
 declare module "next-globe-gen" {
 	interface MessagesRegister {
@@ -103,9 +159,31 @@ declare module "next-globe-gen" {
 `.trimStart();
 
 const expectedClientFilteredMessagesFileContents = `
-export const messages = {"fi":{"hello.world":"Hei maailma","hello.name":"Hei {name}","projects":"{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}","message":"Ei nimiavaruutta viesti","namespace.message":"Nimiavaruus viesti"},"en":{"hello.world":"Hello world","hello.name":"Hello {name}","projects":"{count, plural, =0 {No project} one {One project} other {# projects}}","message":"No namespace message","namespace.message":"Namespaced message"}} as const;
+export const messages = {
+	"fi": {
+		"hello.world": "Hei maailma",
+		"hello.name": "Hei {name}",
+		"projects": "{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}",
+		"message": "Ei nimiavaruutta viesti",
+		"namespace.message": "Nimiavaruus viesti"
+	},
+	"en": {
+		"hello.world": "Hello world",
+		"hello.name": "Hello {name}",
+		"projects": "{count, plural, =0 {No project} one {One project} other {# projects}}",
+		"message": "No namespace message",
+		"namespace.message": "Namespaced message"
+	}
+} as const;
 
-export const clientMessages = {"fi":{"namespace.message":"Nimiavaruus viesti"},"en":{"namespace.message":"Namespaced message"}};
+export const clientMessages = {
+	"fi": {
+		"namespace.message": "Nimiavaruus viesti"
+	},
+	"en": {
+		"namespace.message": "Namespaced message"
+	}
+};
 
 declare module "next-globe-gen" {
 	interface MessagesRegister {

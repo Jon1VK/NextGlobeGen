@@ -1,7 +1,6 @@
 import type { Config } from "~/cli/types";
 import { flatten } from "~/cli/utils/obj-utils";
-
-export type Messages = Record<string, Record<string, string>>;
+import type { Messages } from "~/types/messages";
 
 export async function getMessages(config: Config) {
   const messages: Messages = {};
