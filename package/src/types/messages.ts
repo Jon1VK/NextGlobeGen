@@ -82,40 +82,61 @@ type StripEscaped<S extends string> =
   S extends `${infer A}'${string}'${infer B}`
     ? StripEscaped<`${A}${B}`>
     : S extends `${infer A}'${string}${infer B}`
-      ? StripEscaped<`${A}${B}`>
+      ? `${A}${B}`
       : S;
 
 /**
  * Extract ICU message arguments ang tags from the given string.
  */
 type ExtractArgumentsAngTags<S extends string> =
-  | _ExtractArguments<S>
+  | _ExtractSimpleArguments<S>
+  | _ExtractComplexArguments<S>
+  | _ExtractSelectArguments<S>
   | _ExtractTags<S>;
 
-type ArgType = NumberArgType | DateArgType | StringArgType;
-type NumberArgType = "number" | "plural" | "selectordinal";
-type DateArgType = "date" | "time";
-type StringArgType = "string" | "select";
+type _ExtractSimpleArguments<S extends string> =
+  S extends `${string}{${infer Arg}}${infer Rest}`
+    ? _ExtractNestedSimpleArguments<Arg> | _ExtractSimpleArguments<Rest>
+    : never;
 
-type _ExtractArguments<S extends string> =
-  S extends `${string}{${infer Arg},${NumberArgType}${infer Rest}`
-    ? _ExtractNestedArguments<Arg, NumberArgType> | _ExtractArguments<Rest>
-    : S extends `${string}{${infer Arg},${DateArgType}${infer Rest}`
-      ? _ExtractNestedArguments<Arg, DateArgType> | _ExtractArguments<Rest>
-      : S extends `${string}{${infer Arg},${StringArgType}${infer Rest}`
-        ? _ExtractNestedArguments<Arg, StringArgType> | _ExtractArguments<Rest>
-        : S extends `${string}{${infer Arg}}${infer Rest}`
-          ?
-              | _ExtractNestedArguments<Arg, StringArgType>
-              | _ExtractArguments<Rest>
-          : never;
+type _ExtractNestedSimpleArguments<Arg extends string> =
+  Arg extends `${string}{${infer B}` ? _ExtractSimpleArguments<`{${B}}`> : Arg;
 
-type _ExtractNestedArguments<
-  S extends string,
-  T extends ArgType,
-> = S extends `${infer A}{${infer B}`
-  ? _ExtractArguments<`{${A}`> | _ExtractArguments<`${B},${T}`>
-  : `${S},${T}`;
+type _ExtractComplexArguments<S extends string> =
+  S extends `${string}{${infer Arg}{${infer Rest}`
+    ? _ExtractNestedComplexArguments<Arg> | _ExtractComplexArguments<Rest>
+    : never;
+
+type _ExtractNestedComplexArguments<Arg extends string> =
+  Arg extends `${string}}${string}`
+    ? never
+    : Arg extends `${string},select,${string}`
+      ? never
+      : Arg extends `${string},${string}`
+        ? Arg
+        : never;
+
+type _ExtractSelectArguments<S extends string> =
+  S extends `${string}{${infer Arg},select,${infer Rest}`
+    ? _ExtractNestedSelectArguments<Arg, Rest>
+    : never;
+
+type _ExtractNestedSelectArguments<
+  Arg extends string,
+  Rest extends string,
+> = Arg extends `${string}{${infer B}`
+  ? _ExtractSelectArguments<`{${B},select,${Rest}`>
+  :
+      | `${Arg},select,${_ExtractSelectOptions<Rest>}`
+      | _ExtractSelectArguments<Rest>;
+
+type _ExtractSelectOptions<S extends string> = S extends `}${string}`
+  ? never
+  : S extends `${infer Option}{${infer Nested}}${infer Rest}`
+    ? Nested extends `${string}{${infer NestedRest}`
+      ? _ExtractSelectOptions<`${Option}{${NestedRest}${Rest}`>
+      : Option | _ExtractSelectOptions<Rest>
+    : never;
 
 type _ExtractTags<S extends string> =
   S extends `${string}</${infer Tag}>${infer Rest}`
@@ -123,15 +144,27 @@ type _ExtractTags<S extends string> =
     : never;
 
 /**
+ * Normalize extracted arguments.
+ */
+type NormalizeArguments<Arg extends string> =
+  Arg extends `${infer Name},${infer Type},${string}`
+    ? Type extends "select"
+      ? Arg
+      : `${Name},${Type}`
+    : Arg;
+
+/**
  * Convert ICU type to TS type.
  */
-type Value<T extends string> = T extends NumberArgType
+type Value<T extends string> = T extends "number" | "plural" | "selectordinal"
   ? number
-  : T extends DateArgType
+  : T extends "date" | "time"
     ? Date
     : T extends "tag"
       ? (children: ReactNode) => ReactNode
-      : string;
+      : T extends `select,${infer Option}`
+        ? Option
+        : string;
 
 /**
  * Create an object mapping the extracted key to its type.
@@ -149,5 +182,5 @@ type ArgumentsMap<S extends string> = {
  * Create an object mapping all ICU message arguments to their types.
  */
 export type MessageArguments<T extends string> = ArgumentsMap<
-  ExtractArgumentsAngTags<StripEscaped<StripWhitespace<T>>>
+  NormalizeArguments<ExtractArgumentsAngTags<StripEscaped<StripWhitespace<T>>>>
 >;
