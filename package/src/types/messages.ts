@@ -1,4 +1,4 @@
-import type { DefaultLocale, Locale } from "next-globe-gen/schema";
+import type { Locale } from "next-globe-gen/schema";
 import type { ReactNode } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -15,7 +15,7 @@ export declare const messages: Messages;
 /**
  * All possible message keys. Used default locale by default
  */
-export type MessageKey<L extends Locale = DefaultLocale> = keyof Messages[L];
+export type MessageKey = keyof Messages[Locale];
 
 /**
  * Utility type fot extractiong all the possible namespaces
@@ -49,11 +49,11 @@ export type Message<
   N extends Namespace,
   K extends NamespaceKey<N>,
 > = N extends undefined
-  ? K extends keyof Messages[DefaultLocale]
-    ? Messages[DefaultLocale][K]
+  ? K extends keyof Messages[Locale]
+    ? Messages[Locale][K]
     : never
-  : `${N}.${K}` extends keyof Messages[DefaultLocale]
-    ? Messages[DefaultLocale][`${N}.${K}`]
+  : `${N}.${K}` extends keyof Messages[Locale]
+    ? Messages[Locale][`${N}.${K}`]
     : never;
 
 /**
