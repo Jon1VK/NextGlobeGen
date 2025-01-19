@@ -159,7 +159,44 @@ declare module "next-globe-gen" {
 `.trimStart();
 
 const expectedClientFilteredMessagesFileContents = `
+export const serverOnlyMessages = {
+	"fi": {
+		"hello.world": "Hei maailma",
+		"hello.name": "Hei {name}",
+		"projects": "{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}",
+		"message": "Ei nimiavaruutta viesti"
+	},
+	"en": {
+		"hello.world": "Hello world",
+		"hello.name": "Hello {name}",
+		"projects": "{count, plural, =0 {No project} one {One project} other {# projects}}",
+		"message": "No namespace message"
+	}
+} as const;
+
+export const clientMessages = {
+	"fi": {
+		"namespace.message": "Nimiavaruus viesti"
+	},
+	"en": {
+		"namespace.message": "Namespaced message"
+	}
+} as const;
+
 export const messages = {
+	"fi": { ...serverOnlyMessages["fi"], ...clientMessages["fi"] },
+	"en": { ...serverOnlyMessages["en"], ...clientMessages["en"] }
+} as const;
+
+declare module "next-globe-gen" {
+	interface MessagesRegister {
+		messages: typeof messages
+	}
+}
+`.trimStart();
+
+const expectedEmptyClientKeysFilteredMessagesFileContents = `
+export const serverOnlyMessages = {
 	"fi": {
 		"hello.world": "Hei maailma",
 		"hello.name": "Hei {name}",
@@ -177,13 +214,14 @@ export const messages = {
 } as const;
 
 export const clientMessages = {
-	"fi": {
-		"namespace.message": "Nimiavaruus viesti"
-	},
-	"en": {
-		"namespace.message": "Namespaced message"
-	}
-};
+	"fi": {},
+	"en": {}
+} as const;
+
+export const messages = {
+	"fi": { ...serverOnlyMessages["fi"], ...clientMessages["fi"] },
+	"en": { ...serverOnlyMessages["en"], ...clientMessages["en"] }
+} as const;
 
 declare module "next-globe-gen" {
 	interface MessagesRegister {
@@ -231,6 +269,23 @@ describe("generateMessagesFile()", () => {
     expect(isFile(path.join(OUT_DIR, "messages.ts"))).toBe(true);
     expect(readFileSync(path.join(OUT_DIR, "messages.ts")).toString()).toBe(
       expectedClientFilteredMessagesFileContents,
+    );
+  });
+
+  test("empty clientKeys array works correctly", async () => {
+    await generateMessagesFile(
+      mergeConfigs(DEFAULT_CONFIG, {
+        locales: ["fi", "en"],
+        defaultLocale: "fi",
+        messages: {
+          originDir: "./src/__mocks__/messages",
+          clientKeys: [],
+        },
+      }),
+    );
+    expect(isFile(path.join(OUT_DIR, "messages.ts"))).toBe(true);
+    expect(readFileSync(path.join(OUT_DIR, "messages.ts")).toString()).toBe(
+      expectedEmptyClientKeysFilteredMessagesFileContents,
     );
   });
 });

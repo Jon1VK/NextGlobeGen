@@ -15,10 +15,17 @@ import { getMessages } from "./getMessages";
 export const OUT_DIR = "./.next-globe-gen";
 export const TYPES_DECLARATION_FILE = "next-globe-gen.d.ts";
 
-const template = (type: "schema" | "messages") => {
+const template = (
+  type: "schema" | "messages",
+  splitMessages: boolean = false,
+) => {
   return "".concat(
+    type === "messages" && splitMessages
+      ? "export const serverOnlyMessages = {serverOnlyMessages} as const;\n\n" +
+          "export const clientMessages = {clientMessages} as const;\n\n"
+      : "",
     `export const ${type} = {${type}} as const;\n\n`,
-    type === "messages"
+    type === "messages" && !splitMessages
       ? "export const clientMessages = {clientMessages};\n\n"
       : "",
     `declare module "next-globe-gen" {\n`,
@@ -103,19 +110,34 @@ function sortedRoutes(routes: Schema["routes"]) {
 
 export async function generateMessagesFile(config: Config) {
   const messages = await getMessages(config);
-  const JSONMessages = JSON.stringify(messages, null, "\t");
-  const clientMessages = getClientMessages(config, messages);
+  const serverOnlyMessages = getFilteredMessages(config, messages, false);
+  const clientMessages = getFilteredMessages(config, messages, true);
+  const JSONServerOnlyMessages = serverOnlyMessages
+    ? JSON.stringify(serverOnlyMessages, null, "\t")
+    : "{}";
   const JSONClientMessages = clientMessages
     ? JSON.stringify(clientMessages, null, "\t")
     : "messages";
-  const messagesFile = template("messages")
-    .replace("{messages}", JSONMessages)
-    .replace("{clientMessages}", JSONClientMessages);
+  const JSONMessages =
+    serverOnlyMessages || clientMessages
+      ? getSpreadOperatorString(messages)
+      : JSON.stringify(messages, null, "\t");
+  const messagesFile = template(
+    "messages",
+    !!clientMessages || !!serverOnlyMessages,
+  )
+    .replace("{serverOnlyMessages}", JSONServerOnlyMessages)
+    .replace("{clientMessages}", JSONClientMessages)
+    .replace("{messages}", JSONMessages);
   const messagesFilePath = path.join(OUT_DIR, "messages.ts");
   writeFileSync(messagesFilePath, messagesFile);
 }
 
-function getClientMessages(config: Config, messages: Messages) {
+function getFilteredMessages(
+  config: Config,
+  messages: Messages,
+  isClient: boolean,
+) {
   const clientKeys =
     config.messages.clientKeys instanceof RegExp
       ? [config.messages.clientKeys]
@@ -125,11 +147,25 @@ function getClientMessages(config: Config, messages: Messages) {
     Object.entries(messages).map(([locale, localeMessages]) => {
       const filteredMessages = Object.fromEntries(
         Object.entries(localeMessages).filter(([key]) => {
-          return clientKeys.some((regExp) => regExp.test(key));
+          const matchesClientKey = clientKeys.some((regExp) =>
+            regExp.test(key),
+          );
+          return isClient ? matchesClientKey : !matchesClientKey;
         }),
       );
       return [locale, filteredMessages];
     }),
   );
   return clientMessages;
+}
+
+function getSpreadOperatorString(messages: Messages) {
+  const spreadOperators = Object.keys(messages)
+    .map(
+      (locale) =>
+        `\t"${locale}": { ...serverOnlyMessages["${locale}"], ...clientMessages["${locale}"] }`,
+    )
+    .join(",\n");
+
+  return `{\n${spreadOperators}\n}`;
 }
