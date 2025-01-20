@@ -214,7 +214,7 @@ function withRouteSegmentConfig(template: string, originContents: string) {
         : new RegExp(`export const ${key} = .*`);
     const match = originContents.match(regExp);
     if (!match) return;
-    const config = match[0];
+    const config = match[0].replaceAll("\r\n", "\n");
     configs = configs.concat(`${config}\n`);
   });
   if (configs === "") return template;

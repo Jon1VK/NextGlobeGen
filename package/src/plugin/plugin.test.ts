@@ -1,7 +1,8 @@
 import type { WebpackConfigContext } from "next/dist/server/config-shared";
 import { spawn, spawnSync } from "node:child_process";
+import path from "node:path";
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { withNextGlobeGenPlugin } from ".";
+import withNextGlobeGenPlugin from ".";
 
 vi.mock("node:child_process");
 
@@ -18,8 +19,8 @@ describe("plugin", () => {
       {} as WebpackConfigContext,
     );
     expect(webpackConfig.resolve.alias).toStrictEqual({
-      "next-globe-gen/schema": "/.next-globe-gen/schema.ts",
-      "next-globe-gen/messages": "/.next-globe-gen/messages.ts",
+      "next-globe-gen/schema": path.resolve("/.next-globe-gen/schema.ts"),
+      "next-globe-gen/messages": path.resolve("/.next-globe-gen/messages.ts"),
     });
   });
 
@@ -37,8 +38,10 @@ describe("plugin", () => {
     );
     expect(webpackConfig.resolve.alias).toStrictEqual({
       abc: "/abc.js",
-      "next-globe-gen/schema": "/home/.next-globe-gen/schema.ts",
-      "next-globe-gen/messages": "/home/.next-globe-gen/messages.ts",
+      "next-globe-gen/schema": path.resolve("/home/.next-globe-gen/schema.ts"),
+      "next-globe-gen/messages": path.resolve(
+        "/home/.next-globe-gen/messages.ts",
+      ),
     });
   });
 

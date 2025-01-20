@@ -20,7 +20,10 @@ describe("getOriginRoutes()", () => {
       }),
       directory: exampleDir,
     });
-    expect(files).toStrictEqual(getExpectedOriginRoutes(true));
+    const sortedFiles = files.sort((a, b) =>
+      a.path.localeCompare(b.path, "en"),
+    );
+    expect(sortedFiles).toStrictEqual(getExpectedOriginRoutes(true));
   });
 
   test("works correctly with prefixDefaultLocale: false", async () => {
@@ -32,6 +35,9 @@ describe("getOriginRoutes()", () => {
       }),
       directory: exampleDir,
     });
-    expect(files).toStrictEqual(getExpectedOriginRoutes(false));
+    const sortedFiles = files.sort((a, b) =>
+      a.path.localeCompare(b.path, "en"),
+    );
+    expect(sortedFiles).toStrictEqual(getExpectedOriginRoutes(false));
   });
 });
