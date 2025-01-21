@@ -1,8 +1,9 @@
 import { readdirSync } from "fs";
 import path from "path";
-import type { Config, OriginRoute } from "~/cli/types";
-import { isDirectory, isFile } from "~/cli/utils/fs-utils";
-import { compile } from "~/cli/utils/ts-utils";
+import type { OriginRoute } from "~/cli/types";
+import type { Config } from "~/utils/config";
+import { isDirectory, isFile } from "~/utils/fs-utils";
+import { compile } from "~/utils/ts-utils";
 
 type GetOriginRoutesParams = {
   config: Config;

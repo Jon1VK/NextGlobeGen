@@ -1,7 +1,8 @@
 import { readFileSync } from "fs";
 import path from "path";
-import type { Config, OriginRoute } from "~/cli/types";
+import type { OriginRoute } from "~/cli/types";
 import { getRouteName, isPageOriginRoute } from "~/cli/utils/route-utils";
+import type { Config } from "~/utils/config";
 import type { RouteType } from "./getOriginRoutes";
 
 type PatternKey = (typeof PATTERN_KEYS)[number];

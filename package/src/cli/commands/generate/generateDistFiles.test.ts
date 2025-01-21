@@ -2,8 +2,8 @@ import { readFileSync, rmSync } from "fs";
 import path from "path";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { getExpectedOriginRoutes } from "~/__mocks__/getExpectedOriginRoutes";
-import { isDirectory, isFile, rmDirectory } from "~/cli/utils/fs-utils";
-import { DEFAULT_CONFIG, mergeConfigs } from "./config";
+import { DEFAULT_CONFIG, mergeConfigs } from "~/utils/config";
+import { isDirectory, isFile, rmDirectory } from "~/utils/fs-utils";
 import {
   generateMessagesFile,
   generateOutDirs,

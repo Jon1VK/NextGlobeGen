@@ -6,9 +6,10 @@ import {
   writeFileSync,
 } from "fs";
 import path from "path";
-import type { Config, OriginRoute } from "~/cli/types";
-import { makeDirectory, toPosixPath } from "~/cli/utils/fs-utils";
+import type { OriginRoute } from "~/cli/types";
 import { toPascalCase } from "~/cli/utils/string-utils";
+import type { Config } from "~/utils/config";
+import { makeDirectory, toPosixPath } from "~/utils/fs-utils";
 import { getTemplateCompiler } from "./getTemplateCompiler";
 
 let prevRoutes: OriginRoute[] = [];

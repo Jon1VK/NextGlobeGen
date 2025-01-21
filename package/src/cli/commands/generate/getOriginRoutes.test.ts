@@ -1,8 +1,8 @@
 import { afterEach } from "node:test";
 import { describe, expect, test } from "vitest";
 import { getExpectedOriginRoutes } from "~/__mocks__/getExpectedOriginRoutes";
-import { removeCompiledFiles } from "~/cli/utils/ts-utils";
-import { DEFAULT_CONFIG, mergeConfigs } from "./config";
+import { DEFAULT_CONFIG, mergeConfigs } from "~/utils/config";
+import { removeCompiledFiles } from "~/utils/ts-utils";
 import { getOriginRoutes } from "./getOriginRoutes";
 
 const exampleDir = "./src/__mocks__/_app";
