@@ -1,10 +1,14 @@
 import { Command } from "commander";
 import { watch } from "fs";
-import type { Config, UserConfig } from "~/cli/types";
 import { debounce } from "~/cli/utils/debounce";
-import { isDirectory, isFile, rmDirectory } from "~/cli/utils/fs-utils";
-import { compile, removeCompiledFiles } from "~/cli/utils/ts-utils";
-import { DEFAULT_CONFIG, mergeConfigs } from "./config";
+import {
+  DEFAULT_CONFIG,
+  mergeConfigs,
+  type Config,
+  type UserConfig,
+} from "~/utils/config";
+import { isDirectory, isFile, rmDirectory } from "~/utils/fs-utils";
+import { compile, removeCompiledFiles } from "~/utils/ts-utils";
 import { configNotFoundError, originDirNotFoundError } from "./errors";
 import {
   generateMessagesFile,

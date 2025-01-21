@@ -1,7 +1,6 @@
 import { writeFileSync } from "fs";
 import path from "path";
-import type { Config, OriginRoute } from "~/cli/types";
-import { makeDirectory } from "~/cli/utils/fs-utils";
+import type { OriginRoute } from "~/cli/types";
 import {
   getRouteName,
   getRoutePath,
@@ -10,6 +9,8 @@ import {
 import { toPascalCase } from "~/cli/utils/string-utils";
 import type { Messages } from "~/types/messages";
 import type { Schema } from "~/types/schema";
+import type { Config } from "~/utils/config";
+import { makeDirectory } from "~/utils/fs-utils";
 import { getMessages } from "./getMessages";
 
 export const OUT_DIR = "./.next-globe-gen";

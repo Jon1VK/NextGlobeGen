@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "vitest";
-import type { Config, OriginRoute } from "~/cli/types";
-import { DEFAULT_CONFIG, mergeConfigs } from "./config";
+import type { OriginRoute } from "~/cli/types";
+import { DEFAULT_CONFIG, mergeConfigs, type Config } from "~/utils/config";
 import { getTemplateCompiler } from "./getTemplateCompiler";
 
 const mocks: { config: Config; originRoute: OriginRoute } = {

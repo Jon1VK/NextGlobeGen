@@ -1,8 +1,34 @@
 import { readdirSync, readFileSync } from "fs";
 import path from "path";
 import { parse } from "yaml";
-import type { Config, UserConfig } from "~/cli/types";
-import { isDirectory, isFile } from "~/cli/utils/fs-utils";
+import { isDirectory, isFile } from "~/utils/fs-utils";
+
+export type Config<L extends string[] = string[], Locale = L[number]> = {
+  locales: L;
+  defaultLocale: Locale;
+  routes: {
+    prefixDefaultLocale: boolean;
+    originDir: string;
+    localizedDir: string;
+    skipLanguageAlternatesMetadata?: boolean;
+  };
+  messages: {
+    originDir: string;
+    clientKeys?: RegExp[] | RegExp;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getMessages: (locale: Locale) => Promise<any> | any;
+  };
+};
+
+type DeepPartial<T> =
+  T extends Record<string, unknown>
+    ? { [P in keyof T]?: DeepPartial<T[P]> }
+    : T;
+
+type RequiredUserConfigKeys = "locales" | "defaultLocale";
+
+export type UserConfig = Pick<Config, RequiredUserConfigKeys> &
+  DeepPartial<Omit<Config, RequiredUserConfigKeys>>;
 
 export const DEFAULT_CONFIG: Config = {
   locales: [],
@@ -62,11 +88,11 @@ function getLocaleDirMessages(this: { originDir: string }, locale: string) {
   return messages;
 }
 
-export function mergeConfigs(a: Config, b: Partial<UserConfig>): Config {
+export function mergeConfigs(a: Config, b: DeepPartial<UserConfig>) {
   return {
     ...a,
     ...b,
     messages: { ...a.messages, ...b.messages },
     routes: { ...a.routes, ...b.routes },
-  };
+  } as Config;
 }

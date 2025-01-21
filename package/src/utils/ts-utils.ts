@@ -2,7 +2,7 @@ import { createHash } from "crypto";
 import path from "path";
 import { build } from "tsup";
 import { pathToFileURL } from "url";
-import { rmDirectory } from "./fs-utils";
+import { rmDirectory } from "~/utils/fs-utils";
 
 const OUT_DIR = "./node_modules/next-globe-gen/dist/tmp";
 
