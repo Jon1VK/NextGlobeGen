@@ -70,7 +70,13 @@ type Replace<
 /**
  * Utility type to remove all spaces and new lines from the provided string.
  */
-type StripWhitespace<S extends string> = Replace<Replace<S, "\n", "">, " ", "">;
+type StripWhitespace<S extends string> = StripSpaces<StripNewLines<S>>;
+type StripNewLines<S extends string> = Replace<S, "\n", "">;
+type StripSpaces<S extends string> = Replace<
+  Replace<Replace<S, "    ", "">, "  ", "">,
+  " ",
+  ""
+>;
 
 /**
  * Utility type to remove escaped characters.
