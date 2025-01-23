@@ -1,4 +1,5 @@
 import type {
+  createHref as $createHref,
   createTranslator as $createTranslator,
   permanentRedirect as $permanentRedirect,
   redirect as $redirect,
@@ -36,7 +37,6 @@ export const useTranslations = useTranslationsFactory(
 export const getLocale = notSupported("getLocale") as typeof useLocale;
 export const getSchema = notSupported("getLocale") as typeof useSchema;
 export const getHref = notSupported("getHref") as typeof useHref;
-export const createHref = notSupported("createHref") as typeof useHref;
 export const getTranslations = notSupported(
   "getTranslations",
 ) as typeof useTranslations;
@@ -47,3 +47,4 @@ export const permanentRedirect = notSupported(
 export const createTranslator = notSupported(
   "createTranslator",
 ) as unknown as typeof $createTranslator;
+export const createHref = notSupported("createHref") as typeof $createHref;
