@@ -9,7 +9,7 @@ import {
 import { toPascalCase } from "~/cli/utils/string-utils";
 import type { Messages } from "~/types/messages";
 import type { Schema } from "~/types/schema";
-import type { Config } from "~/utils/config";
+import { getLocales, getUnPrefixedLocales, type Config } from "~/utils/config";
 import { makeDirectory } from "~/utils/fs-utils";
 import { getMessages } from "./getMessages";
 
@@ -67,21 +67,26 @@ export function generateSchemaFile(
 
 function generateSchema(config: Config, originRoutes: OriginRoute[]) {
   const routes: Schema["routes"] = {};
+  const unPrefixedLocales = getUnPrefixedLocales(config);
   originRoutes.forEach((originRoute) => {
     if (!isPageOriginRoute(originRoute)) return;
     const routeName = getRouteName(originRoute.path);
     routes[routeName] ||= {};
     Object.entries(originRoute.localizedPaths).forEach(
       ([locale, localizedPath]) => {
-        const routePath = getRoutePath(localizedPath);
+        const routePath = getRoutePath(
+          localizedPath,
+          unPrefixedLocales.has(locale),
+        );
         routes[routeName]![locale] = routePath;
       },
     );
   });
   return {
-    locales: config.locales,
-    defaultLocale: config.defaultLocale,
-    prefixDefaultLocale: config.routes.prefixDefaultLocale,
+    locales: getLocales(config),
+    defaultLocale: config.defaultLocale ?? "",
+    unPrefixedLocales: [...unPrefixedLocales],
+    domains: config.domains,
     routes: sortedRoutes(routes),
   } satisfies Schema;
 }

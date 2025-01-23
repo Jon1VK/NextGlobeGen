@@ -1,10 +1,31 @@
+import type { Rewrite } from "next/dist/lib/load-custom-routes";
 import type { WebpackConfigContext } from "next/dist/server/config-shared";
 import { spawn, spawnSync } from "node:child_process";
 import path from "node:path";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import withNextGlobeGenPlugin from ".";
 
+const CONFIG_PATH = "./src/__mocks__/i18n.config.ts";
+
 vi.mock("node:child_process");
+
+const expectedRewrites: Rewrite[] = [
+  {
+    source: "/en-US/:path*",
+    destination: "/en-US/:path*",
+    has: [{ type: "host", value: "en.example.com" }],
+  },
+  {
+    source: "/:path*",
+    destination: "/en/:path*",
+    has: [{ type: "host", value: "en.example.com" }],
+  },
+  {
+    source: "/:path*",
+    destination: "/fi/:path*",
+    has: [{ type: "host", value: "fi.example.com" }],
+  },
+];
 
 describe("plugin", () => {
   afterEach(() => {
@@ -12,8 +33,10 @@ describe("plugin", () => {
     vi.unstubAllEnvs();
   });
 
-  test("adds aliases correctly to webpack config", () => {
-    const config = withNextGlobeGenPlugin()({})("phase-production-server");
+  test("adds aliases correctly to webpack config", async () => {
+    const config = await withNextGlobeGenPlugin(CONFIG_PATH)({})(
+      "phase-production-server",
+    );
     const webpackConfig = config.webpack?.(
       { context: "/" },
       {} as WebpackConfigContext,
@@ -24,8 +47,8 @@ describe("plugin", () => {
     });
   });
 
-  test("includes user defined custom webpack config", () => {
-    const config = withNextGlobeGenPlugin()({
+  test("includes user defined custom webpack config", async () => {
+    const config = await withNextGlobeGenPlugin(CONFIG_PATH)({
       webpack: (config) => {
         config.resolve = {};
         config.resolve.alias = { abc: "/abc.js" };
@@ -45,26 +68,28 @@ describe("plugin", () => {
     });
   });
 
-  test("adds aliases correctly to turbopack config", () => {
+  test("adds aliases correctly to turbopack config", async () => {
     vi.stubEnv("TURBOPACK", "1");
-    const config = withNextGlobeGenPlugin()({})("phase-production-server");
+    const config = await withNextGlobeGenPlugin(CONFIG_PATH)({})(
+      "phase-production-server",
+    );
     expect(config.experimental?.turbo?.resolveAlias).toStrictEqual({
       "next-globe-gen/schema": "./.next-globe-gen/schema.ts",
       "next-globe-gen/messages": "./.next-globe-gen/messages.ts",
     });
   });
 
-  test("does not spawn child processes when in production", () => {
-    withNextGlobeGenPlugin()({})("phase-production-server");
+  test("does not spawn child processes when in production", async () => {
+    await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-production-server");
     expect(spawn).not.toBeCalled();
     expect(spawnSync).not.toBeCalled();
   });
 
-  test("spawns generator in async watch mode when in dev", () => {
-    withNextGlobeGenPlugin()({})("phase-development-server");
+  test("spawns generator in async watch mode when in dev", async () => {
+    await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-development-server");
     expect(spawnSync).not.toBeCalled();
     expect(spawn).toHaveBeenCalledWith(
-      "npx next-globe-gen --watch --config ./i18n.config.ts",
+      "npx next-globe-gen --watch --config ./src/__mocks__/i18n.config.ts",
       expect.objectContaining({
         stdio: "inherit",
         shell: true,
@@ -73,29 +98,69 @@ describe("plugin", () => {
     );
   });
 
-  test("does not spawn child processes when executed in a dev worker", () => {
+  test("does not spawn child processes when executed in a dev worker", async () => {
     vi.stubEnv("NEXT_PRIVATE_WORKER", "1");
-    withNextGlobeGenPlugin()({})("phase-development-server");
+    await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-development-server");
     expect(spawn).not.toBeCalled();
     expect(spawnSync).not.toBeCalled();
   });
 
-  test("skip another spawn in build phase", () => {
+  test("skip another spawn in build phase", async () => {
     vi.stubEnv("NEXT_DEPLOYMENT_ID", "1");
-    withNextGlobeGenPlugin()({})("phase-production-build");
+    await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-production-build");
     expect(spawn).not.toBeCalled();
     expect(spawnSync).not.toBeCalled();
   });
 
-  test("spawns generator in sync mode when building", () => {
-    withNextGlobeGenPlugin()({})("phase-production-build");
+  test("spawns generator in sync mode when building", async () => {
+    await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-production-build");
     expect(spawn).not.toBeCalled();
     expect(spawnSync).toHaveBeenCalledWith(
-      "npx next-globe-gen --config ./i18n.config.ts",
+      "npx next-globe-gen --config ./src/__mocks__/i18n.config.ts",
       expect.objectContaining({
         stdio: "inherit",
         shell: true,
       }),
     );
+  });
+
+  test("adds domain rewrites correctly", async () => {
+    vi.stubEnv("TURBOPACK", "1");
+    const config = await withNextGlobeGenPlugin(CONFIG_PATH)({})(
+      "phase-production-server",
+    );
+    const rewrites = await config.rewrites?.();
+    expect(rewrites).toStrictEqual(expectedRewrites);
+  });
+
+  test("includes user defined rewrites array correctly", async () => {
+    const config = await withNextGlobeGenPlugin(CONFIG_PATH)({
+      async rewrites() {
+        return [{ source: "/abc", destination: "/def" }];
+      },
+    })("phase-production-server");
+    const rewrites = await config.rewrites?.();
+    expect(rewrites).toStrictEqual([
+      { source: "/abc", destination: "/def" },
+      ...expectedRewrites,
+    ]);
+  });
+
+  test("includes user defined rewrites object correctly", async () => {
+    const config = await withNextGlobeGenPlugin(CONFIG_PATH)({
+      async rewrites() {
+        return {
+          beforeFiles: [{ source: "/a", destination: "/b" }],
+          afterFiles: [{ source: "/c", destination: "/d" }],
+          fallback: [{ source: "/e", destination: "/f" }],
+        };
+      },
+    })("phase-production-server");
+    const rewrites = await config.rewrites?.();
+    expect(rewrites).toStrictEqual({
+      beforeFiles: [{ source: "/a", destination: "/b" }],
+      afterFiles: [{ source: "/c", destination: "/d" }, ...expectedRewrites],
+      fallback: [{ source: "/e", destination: "/f" }],
+    });
   });
 });

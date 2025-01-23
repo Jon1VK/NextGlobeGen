@@ -33,17 +33,18 @@ export function useRouter() {
   const router = useNextRouter();
   const schema = useSchema();
   const locale = useLocale();
-  const createHref = createHrefFactory(schema);
 
   function push<R extends Route>(...args: RouterArgs<R, NavigateOptions>) {
     const { hrefOpts, scroll } = extractRouterOptions(...args);
     const opts = { ...hrefOpts, locale: hrefOpts.locale ?? locale };
+    const createHref = createHrefFactory(schema, !!hrefOpts.locale);
     router.push(createHref(opts), { scroll });
   }
 
   function replace<R extends Route>(...args: RouterArgs<R, NavigateOptions>) {
     const { hrefOpts, scroll } = extractRouterOptions(...args);
     const opts = { ...hrefOpts, locale: hrefOpts.locale ?? locale };
+    const createHref = createHrefFactory(schema, !!hrefOpts.locale);
     router.replace(createHref(opts), { scroll });
   }
 
@@ -52,6 +53,7 @@ export function useRouter() {
   ) {
     const { hrefOpts, kind } = extractRouterOptions(...args);
     const opts = { ...hrefOpts, locale: hrefOpts.locale ?? locale };
+    const createHref = createHrefFactory(schema, !!hrefOpts.locale);
     router.prefetch(createHref(opts), kind && { kind });
   }
 

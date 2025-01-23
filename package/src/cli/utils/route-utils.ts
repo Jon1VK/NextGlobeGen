@@ -14,15 +14,20 @@ export function getRouteName(originPath: string) {
   ].reduce((result, next) => next(result), originPath);
 }
 
-export function getRoutePath(localizedPath: string) {
+export function getRoutePath(localizedPath: string, removeLocale?: boolean) {
   return [
+    removeLocale ? removeLocaleSegment : undefined,
     removePageSegment,
     removeInterceptedSegments,
     removeGroupSegments,
     removeParallelSegments,
     formatDynamicSegments,
     asRootPath,
-  ].reduce((result, next) => next(result), localizedPath);
+  ].reduce((result, next) => next?.(result) ?? result, localizedPath);
+}
+
+function removeLocaleSegment(input: string) {
+  return input.replace(/^\/[^/]*\/?/, "/");
 }
 
 function removePageSegment(input: string) {

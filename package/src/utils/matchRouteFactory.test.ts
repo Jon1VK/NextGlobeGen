@@ -6,7 +6,7 @@ function useSchema(): Schema {
   return {
     locales: ["en", "fi"],
     defaultLocale: "en",
-    prefixDefaultLocale: true,
+    unPrefixedLocales: [],
     routes: {
       "/": {
         en: "/en",

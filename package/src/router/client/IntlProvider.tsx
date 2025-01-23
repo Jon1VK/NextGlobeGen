@@ -18,7 +18,7 @@ const IntlContext = createContext<{
   schema: {
     locales: [],
     defaultLocale: "",
-    prefixDefaultLocale: true,
+    unPrefixedLocales: [],
     routes: {},
   },
 });
