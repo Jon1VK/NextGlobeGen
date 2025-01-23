@@ -102,7 +102,7 @@ function sortedRoutes(routes: Schema["routes"]) {
 }
 
 const messagesTemplate = "".concat(
-  "export const messages = {messages} as const;\n\n",
+  "export const messages = {clientMessages} as const;\n\n",
   "export const clientMessages = messages;\n\n",
   'declare module "next-globe-gen" {\n',
   "\tinterface MessagesRegister {\n",
@@ -127,49 +127,38 @@ function createSplittedMessagesTemplate(locales: Locale[]) {
 }
 
 export async function generateMessagesFile(config: Config) {
-  const messages = await getMessages(config);
-  const serverOnlyMessages = getFilteredMessages(config, messages, false);
-  const clientMessages = getFilteredMessages(config, messages, true);
-  const JSONServerOnlyMessages = serverOnlyMessages
-    ? JSON.stringify(serverOnlyMessages, null, "\t")
-    : "{}";
-  const JSONClientMessages = clientMessages
-    ? JSON.stringify(clientMessages, null, "\t")
-    : "{}";
-  const JSONMessages = JSON.stringify(messages, null, "\t");
-  const template = !clientMessages
+  const { serverOnlyMessages, clientMessages } =
+    await getFilteredMessages(config);
+  const jsonServerOnlyMessages = JSON.stringify(serverOnlyMessages, null, "\t");
+  const jsonClientMessages = JSON.stringify(clientMessages, null, "\t");
+  const template = !serverOnlyMessages
     ? messagesTemplate
     : createSplittedMessagesTemplate(getLocales(config));
   const messagesFile = template
-    .replace("{serverOnlyMessages}", JSONServerOnlyMessages)
-    .replace("{clientMessages}", JSONClientMessages)
-    .replace("{messages}", JSONMessages);
+    .replace("{serverOnlyMessages}", jsonServerOnlyMessages)
+    .replace("{clientMessages}", jsonClientMessages);
   const messagesFilePath = path.join(OUT_DIR, "messages.ts");
   writeFileSync(messagesFilePath, messagesFile);
 }
 
-function getFilteredMessages(
-  config: Config,
-  messages: Messages,
-  isClient: boolean,
-) {
+async function getFilteredMessages(config: Config) {
+  const messages = await getMessages(config);
   const clientKeys =
     config.messages.clientKeys instanceof RegExp
       ? [config.messages.clientKeys]
       : config.messages.clientKeys;
-  if (!clientKeys) return undefined;
-  const clientMessages = Object.fromEntries(
-    Object.entries(messages).map(([locale, localeMessages]) => {
-      const filteredMessages = Object.fromEntries(
-        Object.entries(localeMessages).filter(([key]) => {
-          const matchesClientKey = clientKeys.some((regExp) =>
-            regExp.test(key),
-          );
-          return isClient ? matchesClientKey : !matchesClientKey;
-        }),
-      );
-      return [locale, filteredMessages];
-    }),
-  );
-  return clientMessages;
+  if (!clientKeys)
+    return { serverOnlyMessages: undefined, clientMessages: messages };
+  const serverOnlyMessages: Messages = {};
+  const clientMessages: Messages = {};
+  Object.entries(messages).forEach(([locale, localeMessages]) => {
+    serverOnlyMessages[locale] = {};
+    clientMessages[locale] = {};
+    Object.entries(localeMessages).forEach(([key, message]) => {
+      const matchesClientKey = clientKeys.some((regExp) => regExp.test(key));
+      if (matchesClientKey) clientMessages[locale]![key] = message;
+      if (!matchesClientKey) serverOnlyMessages[locale]![key] = message;
+    });
+  });
+  return { serverOnlyMessages, clientMessages };
 }
