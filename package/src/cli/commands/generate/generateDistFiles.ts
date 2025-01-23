@@ -6,9 +6,8 @@ import {
   getRoutePath,
   isPageOriginRoute,
 } from "~/cli/utils/route-utils";
-import { toPascalCase } from "~/cli/utils/string-utils";
 import type { Messages } from "~/types/messages";
-import type { Schema } from "~/types/schema";
+import type { Locale, Schema } from "~/types/schema";
 import { getLocales, getUnPrefixedLocales, type Config } from "~/utils/config";
 import { makeDirectory } from "~/utils/fs-utils";
 import { getMessages } from "./getMessages";
@@ -16,24 +15,12 @@ import { getMessages } from "./getMessages";
 export const OUT_DIR = "./.next-globe-gen";
 export const TYPES_DECLARATION_FILE = "next-globe-gen.d.ts";
 
-const template = (
-  type: "schema" | "messages",
-  splitMessages: boolean = false,
-) => {
-  return "".concat(
-    type === "messages" && splitMessages
-      ? "export const serverOnlyMessages = {serverOnlyMessages} as const;\n\n" +
-          "export const clientMessages = {clientMessages} as const;\n\n"
-      : "",
-    `export const ${type} = {${type}} as const;\n\n`,
-    type === "messages" && !splitMessages
-      ? "export const clientMessages = {clientMessages};\n\n"
-      : "",
-    `declare module "next-globe-gen" {\n`,
-    `\tinterface ${toPascalCase(type)}Register {\n`,
-    `\t\t${type}: typeof ${type}\n\t}\n}\n`,
-  );
-};
+const schemaTemplate = "".concat(
+  "export const schema = {schema} as const;\n\n",
+  'declare module "next-globe-gen" {\n',
+  "\tinterface SchemaRegister {\n",
+  "\t\tschema: typeof schema\n\t}\n}\n",
+);
 
 export function generateOutDirs(localizedDir: string) {
   makeDirectory(OUT_DIR);
@@ -60,7 +47,7 @@ export function generateSchemaFile(
 ) {
   const schema = generateSchema(config, originRoutes);
   const JSONSchema = JSON.stringify(schema, null, "\t");
-  const schemaFile = template("schema").replace("{schema}", JSONSchema);
+  const schemaFile = schemaTemplate.replace("{schema}", JSONSchema);
   const schemaFilePath = path.join(OUT_DIR, "schema.ts");
   writeFileSync(schemaFilePath, schemaFile);
 }
@@ -114,6 +101,31 @@ function sortedRoutes(routes: Schema["routes"]) {
   );
 }
 
+const messagesTemplate = "".concat(
+  "export const messages = {messages} as const;\n\n",
+  "export const clientMessages = messages;\n\n",
+  'declare module "next-globe-gen" {\n',
+  "\tinterface MessagesRegister {\n",
+  "\t\tmessages: typeof messages\n\t}\n}\n",
+);
+
+function createSplittedMessagesTemplate(locales: Locale[]) {
+  const mergedMessagesEntries = locales
+    .map((locale) => {
+      return `\t"${locale}": { ...serverOnlyMessages["${locale}"], ...clientMessages["${locale}"] }`;
+    })
+    .join(",\n");
+  const mergedMessagesObject = `{\n${mergedMessagesEntries}\n}`;
+  return "".concat(
+    "export const serverOnlyMessages = {serverOnlyMessages} as const;\n\n",
+    "export const clientMessages = {clientMessages} as const;\n\n",
+    `export const messages = ${mergedMessagesObject} as const;\n\n`,
+    'declare module "next-globe-gen" {\n',
+    "\tinterface MessagesRegister {\n",
+    "\t\tmessages: typeof messages\n\t}\n}\n",
+  );
+}
+
 export async function generateMessagesFile(config: Config) {
   const messages = await getMessages(config);
   const serverOnlyMessages = getFilteredMessages(config, messages, false);
@@ -123,15 +135,12 @@ export async function generateMessagesFile(config: Config) {
     : "{}";
   const JSONClientMessages = clientMessages
     ? JSON.stringify(clientMessages, null, "\t")
-    : "messages";
-  const JSONMessages =
-    serverOnlyMessages || clientMessages
-      ? getSpreadOperatorString(messages)
-      : JSON.stringify(messages, null, "\t");
-  const messagesFile = template(
-    "messages",
-    !!clientMessages || !!serverOnlyMessages,
-  )
+    : "{}";
+  const JSONMessages = JSON.stringify(messages, null, "\t");
+  const template = !clientMessages
+    ? messagesTemplate
+    : createSplittedMessagesTemplate(getLocales(config));
+  const messagesFile = template
     .replace("{serverOnlyMessages}", JSONServerOnlyMessages)
     .replace("{clientMessages}", JSONClientMessages)
     .replace("{messages}", JSONMessages);
@@ -163,15 +172,4 @@ function getFilteredMessages(
     }),
   );
   return clientMessages;
-}
-
-function getSpreadOperatorString(messages: Messages) {
-  const spreadOperators = Object.keys(messages)
-    .map(
-      (locale) =>
-        `\t"${locale}": { ...serverOnlyMessages["${locale}"], ...clientMessages["${locale}"] }`,
-    )
-    .join(",\n");
-
-  return `{\n${spreadOperators}\n}`;
 }
