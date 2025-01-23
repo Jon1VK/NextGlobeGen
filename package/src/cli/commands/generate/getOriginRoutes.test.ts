@@ -31,7 +31,7 @@ describe("getOriginRoutes()", () => {
       config: mergeConfigs(DEFAULT_CONFIG, {
         locales: ["fi", "en"],
         defaultLocale: "fi",
-        routes: { prefixDefaultLocale: false },
+        prefixDefaultLocale: false,
       }),
       directory: exampleDir,
     });
@@ -39,5 +39,30 @@ describe("getOriginRoutes()", () => {
       a.path.localeCompare(b.path, "en"),
     );
     expect(sortedFiles).toStrictEqual(getExpectedOriginRoutes(false));
+  });
+
+  test("works correctly with domains config", async () => {
+    const files = await getOriginRoutes({
+      config: mergeConfigs(DEFAULT_CONFIG, {
+        domains: [
+          {
+            domain: "fi.example.com",
+            locales: ["fi"],
+            defaultLocale: "fi",
+          },
+          {
+            domain: "en.example.com",
+            locales: ["en"],
+            defaultLocale: "en",
+            prefixDefaultLocale: false,
+          },
+        ],
+      }),
+      directory: exampleDir,
+    });
+    const sortedFiles = files.sort((a, b) =>
+      a.path.localeCompare(b.path, "en"),
+    );
+    expect(sortedFiles).toStrictEqual(getExpectedOriginRoutes(true));
   });
 });

@@ -6,8 +6,11 @@ import type {
   PHASE_PRODUCTION_SERVER,
   PHASE_TEST,
 } from "next/constants";
+import type { Rewrite } from "next/dist/lib/load-custom-routes";
 import { spawn, spawnSync } from "node:child_process";
 import { resolve } from "node:path";
+import type { Config, UserConfig } from "~/utils/config";
+import { compile } from "~/utils/ts-utils";
 
 type Phase =
   | typeof PHASE_EXPORT
@@ -30,12 +33,14 @@ export default function createNextGlobeGenPlugin(
   configPath = "./i18n.config.ts",
 ) {
   return function withNextGlobeGen(config: NextConfig) {
-    return (phase: Phase) => {
+    return async (phase: Phase) => {
+      const userConfig = await compile<{ default: UserConfig }>(configPath);
       useGenerator(configPath, phase);
       addAliases(config, {
         "next-globe-gen/schema": "./.next-globe-gen/schema.ts",
         "next-globe-gen/messages": "./.next-globe-gen/messages.ts",
       });
+      await addDomainRewrites(config, userConfig.default.domains);
       return config;
     };
   };
@@ -95,6 +100,47 @@ function addAliases(nextConfig: NextConfig, aliases: Record<string, string>) {
       return config;
     };
   }
+}
+
+/**
+ * Adds domain rewrite rules to the next.js config.
+ * @param config The Next.js config object
+ * @param domains An array of domain based routes
+ */
+async function addDomainRewrites(
+  nextConfig: NextConfig,
+  domains: Config["domains"],
+) {
+  if (!domains) return;
+  const originalRewrites = await nextConfig.rewrites?.();
+  const domainRewrites: Rewrite[] = domains
+    .filter(({ prefixDefaultLocale }) => !prefixDefaultLocale)
+    .flatMap(({ domain, locales, defaultLocale }) => {
+      return [
+        ...locales
+          .filter((locale) => locale !== defaultLocale)
+          .map<Rewrite>((locale) => ({
+            source: `/${locale}/:path*`,
+            destination: `/${locale}/:path*`,
+            has: [{ type: "host", value: domain.split(":").at(0)! }],
+          })),
+        {
+          source: `/:path*`,
+          destination: `/${defaultLocale}/:path*`,
+          has: [{ type: "host", value: domain.split(":").at(0)! }],
+        },
+      ];
+    });
+  nextConfig.rewrites = async function rewrites() {
+    if (!originalRewrites) return domainRewrites;
+    if (Array.isArray(originalRewrites)) {
+      return [...originalRewrites, ...domainRewrites];
+    }
+    return {
+      ...originalRewrites,
+      afterFiles: [...originalRewrites.afterFiles, ...domainRewrites],
+    };
+  };
 }
 
 /**

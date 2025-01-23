@@ -1,11 +1,14 @@
+import type { DomainConfig } from "~/utils/config";
+
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface SchemaRegister {}
 
 type MockSchema = {
   locales: string[];
+  unPrefixedLocales: string[];
   defaultLocale: string;
-  prefixDefaultLocale: boolean;
   routes: Record<string, Record<string, string>>;
+  domains?: DomainConfig[];
 };
 
 export type Schema = SchemaRegister extends { schema: infer S }
@@ -15,7 +18,6 @@ export type Schema = SchemaRegister extends { schema: infer S }
 export declare const schema: Schema;
 
 export type Locale = Schema["locales"][number];
-export type DefaultLocale = Schema["defaultLocale"];
 export type Route = keyof Schema["routes"];
 
 /**

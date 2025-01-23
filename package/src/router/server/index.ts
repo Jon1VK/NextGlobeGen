@@ -17,7 +17,7 @@ export * from "./withLanguageAlternates";
 
 export const useSchema = () => schema;
 export const useHref = useHrefFactory(useLocale, useSchema);
-export const createHref = createHrefFactory(schema);
+export const createHref = createHrefFactory(schema, true);
 export const Link = LinkFactory(useHref);
 export const Form = FormFactory(useHref);
 const useMessages = () => messages[useLocale()];

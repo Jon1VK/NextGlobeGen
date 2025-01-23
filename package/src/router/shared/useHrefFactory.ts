@@ -30,7 +30,10 @@ export function useHrefFactory(
   return function useHref<R extends Route>(...args: UseHrefArgs<R>) {
     const schema = useSchema();
     const { pathname, params, query, locale } = extractHrefOptions(args);
-    return createHrefFactory(schema)({
+    return createHrefFactory(
+      schema,
+      !!locale,
+    )({
       pathname,
       params,
       query,
@@ -39,17 +42,20 @@ export function useHrefFactory(
   };
 }
 
-type CreateHrefOptions<R extends Route> = Omit<HrefOptions<R>, "locale"> & {
+export type CreateHrefOptions<R extends Route> = Omit<
+  HrefOptions<R>,
+  "locale"
+> & {
   locale: Locale;
 };
 
-type CreateHrefArgs<R extends Route> =
+export type CreateHrefArgs<R extends Route> =
   | (R extends StaticRoute
       ? [route: R, locale: Locale, _?: undefined]
       : [route: R, params: RouteParams<R>, locale: Locale])
   | [options: CreateHrefOptions<R>, _?: undefined, __?: undefined];
 
-export function createHrefFactory(schema: Schema) {
+export function createHrefFactory(schema: Schema, includeDomain: boolean) {
   return function createHref<R extends Route>(...args: CreateHrefArgs<R>) {
     const { pathname, params, query, locale } = extractHrefOptions(
       args as UseHrefArgs<R>,
@@ -60,8 +66,10 @@ export function createHrefFactory(schema: Schema) {
     const path = localizedPaths[locale];
     if (!path) return withQuery(pathname, query);
     const compiledPath = compile(path)(params);
-    if (!query) return compiledPath;
-    return withQuery(compiledPath, query);
+    const domainConfig = includeDomain
+      ? schema.domains?.find(({ locales }) => locales.includes(locale))
+      : undefined;
+    return withDomain(withQuery(compiledPath, query), domainConfig?.domain);
   };
 }
 
@@ -69,6 +77,12 @@ function withQuery(pathname: string, query?: Record<string, string>) {
   if (!query) return pathname;
   const searchParams = new URLSearchParams(query);
   return `${pathname}?${searchParams}`;
+}
+
+function withDomain(pathname: string, domain?: string) {
+  if (!domain) return pathname;
+  const protocol = process.env.NODE_ENV === "development" ? "http:" : "https:";
+  return `${protocol}//${domain}${pathname}`;
 }
 
 export function extractHrefOptions<R extends Route>(args: UseHrefArgs<R>) {

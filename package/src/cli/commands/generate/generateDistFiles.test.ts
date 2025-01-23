@@ -56,46 +56,114 @@ describe("generateOutDirs()", () => {
   });
 });
 
-const expectedSchemaFileContents = `
+const expectedSchemaFileContents = (
+  prefixDefaultLocale?: boolean,
+  includeEnUS?: boolean,
+) => {
+  const locales = includeEnUS
+    ? '[\n\t\t"en-US",\n\t\t"fi",\n\t\t"en"\n\t]'
+    : '[\n\t\t"fi",\n\t\t"en"\n\t]';
+  const defaultLocale = includeEnUS ? '""' : '"fi"';
+  const prefix = prefixDefaultLocale ? "/fi" : "";
+  const unPrefixedLocales = prefixDefaultLocale ? "[]" : '[\n\t\t"fi"\n\t]';
+  const domains = includeEnUS
+    ? `
+	"domains": [
+		{
+			"domain": "fi.example.com",
+			"locales": [
+				"fi"
+			],
+			"defaultLocale": "fi"
+		},
+		{
+			"domain": "en.example.com",
+			"locales": [
+				"en",
+				"en-US"
+			],
+			"defaultLocale": "en",
+			"prefixDefaultLocale": true
+		}
+	],`
+    : "";
+  return `
 export const schema = {
-	"locales": [
-		"fi",
-		"en"
-	],
-	"defaultLocale": "fi",
-	"prefixDefaultLocale": true,
+	"locales": ${locales},
+	"defaultLocale": ${defaultLocale},
+	"unPrefixedLocales": ${unPrefixedLocales},${domains}
 	"routes": {
-		"/": {
+		"/": {${
+      includeEnUS
+        ? `
+			"en-US": "/en-US",`
+        : ""
+    }
 			"en": "/en",
-			"fi": "/fi"
+			"fi": "${prefix || "/"}"
 		},
-		"/about": {
+		"/about": {${
+      includeEnUS
+        ? `
+			"en-US": "/en-US/about-the-site",`
+        : ""
+    }
 			"en": "/en/about-the-site",
-			"fi": "/fi/tietoa-sivustosta"
+			"fi": "${prefix}/tietoa-sivustosta"
 		},
-		"/feed": {
+		"/feed": {${
+      includeEnUS
+        ? `
+			"en-US": "/en-US/feed",`
+        : ""
+    }
 			"en": "/en/feed",
-			"fi": "/fi/syote"
+			"fi": "${prefix}/syote"
 		},
-		"/images": {
+		"/images": {${
+      includeEnUS
+        ? `
+			"en-US": "/en-US/images",`
+        : ""
+    }
 			"en": "/en/images",
-			"fi": "/fi/kuvat"
+			"fi": "${prefix}/kuvat"
 		},
-		"/privacy-policy": {
+		"/privacy-policy": {${
+      includeEnUS
+        ? `
+			"en-US": "/en-US/privacy-policy",`
+        : ""
+    }
 			"en": "/en/privacy-policy",
-			"fi": "/fi/tietosuojaseloste"
+			"fi": "${prefix}/tietosuojaseloste"
 		},
-		"/feed/images/[id]": {
+		"/feed/images/[id]": {${
+      includeEnUS
+        ? `
+			"en-US": "/en-US/feed/images/:id",`
+        : ""
+    }
 			"en": "/en/feed/images/:id",
-			"fi": "/fi/syote/kuvat/:id"
+			"fi": "${prefix}/syote/kuvat/:id"
 		},
-		"/images/[id]": {
+		"/images/[id]": {${
+      includeEnUS
+        ? `
+			"en-US": "/en-US/images/:id",`
+        : ""
+    }
 			"en": "/en/images/:id",
-			"fi": "/fi/kuvat/:id"
+			"fi": "${prefix}/kuvat/:id"
 		},
-		"/[...catchAll]": {
+		"/[...catchAll]": {${
+      includeEnUS
+        ? `
+			"en-US": "/en-US/*catchAll",`
+        : ""
+    }
 			"en": "/en/*catchAll",
-			"fi": "/fi/*catchAll"
+			"fi": "${prefix}/*catchAll"
 		}
 	}
 } as const;
@@ -106,6 +174,7 @@ declare module "next-globe-gen" {
 	}
 }
 `.trimStart();
+};
 
 describe("generateSchemaFile()", () => {
   beforeEach(() => {
@@ -116,17 +185,62 @@ describe("generateSchemaFile()", () => {
     cleanOutDirs();
   });
 
-  test("works correctly", () => {
+  test("works correctly with prefixDefaultLocale: true", () => {
+    const prefixDefaultLocale = true;
     generateSchemaFile(
       mergeConfigs(DEFAULT_CONFIG, {
         locales: ["fi", "en"],
         defaultLocale: "fi",
+        prefixDefaultLocale,
       }),
-      getExpectedOriginRoutes(true),
+      getExpectedOriginRoutes(prefixDefaultLocale),
     );
     expect(isFile(path.join(OUT_DIR, "schema.ts"))).toBe(true);
     expect(readFileSync(path.join(OUT_DIR, "schema.ts")).toString()).toBe(
-      expectedSchemaFileContents,
+      expectedSchemaFileContents(prefixDefaultLocale),
+    );
+  });
+
+  test("works correctly with prefixDefaultLocale: false", () => {
+    const prefixDefaultLocale = false;
+    generateSchemaFile(
+      mergeConfigs(DEFAULT_CONFIG, {
+        locales: ["fi", "en"],
+        defaultLocale: "fi",
+        prefixDefaultLocale,
+      }),
+      getExpectedOriginRoutes(prefixDefaultLocale),
+    );
+    expect(isFile(path.join(OUT_DIR, "schema.ts"))).toBe(true);
+    expect(readFileSync(path.join(OUT_DIR, "schema.ts")).toString()).toBe(
+      expectedSchemaFileContents(prefixDefaultLocale),
+    );
+  });
+
+  test("works correctly with domains config", () => {
+    const prefixFinnishLocale = false;
+    const includeEnUS = true;
+    generateSchemaFile(
+      mergeConfigs(DEFAULT_CONFIG, {
+        domains: [
+          {
+            domain: "fi.example.com",
+            locales: ["fi"],
+            defaultLocale: "fi",
+          },
+          {
+            domain: "en.example.com",
+            locales: ["en", "en-US"],
+            defaultLocale: "en",
+            prefixDefaultLocale: true,
+          },
+        ],
+      }),
+      getExpectedOriginRoutes(prefixFinnishLocale, includeEnUS),
+    );
+    expect(isFile(path.join(OUT_DIR, "schema.ts"))).toBe(true);
+    expect(readFileSync(path.join(OUT_DIR, "schema.ts")).toString()).toBe(
+      expectedSchemaFileContents(prefixFinnishLocale, includeEnUS),
     );
   });
 });

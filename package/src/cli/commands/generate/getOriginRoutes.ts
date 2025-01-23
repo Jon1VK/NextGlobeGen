@@ -1,7 +1,8 @@
 import { readdirSync } from "fs";
 import path from "path";
 import type { OriginRoute } from "~/cli/types";
-import type { Config } from "~/utils/config";
+import type { Locale } from "~/types/schema";
+import { getLocales, type Config } from "~/utils/config";
 import { isDirectory, isFile } from "~/utils/fs-utils";
 import { compile } from "~/utils/ts-utils";
 
@@ -9,16 +10,19 @@ type GetOriginRoutesParams = {
   config: Config;
   directory?: string;
   parentRoute?: OriginRoute;
+  locales_?: Locale[];
 };
 
 export async function getOriginRoutes({
   config,
   directory,
   parentRoute,
+  locales_,
 }: GetOriginRoutesParams) {
   const originRoutes: OriginRoute[] = [];
   const currentDir = directory ?? config.routes.originDir;
   const files = getAppRouterFiles(currentDir);
+  const locales = locales_ ?? getLocales(config);
   for await (const file of files) {
     const filePath = path.join(currentDir, file.name);
     const routePath = `${parentRoute?.path ?? ""}/${file.name}`;
@@ -27,28 +31,32 @@ export async function getOriginRoutes({
     const routeTranslations = isDir
       ? await getRouteTranslations(filePath)
       : undefined;
-    const localizedPaths = Object.fromEntries(
-      config.locales
-        .map((locale) => {
-          if (isDifferentLocaleMarkdownPageFile(file, locale)) return;
-          const noLocalePrefix =
-            !config.routes.prefixDefaultLocale &&
-            locale === config.defaultLocale;
-          const localePrefix = noLocalePrefix ? `(${locale})` : locale;
-          const localizedDir =
-            parentRoute?.localizedPaths[locale] ?? `/${localePrefix}`;
-          const localizedSegment =
-            routeTranslations?.[locale] ??
-            file.name.replace(`.${locale}.mdx`, ".tsx");
-          const localizedPath = `${localizedDir}/${localizedSegment}`;
-          return [locale, localizedPath];
-        })
-        .filter((v) => !!v),
-    );
+    const localizedPathEntries = locales
+      .map((locale) => {
+        if (isDifferentLocaleMarkdownPageFile(file, locale)) return;
+        const prefixDefaultLocale =
+          typeof config.routes.prefixDefaultLocale === "boolean"
+            ? config.routes.prefixDefaultLocale
+            : config.prefixDefaultLocale;
+        const skipPrefixLocale =
+          !config.domains &&
+          !prefixDefaultLocale &&
+          locale === config.defaultLocale;
+        const localePrefix = skipPrefixLocale ? `(${locale})` : locale;
+        const localizedDir =
+          parentRoute?.localizedPaths[locale] ?? `/${localePrefix}`;
+        const localizedSegment =
+          routeTranslations?.[locale] ??
+          file.name.replace(`.${locale}.mdx`, ".tsx");
+        const localizedPath = `${localizedDir}/${localizedSegment}`;
+        return [locale, localizedPath];
+      })
+      .filter((v) => !!v);
+    if (localizedPathEntries.length === 0) continue;
     const originRoute: OriginRoute = {
       type: file.type as RouteType,
       path: routePath,
-      localizedPaths,
+      localizedPaths: Object.fromEntries(localizedPathEntries),
     };
     if (!isDir) {
       originRoutes.push(originRoute);
@@ -58,6 +66,7 @@ export async function getOriginRoutes({
       config,
       directory: filePath,
       parentRoute: originRoute,
+      locales_: locales,
     });
     originRoutes.push(...childRoutes);
   }

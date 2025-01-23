@@ -6,7 +6,7 @@ import type {
   Namespace,
   NamespaceKey,
 } from "next-globe-gen/messages";
-import type { DefaultLocale, Locale } from "next-globe-gen/schema";
+import type { Locale } from "next-globe-gen/schema";
 import { cloneElement, type ReactNode } from "react";
 
 export function useTranslationsFactory(
@@ -58,7 +58,7 @@ export function tImpl<
   key,
   args,
 }: {
-  messages: Messages[DefaultLocale] | undefined;
+  messages: Messages[Locale] | undefined;
   formatters: Options["formatters"];
   locale: Locale;
   namespace: N;
