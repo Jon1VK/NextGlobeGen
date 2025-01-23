@@ -1,0 +1,14 @@
+import { Link } from "next-globe-gen";
+
+# Link Component
+
+`<Link>` is a React component that extends the Next.js [`<Link>`](https://nextjs.org/docs/app/api-reference/components/link) component to provide locale-aware navigation to localized pathnames. It is the primary way to navigate between localized routes.
+
+Try the following examples:
+
+{/* prettier-ignore */}
+- <Link href="/">Homepage</Link>
+- <Link href="/" locale="fi">Homepage (In Finnish)</Link>
+- <Link href={{ pathname: "/link-component", query: { q: "query" } }}>With a query</Link>
+- <Link href="/[...catchAll]" params={{ catchAll: ["a", "b", "c"] }}>With dynamic params</Link>
+{/* prettier-ignore-end */}

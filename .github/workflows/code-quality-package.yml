@@ -2,8 +2,6 @@ name: Package Code Quality
 
 on:
   pull_request:
-    paths:
-      - package/**
 
 defaults:
   run:

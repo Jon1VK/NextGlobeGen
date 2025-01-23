@@ -8,5 +8,7 @@ export default function sitemap({
 }): MetadataRoute.Sitemap {
   const routes = Object.keys(schema.routes) as Route[];
   const staticRoutes = routes.filter((route) => route !== "/[...catchAll]");
-  return staticRoutes.map((route) => ({ url: createHref(route, locale) }));
+  return staticRoutes.map((route) => ({
+    url: createHref(route, locale as "fi"),
+  }));
 }

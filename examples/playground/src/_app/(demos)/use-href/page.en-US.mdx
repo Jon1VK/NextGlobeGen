@@ -1,0 +1,10 @@
+import { useHref } from "next-globe-gen";
+
+# useHref
+
+If you need to construct a localized href of a route, you can use the `useHref` hook. This hook is used under the hood in other components and functions, such as the `Link` component.
+
+- Homepage: <code>{useHref("/")}</code>
+- Homepage (In Finnish): <code>{useHref("/", "fi")}</code>
+- With a query: <code>{useHref({ pathname: "/localized-pathnames", query: { q: "query" } })}</code>
+- With dynamic params: <code>{useHref("/[...catchAll]", { catchAll: ["a", "b", "c"] })}</code>

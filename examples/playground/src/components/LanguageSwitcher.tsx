@@ -28,6 +28,8 @@ export default function LanguageSwitcher() {
           })}
         >
           {locale === "en" && "In English"}
+          {/* @ts-expect-error en-US is used only when testing domain-based routing  */}
+          {locale === "en-US" && "In US English"}
           {locale === "fi" && "Suomeksi"}
         </Link>
       ))}
