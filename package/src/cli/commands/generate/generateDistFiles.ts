@@ -25,10 +25,8 @@ const schemaTemplate = "".concat(
 export function generateOutDirs(localizedDir: string) {
   makeDirectory(OUT_DIR);
   writeFileSync(path.join(OUT_DIR, ".gitignore"), "*");
-  writeFileSync(path.join(OUT_DIR, ".prettierignore"), "*");
   makeDirectory(localizedDir);
   writeFileSync(path.join(localizedDir, ".gitignore"), "*");
-  writeFileSync(path.join(localizedDir, ".prettierignore"), "*");
   generateDeclarationFile();
 }
 
