@@ -1,5 +1,5 @@
 import { render, type RenderOptions } from "@testing-library/react";
-import { IntlProvider } from "next-globe-gen";
+import { IntlProvider } from "next-globe-gen/client";
 import type { ReactNode } from "react";
 import { messages } from "../.next-globe-gen/messages";
 import { schema } from "../.next-globe-gen/schema";
