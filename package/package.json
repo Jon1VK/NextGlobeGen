@@ -63,7 +63,6 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@formatjs/intl-localematcher": "^0.5.9",
     "commander": "^12.1.0",
     "fast-memoize": "^2.5.2",
     "intl-messageformat": "^10.7.10",

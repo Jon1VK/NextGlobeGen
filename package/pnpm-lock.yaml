@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@formatjs/intl-localematcher':
-        specifier: ^0.5.9
-        version: 0.5.9
       commander:
         specifier: ^12.1.0
         version: 12.1.0
