@@ -4,43 +4,32 @@ import type { Options } from "intl-messageformat";
 import type { Messages } from "next-globe-gen/messages";
 import type { Locale, Schema } from "next-globe-gen/schema";
 import { createContext, use, type ReactNode } from "react";
-import { formatters } from "../shared/formatters";
 
-const IntlContext = createContext<{
-  locale: Locale;
-  messages: Messages[Locale];
-  formatters: Options["formatters"];
-  schema: Schema;
-}>({
-  locale: "",
-  messages: {},
-  formatters: undefined,
-  schema: {
-    locales: [],
-    defaultLocale: "",
-    unPrefixedLocales: [],
-    routes: {},
+const IntlContext = createContext(
+  null as unknown as {
+    locale: Locale;
+    messages: Messages[Locale];
+    formatters: Options["formatters"];
+    schema: Schema;
   },
-});
+);
 
 type IntlProviderProps = {
   children: ReactNode;
-  locale: Locale;
-  messages: Messages[Locale];
-  schema: Schema;
+  locale?: Locale;
+  messages?: Messages[Locale];
+  schema?: Schema;
 };
 
-export function IntlProvider({
-  children,
-  locale,
-  messages,
-  schema,
-}: IntlProviderProps) {
-  return (
-    <IntlContext.Provider value={{ locale, messages, formatters, schema }}>
-      {children}
-    </IntlContext.Provider>
-  );
+export function IntlProvider(props: IntlProviderProps) {
+  const parentContext = use(IntlContext);
+  if (!parentContext && !(props.locale && props.messages && props.schema)) {
+    throw new Error(
+      "Root IntlProvider is missing some of the following props: `locale`, `schema`, `messages`.",
+    );
+  }
+  const { children, ...value } = { ...parentContext, ...props };
+  return <IntlContext.Provider value={value}>{children}</IntlContext.Provider>;
 }
 
 export const useLocale = (): Locale => use(IntlContext).locale;
