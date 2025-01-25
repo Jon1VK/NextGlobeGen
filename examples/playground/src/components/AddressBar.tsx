@@ -42,7 +42,7 @@ export default function AddressBar() {
   return (
     <div className="rounded-lg bg-vc-border-gradient p-px shadow-lg shadow-black/20">
       <div className="rounded-lg bg-black">
-        <div className="flex text-nowrap items-center justify-between flex-wrap overflow-x-auto gap-4 p-3.5 lg:px-5 lg:py-3">
+        <div className="flex flex-wrap items-center justify-between gap-4 overflow-x-auto text-nowrap p-3.5 lg:px-5 lg:py-3">
           <div className="flex items-center gap-x-2">
             <div className="text-gray-600">
               <svg

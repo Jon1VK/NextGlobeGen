@@ -1,3 +1,5 @@
+import forms from "@tailwindcss/forms";
+import typography from "@tailwindcss/typography";
 import type { Config } from "tailwindcss";
 import colors from "tailwindcss/colors";
 
@@ -24,7 +26,7 @@ export default {
       },
       backgroundImage: ({ theme }) => ({
         "vc-border-gradient": `radial-gradient(at left top, ${theme(
-          "colors.gray.500"
+          "colors.gray.500",
         )}, 50px, ${theme("colors.gray.800")} 50%)`,
       }),
       keyframes: ({ theme }) => ({
@@ -82,5 +84,5 @@ export default {
       }),
     },
   },
-  plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],
+  plugins: [typography, forms],
 } satisfies Config;

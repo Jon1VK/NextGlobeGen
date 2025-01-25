@@ -7,6 +7,10 @@ const withNextGlobeGen = createNextGlobeGenPlugin();
 
 const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  // Checked in CI pipeline
+  typescript: { ignoreBuildErrors: true },
+  // Checked in CI pipeline
+  eslint: { ignoreDuringBuilds: true },
 };
 
 export default withNextGlobeGen(withMDX(nextConfig));

@@ -1,0 +1,27 @@
+name: Playground Code Quality
+
+on:
+  pull_request:
+    paths:
+      - examples/playground/**
+
+defaults:
+  run:
+    working-directory: ./examples/playground
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - run: pnpm pnpm:devPreinstall
+      - run: pnpm install
+      - run: pnpm check

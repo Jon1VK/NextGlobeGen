@@ -6,7 +6,7 @@ export default function NotFoundPage() {
   const tDemos = useTranslations("demos");
   return (
     <>
-      <h1 className="text-xl font-medium ">
+      <h1 className="text-xl font-medium">
         {tDemos("client.titles.not-found")}
       </h1>
       <p className="my-4 text-sm text-gray-300">
