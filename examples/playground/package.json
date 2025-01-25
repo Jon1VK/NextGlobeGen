@@ -8,11 +8,13 @@
     "start": "next start",
     "pnpm:devPreinstall": "pnpm -C ../../package i && pnpm -C ../../package build",
     "check": "pnpm run /^check:/",
-    "check:types": "pnpm next-globe-gen && tsc",
+    "check:types": "next-globe-gen && tsc",
     "check:lint": "next lint",
     "check:format": "prettier --check .",
-    "test": "pnpm next-globe-gen && vitest --no-watch",
-    "test:watch": "pnpm next-globe-gen && vitest"
+    "test": "pnpm run /^test:[^:]*$/",
+    "test:unit": "next-globe-gen && vitest --no-watch",
+    "test:unit:watch": "next-globe-gen && vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -28,6 +30,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.19.0",
+    "@playwright/test": "^1.50.0",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
     "@testing-library/dom": "^10.4.0",
