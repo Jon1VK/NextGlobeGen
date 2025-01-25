@@ -1,4 +1,4 @@
-import IntlMessageFormat, { type Options } from "intl-messageformat";
+import { IntlMessageFormat, type Options } from "intl-messageformat";
 import type {
   Message,
   MessageArguments,

@@ -1,4 +1,15 @@
-import { defineConfig } from "tsup";
+import { defineConfig, Options } from "tsup";
+
+type Plugin = Options["plugins"] extends (infer T)[] | undefined ? T : never;
+
+const nextImportsPlugin: Plugin = {
+  name: "next-imports-plugin",
+  renderChunk(_, chunk) {
+    if (this.format !== "esm") return;
+    const code = chunk.code.replace(/from "next\/(.*)"/g, 'from "next/$1.js"');
+    return { code };
+  },
+};
 
 export default defineConfig([
   {
@@ -25,6 +36,7 @@ export default defineConfig([
     esbuildOptions(options) {
       options.banner = { js: '"use client"' };
     },
+    plugins: [nextImportsPlugin],
     entry: { "index.client": "src/router/client/index.ts" },
     dts: true,
   },
