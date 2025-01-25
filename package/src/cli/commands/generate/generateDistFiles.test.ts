@@ -35,19 +35,11 @@ describe("generateOutDirs()", () => {
     generateOutDirs(LOCALIZED_DIR);
     expect(isDirectory(OUT_DIR)).toBe(true);
     expect(isFile(path.join(OUT_DIR, ".gitignore"))).toBe(true);
-    expect(isFile(path.join(OUT_DIR, ".prettierignore"))).toBe(true);
     expect(readFileSync(path.join(OUT_DIR, ".gitignore")).toString()).toBe("*");
-    expect(readFileSync(path.join(OUT_DIR, ".prettierignore")).toString()).toBe(
-      "*",
-    );
     expect(isDirectory(LOCALIZED_DIR)).toBe(true);
     expect(isFile(path.join(LOCALIZED_DIR, ".gitignore"))).toBe(true);
-    expect(isFile(path.join(LOCALIZED_DIR, ".prettierignore"))).toBe(true);
     expect(
       readFileSync(path.join(LOCALIZED_DIR, ".gitignore")).toString(),
-    ).toBe("*");
-    expect(
-      readFileSync(path.join(LOCALIZED_DIR, ".prettierignore")).toString(),
     ).toBe("*");
     expect(isFile(TYPES_DECLARATION_FILE)).toBe(true);
     expect(readFileSync(TYPES_DECLARATION_FILE).toString()).toBe(
