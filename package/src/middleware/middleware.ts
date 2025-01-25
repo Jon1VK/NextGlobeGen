@@ -1,4 +1,3 @@
-import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 import { schema, type Locale } from "next-globe-gen/schema";
 import { NextResponse, type NextRequest } from "next/server";
@@ -97,7 +96,7 @@ function localeMatcher(
 ) {
   const headers = Object.fromEntries(request.headers);
   const negotiator = new Negotiator({ headers });
-  return match(negotiator.languages(), locales, defaultLocale);
+  return negotiator.language(locales) ?? defaultLocale;
 }
 
 const matchRoute = matchRouteFactory(() => schema);
