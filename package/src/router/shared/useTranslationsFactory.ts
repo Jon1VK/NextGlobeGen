@@ -1,4 +1,8 @@
-import { IntlMessageFormat, type Options } from "intl-messageformat";
+import {
+  IntlMessageFormat,
+  type Formats,
+  type Options,
+} from "intl-messageformat";
 import type {
   Message,
   MessageArguments,
@@ -6,11 +10,12 @@ import type {
   Namespace,
   NamespaceKey,
 } from "next-globe-gen/messages";
-import type { Locale } from "next-globe-gen/schema";
+import type { Locale, Schema } from "next-globe-gen/schema";
 import { cloneElement, type ReactNode } from "react";
 
 export function useTranslationsFactory(
   useLocale: () => Locale,
+  useSchema: () => Schema,
   useMessages: () => Messages[Locale] | undefined,
   useFormatters: () => Options["formatters"],
 ) {
@@ -18,6 +23,7 @@ export function useTranslationsFactory(
     namespace?: N,
   ) {
     const locale = useLocale();
+    const formats = useSchema().formats;
     const messages = useMessages();
     const formatters = useFormatters();
     return function t<
@@ -37,6 +43,7 @@ export function useTranslationsFactory(
       return tImpl({
         messages,
         formatters,
+        formats,
         locale,
         namespace,
         key,
@@ -53,6 +60,7 @@ export function tImpl<
 >({
   messages,
   formatters,
+  formats,
   locale,
   namespace,
   key,
@@ -60,6 +68,7 @@ export function tImpl<
 }: {
   messages: Messages[Locale] | undefined;
   formatters: Options["formatters"];
+  formats?: Partial<Formats>;
   locale: Locale;
   namespace: N;
   key: K;
@@ -72,7 +81,7 @@ export function tImpl<
   const isLiteralMessage = !/['{<]/.test(message);
   if (isLiteralMessage) return message;
   try {
-    const msgFormat = new IntlMessageFormat(message, locale, undefined, {
+    const msgFormat = new IntlMessageFormat(message, locale, formats, {
       formatters,
     });
     const keyedTagArgs = injectKeysToTagArgs(args);

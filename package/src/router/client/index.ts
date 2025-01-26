@@ -29,6 +29,7 @@ export const Link = LinkFactory(useHref);
 export const Form = FormFactory(useHref);
 export const useTranslations = useTranslationsFactory(
   useLocale,
+  useSchema,
   useMessages,
   useFormatters,
 );

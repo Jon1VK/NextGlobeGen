@@ -1,4 +1,5 @@
 import { readdirSync, readFileSync } from "fs";
+import type { Formats } from "intl-messageformat";
 import path from "path";
 import { parse } from "yaml";
 import { isDirectory, isFile } from "~/utils/fs-utils";
@@ -37,14 +38,15 @@ type RoutesConfig = {
 type MessagesConfig = {
   originDir: string;
   clientKeys?: RegExp[] | RegExp;
+  formats?: Partial<Formats>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getMessages: (locale: string) => Promise<any> | any;
 };
 
-export type Config = { routes: RoutesConfig; messages: MessagesConfig } & (
-  | PrefixConfig
-  | DomainsConfig
-);
+export type Config = {
+  routes: RoutesConfig;
+  messages: MessagesConfig;
+} & (PrefixConfig | DomainsConfig);
 
 type DeepPartial<T> =
   T extends Record<string, unknown>
@@ -120,7 +122,10 @@ export function mergeConfigs(a: Config, b: DeepPartial<Config>) {
     ...a,
     ...b,
     domains: mergeDomainConfigs(a.domains, b.domains),
-    messages: { ...a.messages, ...b.messages },
+    messages: mergeMessageConfigs(
+      a.messages,
+      b.messages as Partial<MessagesConfig> | undefined,
+    ),
     routes: { ...a.routes, ...b.routes },
   } as Config;
 }
@@ -130,6 +135,19 @@ function mergeDomainConfigs(a?: DomainConfig[], b?: DomainConfig[]) {
   if (!a) return b;
   if (!b) return a;
   return [...a, ...b];
+}
+
+function mergeMessageConfigs(a: MessagesConfig, b?: Partial<MessagesConfig>) {
+  if (!b) return a;
+  const formats = mergeFormatsConfigs(a.formats, b.formats);
+  return { ...a, ...b, formats };
+}
+
+function mergeFormatsConfigs(a?: Partial<Formats>, b?: Partial<Formats>) {
+  if (!a && !b) return undefined;
+  if (!a) return b;
+  if (!b) return a;
+  return { ...a, ...b };
 }
 
 export function getLocales(config: Config) {
