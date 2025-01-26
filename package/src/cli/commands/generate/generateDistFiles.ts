@@ -72,6 +72,7 @@ function generateSchema(config: Config, originRoutes: OriginRoute[]) {
     defaultLocale: config.defaultLocale ?? "",
     unPrefixedLocales: [...unPrefixedLocales],
     domains: config.domains,
+    formats: config.messages.formats,
     routes: sortedRoutes(routes),
   } satisfies Schema;
 }

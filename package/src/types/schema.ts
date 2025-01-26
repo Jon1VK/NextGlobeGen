@@ -1,3 +1,4 @@
+import type { Formats } from "intl-messageformat";
 import type { DomainConfig } from "~/utils/config";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -9,6 +10,7 @@ type MockSchema = {
   defaultLocale: string;
   routes: Record<string, Record<string, string>>;
   domains?: DomainConfig[];
+  formats?: Partial<Formats>;
 };
 
 export type Schema = SchemaRegister extends { schema: infer S }

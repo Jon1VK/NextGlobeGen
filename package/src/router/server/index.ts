@@ -24,6 +24,7 @@ const useMessages = () => messages[useLocale()];
 const useFormatters = () => formatters;
 export const useTranslations = useTranslationsFactory(
   useLocale,
+  useSchema,
   useMessages,
   useFormatters,
 );

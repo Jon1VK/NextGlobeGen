@@ -48,10 +48,15 @@ describe("generateOutDirs()", () => {
   });
 });
 
-const expectedSchemaFileContents = (
-  prefixDefaultLocale?: boolean,
-  includeEnUS?: boolean,
-) => {
+const expectedSchemaFileContents = ({
+  prefixDefaultLocale,
+  includeEnUS,
+  includeFormats,
+}: {
+  prefixDefaultLocale?: boolean;
+  includeEnUS?: boolean;
+  includeFormats?: boolean;
+} = {}) => {
   const locales = includeEnUS
     ? '[\n\t\t"en-US",\n\t\t"fi",\n\t\t"en"\n\t]'
     : '[\n\t\t"fi",\n\t\t"en"\n\t]';
@@ -79,11 +84,22 @@ const expectedSchemaFileContents = (
 		}
 	],`
     : "";
+  const formats = includeFormats
+    ? `
+	"formats": {
+		"number": {
+			"rounded_two": {
+				"maximumFractionDigits": 2,
+				"minimumFractionDigits": 2
+			}
+		}
+	},`
+    : "";
   return `
 export const schema = {
 	"locales": ${locales},
 	"defaultLocale": ${defaultLocale},
-	"unPrefixedLocales": ${unPrefixedLocales},${domains}
+	"unPrefixedLocales": ${unPrefixedLocales},${domains}${formats}
 	"routes": {
 		"/": {${
       includeEnUS
@@ -189,7 +205,7 @@ describe("generateSchemaFile()", () => {
     );
     expect(isFile(path.join(OUT_DIR, "schema.ts"))).toBe(true);
     expect(readFileSync(path.join(OUT_DIR, "schema.ts")).toString()).toBe(
-      expectedSchemaFileContents(prefixDefaultLocale),
+      expectedSchemaFileContents({ prefixDefaultLocale }),
     );
   });
 
@@ -205,12 +221,12 @@ describe("generateSchemaFile()", () => {
     );
     expect(isFile(path.join(OUT_DIR, "schema.ts"))).toBe(true);
     expect(readFileSync(path.join(OUT_DIR, "schema.ts")).toString()).toBe(
-      expectedSchemaFileContents(prefixDefaultLocale),
+      expectedSchemaFileContents({ prefixDefaultLocale }),
     );
   });
 
   test("works correctly with domains config", () => {
-    const prefixFinnishLocale = false;
+    const prefixDefaultLocale = false;
     const includeEnUS = true;
     generateSchemaFile(
       mergeConfigs(DEFAULT_CONFIG, {
@@ -228,11 +244,37 @@ describe("generateSchemaFile()", () => {
           },
         ],
       }),
-      getExpectedOriginRoutes(prefixFinnishLocale, includeEnUS),
+      getExpectedOriginRoutes(prefixDefaultLocale, includeEnUS),
     );
     expect(isFile(path.join(OUT_DIR, "schema.ts"))).toBe(true);
     expect(readFileSync(path.join(OUT_DIR, "schema.ts")).toString()).toBe(
-      expectedSchemaFileContents(prefixFinnishLocale, includeEnUS),
+      expectedSchemaFileContents({ prefixDefaultLocale, includeEnUS }),
+    );
+  });
+
+  test("includes custom format options correctly", () => {
+    const prefixDefaultLocale = true;
+    generateSchemaFile(
+      mergeConfigs(DEFAULT_CONFIG, {
+        locales: ["fi", "en"],
+        defaultLocale: "fi",
+        prefixDefaultLocale,
+        messages: {
+          formats: {
+            number: {
+              rounded_two: {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2,
+              },
+            },
+          },
+        },
+      }),
+      getExpectedOriginRoutes(prefixDefaultLocale),
+    );
+    expect(isFile(path.join(OUT_DIR, "schema.ts"))).toBe(true);
+    expect(readFileSync(path.join(OUT_DIR, "schema.ts")).toString()).toBe(
+      expectedSchemaFileContents({ prefixDefaultLocale, includeFormats: true }),
     );
   });
 });
