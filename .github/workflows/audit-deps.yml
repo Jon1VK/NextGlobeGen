@@ -1,0 +1,42 @@
+name: Audit deps
+
+on:
+  schedule:
+    - cron: 0 0 * * 0
+
+jobs:
+  audit-docs:
+    defaults:
+      run:
+        working-directory: ./docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - run: pnpm audit
+
+  audit-playground:
+    defaults:
+      run:
+        working-directory: ./examples/playground
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - run: pnpm audit
+
+  audit-package:
+    defaults:
+      run:
+        working-directory: ./package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - run: pnpm audit
