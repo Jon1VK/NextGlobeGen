@@ -16,6 +16,7 @@ export default defineConfig([
     clean: true,
     format: ["cjs", "esm"],
     external: ["next-globe-gen"],
+    splitting: false,
     entry: {
       cli: "src/cli/index.ts",
       plugin: "src/plugin/index.ts",

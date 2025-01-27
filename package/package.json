@@ -23,6 +23,7 @@
     "README.md",
     "LICENSE"
   ],
+  "sideEffects": false,
   "bin": {
     "next-globe-gen": "./dist/cli.js"
   },
