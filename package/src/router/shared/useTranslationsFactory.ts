@@ -83,6 +83,7 @@ export function tImpl<
   try {
     const msgFormat = new IntlMessageFormat(message, locale, formats, {
       formatters,
+      requiresOtherClause: false,
     });
     const keyedTagArgs = injectKeysToTagArgs(args);
     return msgFormat.format(keyedTagArgs);
