@@ -95,32 +95,36 @@ type StripEscaped<S extends string> =
  * Extract ICU message arguments ang tags from the given string.
  */
 type ExtractArgumentsAngTags<S extends string> =
-  | _ExtractSimpleArguments<S>
-  | _ExtractComplexArguments<S>
+  | _ExtractArguments<S>
   | _ExtractSelectArguments<S>
   | _ExtractTags<S>;
 
-type _ExtractSimpleArguments<S extends string> =
-  S extends `${string}{${infer Arg}}${infer Rest}`
-    ? _ExtractNestedSimpleArguments<Arg> | _ExtractSimpleArguments<Rest>
-    : never;
+type _ExtractArguments<S extends string> =
+  S extends `${string}{${string}{${string}`
+    ? _ExtractMultipleArguments<S>
+    : _ExtractArgument<S>;
 
-type _ExtractNestedSimpleArguments<Arg extends string> =
-  Arg extends `${string}{${infer B}` ? _ExtractSimpleArguments<`{${B}}`> : Arg;
-
-type _ExtractComplexArguments<S extends string> =
+type _ExtractMultipleArguments<S extends string> =
   S extends `${string}{${infer Arg}{${infer Rest}`
-    ? _ExtractNestedComplexArguments<Arg> | _ExtractComplexArguments<Rest>
+    ? Arg extends `${infer A}}${string}`
+      ? _ExtractArguments<`{${A}}`> | _ExtractArguments<`{${Rest}`>
+      : Arg extends `${string},select,${string}`
+        ? _ExtractRestArguments<`{${Rest}`>
+        : Arg extends `${string},${string}`
+          ? Arg | _ExtractRestArguments<`{${Rest}`>
+          : never
     : never;
 
-type _ExtractNestedComplexArguments<Arg extends string> =
-  Arg extends `${string}}${string}`
-    ? never
-    : Arg extends `${string},select,${string}`
-      ? never
-      : Arg extends `${string},${string}`
-        ? Arg
-        : never;
+type _ExtractRestArguments<S extends string> = S extends `}${infer Rest}`
+  ? _ExtractArguments<Rest>
+  : S extends `${string}{${infer Nested}}${infer Rest}`
+    ? Nested extends `${string}{${infer NestedRest}`
+      ? _ExtractArguments<`{${NestedRest}}`> | _ExtractRestArguments<`{${Rest}`>
+      : _ExtractRestArguments<Rest>
+    : never;
+
+type _ExtractArgument<S extends string> =
+  S extends `${string}{${infer Arg}}${string}` ? Arg : never;
 
 type _ExtractSelectArguments<S extends string> =
   S extends `${string}{${infer Arg},select,${infer Rest}`
