@@ -70,6 +70,7 @@ demos:
     withTimeFull: "Full time: {value, time, full}."
     withRichText: "Rich text : <b>bold</b>."
     escaped: "Escaped: '{interpolation}' '<b>Bold</b>' ''quoted''"
+    plural: "Plural: You have {count, plural, =0 {no followers yet} =1 {one follower} other {# followers}}."
     complex: >-
       Complex: {gender_of_host, select, 
         female {

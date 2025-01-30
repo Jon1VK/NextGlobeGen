@@ -7,6 +7,7 @@ export default function TranslationsExample() {
   return (
     <ul>
       <li>{t("simple")}</li>
+      <li>{t("plural", { count: 3 })}</li>
       <li>
         {t("complex", {
           b: (children) => <b>{children}</b>,

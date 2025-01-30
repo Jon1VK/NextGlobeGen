@@ -71,6 +71,7 @@ demos:
     withTimeFull: "Täydellinen aika: {value, time, full}."
     withRichText: "Rikastettu teksti: <b>lihavoitu</b>."
     escaped: "Escapetettu: '{interpolation}' '<b>Lihavoitu</b>' ''lainausmerkit''"
+    plural: "Monikollinen: Sinulla {count, plural, =0 {ei ole seuraajia vielä} =1 {on yksi seuraaja} other {on # seuraajaa}}."
     complex: >-
       Monimutkainen: {num_guests, plural, offset:1
         =0 {<b>{host}</b> ei järjestä juhlia.}
