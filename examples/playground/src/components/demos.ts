@@ -19,6 +19,11 @@ export const demos: {
         descriptionKey: "localized-pathnames",
       },
       {
+        route: "/dynamic",
+        titleKey: "dynamic",
+        descriptionKey: "dynamic",
+      },
+      {
         route: "/markdown",
         titleKey: "markdown",
         descriptionKey: "markdown",

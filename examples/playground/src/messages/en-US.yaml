@@ -6,6 +6,7 @@ common:
 home:
   title: NextGlobeGen Playground
   description: A playground to explore NextGlobeGen features.
+posts: Posts
 demos:
   client:
     titles:
@@ -26,6 +27,7 @@ demos:
       use-route: useRoute
       use-router: useRouter
       t-function: Translator Function
+      dynamic: Dynamic route
     useRouter:
       homepage: Homepage
       homepageAlt: Homepage (In Finnish)
@@ -44,6 +46,7 @@ demos:
     use-route: The useRoute hook returns the current route of the page.
     use-router: Navigate to localized pathnames programmatically.
     t-function: Render messages in the current locale.
+    dynamic: Example of how to translate dynamic segments.
   content:
     localized-pathnames: >-
       <p>The pathnames in the url often need to be translated to improve SEO. In

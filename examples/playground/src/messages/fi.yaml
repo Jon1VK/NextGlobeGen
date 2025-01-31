@@ -6,6 +6,7 @@ common:
 home:
   title: NextGlobeGen leikkipaikka
   description: Leikkipaikka NextGlobeGen-ominaisuuksien tutkimiseen.
+posts: Julkaisut
 demos:
   client:
     titles:
@@ -26,6 +27,7 @@ demos:
       use-route: useRoute
       use-router: useRouter
       t-function: Kääntäjäfunktio
+      dynamic: Dynaaminen segmentti
     useRouter:
       homepage: Kotisivu
       homepageAlt: Kotisivu (englanniksi)
@@ -44,6 +46,7 @@ demos:
     use-route: useRoute-hook palauttaa sivun nykyisen reitin.
     use-router: Navigoi paikallistettuihin polkunimiin ohjelmallisesti.
     t-function: Renderöi viestit nykyisellä kielellä.
+    dynamic: Esimerkki dynaamisten segmenttien kääntämisestä.
   content:
     localized-pathnames: >-
       <p>URL-osoitteiden polut täytyy usein kääntää hakukoneoptimoinnin (SEO)
