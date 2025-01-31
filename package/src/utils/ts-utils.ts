@@ -1,13 +1,17 @@
 import { createHash } from "crypto";
+import { rmSync } from "fs";
 import path from "path";
 import { build } from "tsup";
 import { pathToFileURL } from "url";
-import { rmDirectory } from "~/utils/fs-utils";
+import { isFile } from "~/utils/fs-utils";
 
-const OUT_DIR = "./node_modules/next-globe-gen/dist/tmp";
+const OUT_DIR = "./.next-globe-gen";
 
 export async function compile<T>(filePath: string) {
-  const outputFileName = createHash("md5").update(filePath).digest("hex");
+  const version = new Date().getTime();
+  const outputFileName = createHash("md5")
+    .update(`${filePath}-${version}`)
+    .digest("hex");
   await build({
     config: false,
     target: "node18",
@@ -16,12 +20,14 @@ export async function compile<T>(filePath: string) {
     entryPoints: { [`${outputFileName}`]: filePath },
     silent: true,
   });
-  // Hack to import always the latest i18n.ts files
-  const version = new Date().getTime();
-  const compiledPath = `${pathToFileURL(path.resolve(OUT_DIR, outputFileName))}.mjs?version=${version}`;
-  return (await import(compiledPath)) as T;
-}
-
-export function removeCompiledFiles() {
-  rmDirectory(OUT_DIR);
+  const compiledPath = path.resolve(OUT_DIR, outputFileName);
+  const compiledFileURL = pathToFileURL(compiledPath);
+  if (isFile(`${compiledPath}.mjs`)) {
+    const contents = await import(`${compiledFileURL}.mjs`);
+    rmSync(`${compiledPath}.mjs`);
+    return contents as T;
+  }
+  const contents = await import(`${compiledFileURL}.js`);
+  rmSync(`${compiledPath}.js`);
+  return contents as T;
 }

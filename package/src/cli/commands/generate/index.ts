@@ -8,7 +8,7 @@ import {
   type UserConfig,
 } from "~/utils/config";
 import { isDirectory, isFile, rmDirectory } from "~/utils/fs-utils";
-import { compile, removeCompiledFiles } from "~/utils/ts-utils";
+import { compile } from "~/utils/ts-utils";
 import { configNotFoundError, originDirNotFoundError } from "./errors";
 import {
   generateMessagesFile,
@@ -64,8 +64,6 @@ async function generateRoutes(config: Config, updatedOriginPath?: string) {
     );
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
-  } finally {
-    removeCompiledFiles();
   }
 }
 
