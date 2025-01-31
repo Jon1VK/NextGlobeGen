@@ -1,5 +1,6 @@
 {
   "name": "next-globe-gen",
+  "type": "module",
   "version": "0.0.0-placeholder",
   "description": "Internationalization (i18n) library for Next.js App Router",
   "author": "Joni Vainio-Kaila",
@@ -31,25 +32,25 @@
   "exports": {
     ".": {
       "react-server": {
-        "require": "./dist/index.server.js",
-        "import": "./dist/index.server.mjs"
+        "require": "./dist/index.server.cjs",
+        "import": "./dist/index.server.js"
       },
       "default": {
-        "require": "./dist/index.client.js",
-        "import": "./dist/index.client.mjs"
+        "require": "./dist/index.client.cjs",
+        "import": "./dist/index.client.js"
       }
     },
     "./client": {
-      "require": "./dist/index.client.js",
-      "import": "./dist/index.client.mjs"
+      "require": "./dist/index.client.cjs",
+      "import": "./dist/index.client.js"
     },
     "./middleware": {
-      "require": "./dist/middleware.js",
-      "import": "./dist/middleware.mjs"
+      "require": "./dist/middleware.cjs",
+      "import": "./dist/middleware.js"
     },
     "./plugin": {
-      "require": "./dist/plugin.js",
-      "import": "./dist/plugin.mjs"
+      "require": "./dist/plugin.cjs",
+      "import": "./dist/plugin.js"
     }
   },
   "scripts": {
