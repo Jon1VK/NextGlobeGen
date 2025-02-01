@@ -1,11 +1,21 @@
 import { createHash } from "crypto";
 import { rmSync } from "fs";
 import path from "path";
-import { build } from "tsup";
+import { build, type Options } from "tsup";
 import { pathToFileURL } from "url";
 import { isFile } from "~/utils/fs-utils";
 
 const OUT_DIR = "./.next-globe-gen";
+
+type Plugin = Options["plugins"] extends (infer T)[] | undefined ? T : never;
+
+const jsImportsPlugin: Plugin = {
+  name: "js-imports-plugin",
+  renderChunk(_, chunk) {
+    const code = chunk.code.replace(/from "(.*)"/g, 'from "$1.js"');
+    return { code };
+  },
+};
 
 export async function compile<T>(filePath: string) {
   const version = new Date().getTime();
@@ -14,9 +24,12 @@ export async function compile<T>(filePath: string) {
     .digest("hex");
   await build({
     config: false,
-    target: "node18",
     outDir: OUT_DIR,
     format: "esm",
+    bundle: true,
+    splitting: false,
+    target: "node18",
+    plugins: [jsImportsPlugin],
     entryPoints: { [`${outputFileName}`]: filePath },
     silent: true,
   });
