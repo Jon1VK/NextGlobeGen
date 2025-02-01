@@ -50,18 +50,19 @@ function useGenerator(configPath: string, phase: Phase) {
   if (process.env.NEXT_PRIVATE_WORKER) return;
   if (process.env.NEXT_DEPLOYMENT_ID !== undefined) return;
   try {
+    if (phase !== "phase-production-server") {
+      spawnSync(`npx next-globe-gen --config ${configPath}`, {
+        cwd: process.cwd(),
+        stdio: "inherit",
+        shell: true,
+      });
+    }
     if (phase === "phase-development-server") {
       spawn(`npx next-globe-gen --watch --config ${configPath}`, {
         cwd: process.cwd(),
         stdio: "inherit",
         shell: true,
         detached: false,
-      });
-    } else if (phase !== "phase-production-server") {
-      spawnSync(`npx next-globe-gen --config ${configPath}`, {
-        cwd: process.cwd(),
-        stdio: "inherit",
-        shell: true,
       });
     }
   } catch (_e) {

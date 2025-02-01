@@ -85,9 +85,15 @@ describe("plugin", () => {
     expect(spawnSync).not.toBeCalled();
   });
 
-  test("spawns generator in async watch mode when in dev", async () => {
+  test("spawns generator first sync and then async watch mode when in dev", async () => {
     await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-development-server");
-    expect(spawnSync).not.toBeCalled();
+    expect(spawnSync).toHaveBeenCalledWith(
+      "npx next-globe-gen --config ./src/__mocks__/i18n.config.ts",
+      expect.objectContaining({
+        stdio: "inherit",
+        shell: true,
+      }),
+    );
     expect(spawn).toHaveBeenCalledWith(
       "npx next-globe-gen --watch --config ./src/__mocks__/i18n.config.ts",
       expect.objectContaining({
