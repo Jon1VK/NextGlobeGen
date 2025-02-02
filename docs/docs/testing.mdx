@@ -1,0 +1,64 @@
+---
+sidebar_position: 5
+---
+
+# Testing
+
+Browser and end-to-end tests should work out of the box, since those tests are usually ran against the Next.js development or the production server. Unit testing client components requires a setup which provides the required context for the rendered client components.
+
+## Unit Testing - Vitest
+
+Following setup is intended to be used with Vitest and it might need to be modified for other testing libraries.
+
+First follow the Next.js documentation for [setting up Vitest](https://nextjs.org/docs/app/building-your-application/testing/vitest).
+
+Then define the following testing utility file:
+
+```tsx title="./src/test-utils.tsx"
+import { render, type RenderOptions } from "@testing-library/react";
+import { IntlProvider } from "next-globe-gen/client";
+import type { ReactNode } from "react";
+import { messages } from "../.next-globe-gen/messages";
+import { schema } from "../.next-globe-gen/schema";
+
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <IntlProvider
+    schema={schema}
+    messages={messages[schema.defaultLocale]}
+    locale={schema.defaultLocale}
+  >
+    {children}
+  </IntlProvider>
+);
+
+const customRender = ((ui: ReactNode, options?: RenderOptions) => {
+  return render(ui, { wrapper, ...options });
+}) as typeof render;
+
+// re-export everything
+export * from "@testing-library/react";
+
+// override render method
+export { customRender as render };
+```
+
+Now the components can be tested like so:
+
+```tsx title="./src/page.test.tsx"
+import { render, screen } from "@/test-utils";
+import { expect, test } from "vitest";
+import Page from "./page";
+
+test("Page", () => {
+  render(<Page />);
+  expect(
+    screen.getByRole("heading", { level: 1, name: "NextGlobeGen Playground" }),
+  ).toBeDefined();
+});
+```
+
+:::warning
+
+Vitest renders the components as client components. As so the tested component cannot be an async server component or it cannod use next-globe-gen APIs which are for server-side only. If the rendered component uses server-side only APIs, those have to be mocked.
+
+:::

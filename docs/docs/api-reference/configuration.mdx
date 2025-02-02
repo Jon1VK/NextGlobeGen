@@ -36,7 +36,7 @@ export default withNextGlobeGen(nextConfig);
 
 This section documents all the available configuration options.
 
-### locales (required)
+### locales
 
 An array of locales that the application supports. At least one locale needs to be provided.
 
@@ -47,7 +47,7 @@ const config: Config = {
 };
 ```
 
-### defaultLocale (required)
+### defaultLocale
 
 A locale that will be used as a default locale. Should be one of the provided [`locales`](#locales-required).
 
@@ -59,22 +59,20 @@ const config: Config = {
 };
 ```
 
-### Routes
-
-Options under `routes` namespace affect how localized routes are generated.
-
-#### prefixDefaultLocale
+### prefixDefaultLocale
 
 A boolean value indicating if the default locale version of the site should be served from locale-prefixed path or from the root.
 
 ```tsx
 const config: Config = {
-  routes: {
-    // highlight-next-line
-    prefixDefaultLocale: false, // Default: true
-  },
+  // highlight-next-line
+  prefixDefaultLocale: false, // Default: true
 };
 ```
+
+### Routes
+
+Options under `routes` namespace affect how localized routes are generated.
 
 #### originDir
 
@@ -114,6 +112,32 @@ const config: Config = {
     // highlight-next-line
     skipLanguageAlternatesMetadata: true, // Default: false
   },
+};
+```
+
+### Domains
+
+Using the `domains` option enables the domain based routing. Is receives all domain spesific locale configuration objects as an array. Each object defines which locales are served from the defined domain and which locale is used as a default locale.
+
+When `domains` option is given, the root level `locales` and `defaultLocale` options must be removed.
+
+```tsx
+const config: Config = {
+  // highlight-start
+  domains: [
+    {
+      domain: "fi.example.com",
+      locales: ["fi"],
+      defaultLocale: "fi",
+    },
+    {
+      domain: "en.example.com",
+      locales: ["en", "en-US"],
+      defaultLocale: "en",
+      prefixDefaultLocale: true, // Default: false
+    },
+  ],
+  // highlight-end
 };
 ```
 
@@ -194,3 +218,36 @@ By default all messages are sent to the client. If you want to exclude all messa
 This option is helpful if you would like to reduce the payload of the responses by sending fewer of the messages to the client.
 
 :::
+
+#### formats
+
+Object which is used to extend or override the predefined format options.
+
+```tsx
+const config: Config = {
+  messages: {
+    // highlight-start
+    formats: {
+      number: {
+        onedigit: {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1,
+        },
+      },
+      date: {
+        withtime: {
+          dateStyle: "long",
+          timeStyle: "short",
+        },
+      },
+      time: {
+        withdate: {
+          dateStyle: "short",
+          timeStyle: "medium",
+        },
+      },
+    },
+    // highlight-end
+  },
+};
+```

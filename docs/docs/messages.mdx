@@ -1,0 +1,205 @@
+---
+sidebar_position: 4
+---
+
+# Messages
+
+NextGlobeGen uses [ICU](https://unicode-org.github.io/icu/userguide/format_parse/messages/) formatted interpolation patterns in the messages. Let's see what is possible using this format.
+
+Check out the reference for the [t-function](./api-reference/functions.mdx#t-function), which is used in the following examples.
+
+## Dynamic values
+
+Dynamic values can be inserted to the messages by wrapping a parameter name in curly braces:
+
+```yaml title="en.yaml"
+dynamic: "Hello {name}!"
+```
+
+```ts
+t("dynamic", { name: "Jon1VK" }); // Hello Jon1VK!
+```
+
+The dynamic value can also be defined to be one of the types of `number`, `date` or `time`:
+
+```yaml title="en.yaml"
+postCount: "Posts: {count, number}"
+current-date: "Current date: {currentDate, date}"
+current-time: "Current time: {currentTime, time}"
+```
+
+```ts
+t("post-count", { count: 43 }); // Posts: 43
+t("current-date", { currentDate: new Date() }); // Current date: 1/31/2025
+t("current-time", { currentTime: new Date() }); // Current time: 8:34:59 PM
+```
+
+The values can be formatted with the predefined format options or by custom skeletons. The predefined format options can be extended or overriden with [configuration](./api-reference//configuration.mdx#formats). See the available skeleton formats [here](https://formatjs.github.io/docs/intl-messageformat/#datetimenumber-skeleton).
+
+<details>
+<summary>
+Predefined format options
+</summary>
+Following predefined format options are available by default:
+
+```ts
+formats = {
+  number: {
+    integer: {
+      maximumFractionDigits: 0,
+    },
+    percent: {
+      style: "percent",
+    },
+  },
+
+  date: {
+    short: {
+      month: "numeric",
+      day: "numeric",
+      year: "2-digit",
+    },
+    medium: {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    },
+    long: {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    },
+    full: {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    },
+  },
+
+  time: {
+    short: {
+      hour: "numeric",
+      minute: "numeric",
+    },
+    medium: {
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    },
+    long: {
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      timeZoneName: "short",
+    },
+    full: {
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      timeZoneName: "short",
+    },
+  },
+};
+```
+
+</details>
+
+```yaml title="en.yaml"
+project-status: "Project status: {completion, number, percent} completed"
+project-cost: "Project cost: {cost, number, ::currency/USD}"
+current-date: "Current date: {currentDate, date, full}"
+current-time: "Current time: {currentTime, time, short}"
+```
+
+```ts
+t("project-status", { completion: 0.43 }); // Project status: 43% completed
+t("project-cost", { cost: 666.43 }); // Project cost: $666.34
+t("current-date", { currentDate: new Date() }); // Current date: Friday, January 31, 2025
+t("current-time", { currentTime: new Date() }); // Current time: 8:34 PM
+```
+
+## Pluralization
+
+By using a `plural` interpolation value, it is possible to define different messages for different count of items:
+
+```txt title="en.yaml"
+followers: >-
+  You have {count, plural
+    =0 {no followers yet}
+    =1 {one follower}
+    other {# followers}
+  }.
+```
+
+```ts
+t("followers", { count: 0 }); // You have no followers yet.
+t("followers", { count: 1 }); // You have one follower.
+t("followers", { count: 43 }); // You have 43 followers.
+```
+
+## Ordinalization
+
+By using a `selectordinal` interpolation value, it is possible to define different messages for different ordinal values:
+
+```txt title="en.yaml"
+victory-count: >-
+  It is your {count, selectordinal
+    one {#st}
+    two {#nd}
+    few {#rd}
+    other {#th}
+  } victory.
+```
+
+```ts
+t("victory-count", { count: 21 }); // It is your 21st victory.
+t("victory-count", { count: 32 }); // It is your 32nd victory.
+t("victory-count", { count: 3 }); // It is your 3rd victory.
+t("victory-count", { count: 11 }); // It is your 11th victory.
+```
+
+## Select by enum
+
+By using a `select` interpolation value, it is possible to define different messages for enumeration options:
+
+```yaml title="en.yaml"
+message: {gender, select,
+  male {He uses}
+  female {She uses}
+  other {They use}
+} NextGlobeGen for internationalization.
+```
+
+```ts
+t("message", { gender: "other" }); // They use NextGlobeGen for internationalization.
+```
+
+## Rich text
+
+By using tags in the messages, it is possible to interpolate react components to the translations:
+
+```yaml title="en.yaml"
+playground: "Check out <playground>Playground</playground>."
+```
+
+```tsx
+t("playground", {
+  playground: (children) => (
+    <a href="https://next-globe-gen-playground.vercel.app/en">{children}</a>
+  ),
+});
+// Check out <a href="https://next-globe-gen-playground.vercel.app/en">Playground</a>.
+```
+
+## Escaping reserved chars
+
+Reserved characters can be escaped by prefixing them with `'` character or by wrapping escaped sections with `'` characters.
+
+```yaml title="en.yaml"
+escaped: "'{interpolation}' '<b>Bold</b>' ''quoted'' single char escaped '{"
+```
+
+```tsx
+t("escaped"); // {interpolation} <b>Bold</b> 'quoted' single char escaped {
+```

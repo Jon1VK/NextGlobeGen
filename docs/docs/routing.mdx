@@ -1,5 +1,5 @@
 ---
-sidebar_position: 0
+sidebar_position: 3
 ---
 
 import TabItem from "@theme/TabItem";
@@ -9,19 +9,25 @@ import Tabs from "@theme/Tabs";
 
 With NextGlobeGen, the application routes are created to a special `src/_app` directory. In this directory all Next.js file-system based routing rules apply and all Next.js specific routing files work exactly the same as in `src/app` directory. Localized routes are generated to `src/app/(i18n)` directory based on the contents in the `src/_app` origin directory.
 
-The localized route directory `src/app/(i18n)` should not be modified. Other non-localized routes, such as `api` routes, can still be added to the root of the `src/app` directory.
+The localized route directory `src/app/(i18n)` should not be modified. Other non-localized routes and files, such as `api` routes and `favicon.ico` file, can still be added to the root of the `src/app` directory.
 
 In addition to Next.js specific routing files, NextGlobeGen adds a few routing file conventions of its own. NextGlobeGen also passes the current locale to all functions that cannot infer it from the rendering context.
 
 :::info Configuring directory locations
 
-Default directory locations can be altered through [configuration](./configuration.mdx#routes).
+Default directory locations can be altered through [configuration](./api-reference/configuration.mdx#routes).
 
 :::
 
 ## Localized pathnames
 
 The pathnames in the url often need to be translated to improve SEO. In NextGlobeGen this is done for each route segment (directory) separately with special `i18n.ts` files. With this approach the route segment and it's localizations can be colocated.
+
+:::info Translating dynamic params
+
+The `i18n.ts` file is only used for translating static route segments. Dynamic params are translated by manually providing translated params to the [`Link`](./api-reference/components.mdx#link) component. Check the [example](<https://github.com/Jon1VK/NextGlobeGen/tree/main/examples/playground/src/_app/(demos)/dynamic>).
+
+:::
 
 ### Static translations
 
@@ -144,6 +150,6 @@ export default function sitemap({ id, locale }: SitemapParams) {
 
 :::info Routing Components
 
-In rendering contexts the primary way to access the current locale is with [`useLocale`](./hooks.mdx#uselocale) hook, but the locale is also passed as a prop to routing components.
+In rendering contexts the primary way to access the current locale is with [`useLocale`](./api-reference/hooks.mdx#uselocale) hook, but the locale is also passed as a prop to routing components.
 
 :::
