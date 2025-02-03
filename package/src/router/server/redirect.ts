@@ -26,12 +26,12 @@ type RedirectArgs<
 
 export function redirect<R extends Route>(...args: RedirectArgs<R>) {
   const { hrefOpts, type } = extractRedirectOptions(...args);
-  nextRedirect(useHref(hrefOpts), type);
+  return nextRedirect(useHref(hrefOpts), type);
 }
 
 export function permanentRedirect<R extends Route>(...args: RedirectArgs<R>) {
   const { hrefOpts, type } = extractRedirectOptions(...args);
-  nextPermanentRedirect(useHref(hrefOpts), type);
+  return nextPermanentRedirect(useHref(hrefOpts), type);
 }
 
 function extractRedirectOptions<R extends Route>(...args: RedirectArgs<R>) {
