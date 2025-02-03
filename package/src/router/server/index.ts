@@ -11,6 +11,7 @@ import { notSupported } from "./notSupported";
 export { messages } from "next-globe-gen/messages";
 export { schema } from "next-globe-gen/schema";
 export * from "./createTranslator";
+export * from "./getMessages";
 export * from "./LocaleStore";
 export * from "./redirect";
 export * from "./withLanguageAlternates";

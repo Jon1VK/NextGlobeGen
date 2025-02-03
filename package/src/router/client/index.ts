@@ -1,6 +1,7 @@
 import type {
   createHref as $createHref,
   createTranslator as $createTranslator,
+  getMessages as $getMessages,
   permanentRedirect as $permanentRedirect,
   redirect as $redirect,
 } from "../server";
@@ -49,3 +50,4 @@ export const createTranslator = notSupported(
   "createTranslator",
 ) as unknown as typeof $createTranslator;
 export const createHref = notSupported("createHref") as typeof $createHref;
+export const getMessages = notSupported("getMessages") as typeof $getMessages;
