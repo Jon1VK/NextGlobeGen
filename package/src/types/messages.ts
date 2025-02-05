@@ -59,21 +59,29 @@ export type Message<
 /**
  * Utility type to replace a string with another.
  */
-type Replace<
+type ReplaceAll<
   S extends string,
   R extends string,
   W extends string,
-> = S extends `${infer BS}${R}${infer AS}`
-  ? Replace<`${BS}${W}${AS}`, R, W>
+> = S extends `${infer Head}${R}${infer Tail}`
+  ? ReplaceAll<`${Head}${W}${Tail}`, R, W>
   : S;
 
 /**
  * Utility type to remove all spaces and new lines from the provided string.
  */
-type StripWhitespace<S extends string> = StripSpaces<StripNewLines<S>>;
-type StripNewLines<S extends string> = Replace<S, "\n", "">;
-type StripSpaces<S extends string> = Replace<
-  Replace<Replace<S, "    ", "">, "  ", "">,
+type StripWhitespace<S extends string> = StripSpaces<
+  StripTabs<StripCarriageReturns<StripLineFeeds<S>>>
+>;
+type StripLineFeeds<S extends string> = ReplaceAll<S, "\n", "">;
+type StripCarriageReturns<S extends string> = ReplaceAll<S, "\r", "">;
+type StripTabs<S extends string> = ReplaceAll<
+  ReplaceAll<S, "\t\t", "">,
+  "\t",
+  ""
+>;
+type StripSpaces<S extends string> = ReplaceAll<
+  ReplaceAll<ReplaceAll<S, "    ", "">, "  ", "">,
   " ",
   ""
 >;
@@ -85,72 +93,72 @@ type StripSpaces<S extends string> = Replace<
  * @example "foo '{word1} {word2}'" -> "foo "
  */
 type StripEscaped<S extends string> =
-  S extends `${infer A}'${string}'${infer B}`
-    ? StripEscaped<`${A}${B}`>
-    : S extends `${infer A}'${string}${infer B}`
-      ? `${A}${B}`
+  S extends `${infer Head}'${string}'${infer Tail}`
+    ? StripEscaped<`${Head}${Tail}`>
+    : S extends `${infer Head}'${string}${infer Tail}`
+      ? `${Head}${Tail}`
       : S;
 
 /**
  * Extract ICU message arguments ang tags from the given string.
  */
-type ExtractArgumentsAngTags<S extends string> =
-  | _ExtractArguments<S>
-  | _ExtractSelectArguments<S>
-  | _ExtractTags<S>;
+type ExtractArgumentsAndTags<S extends string> =
+  | ExtractArguments<S>
+  | ExtractSelectArguments<S>
+  | ExtractTags<S>;
 
-type _ExtractArguments<S extends string> =
+type ExtractArguments<S extends string> =
   S extends `${string}{${string}{${string}`
-    ? _ExtractMultipleArguments<S>
-    : _ExtractArgument<S>;
+    ? ExtractMultipleArguments<S>
+    : ExtractArgument<S>;
 
-type _ExtractMultipleArguments<S extends string> =
+type ExtractMultipleArguments<S extends string> =
   S extends `${string}{${infer Arg}{${infer Rest}`
-    ? Arg extends `${infer A}}${string}`
-      ? _ExtractArguments<`{${A}}`> | _ExtractArguments<`{${Rest}`>
+    ? Arg extends `${infer Head}}${string}`
+      ? ExtractArguments<`{${Head}}`> | ExtractArguments<`{${Rest}`>
       : Arg extends `${string},select,${string}`
-        ? _ExtractRestArguments<`{${Rest}`>
+        ? ExtractRestArguments<`{${Rest}`>
         : Arg extends `${string},${string}`
-          ? Arg | _ExtractRestArguments<`{${Rest}`>
+          ? Arg | ExtractRestArguments<`{${Rest}`>
           : never
     : never;
 
-type _ExtractRestArguments<S extends string> = S extends `}${infer Rest}`
-  ? _ExtractArguments<Rest>
+type ExtractRestArguments<S extends string> = S extends `}${infer Rest}`
+  ? ExtractArguments<Rest>
   : S extends `${string}{${infer Nested}}${infer Rest}`
     ? Nested extends `${string}{${infer NestedRest}`
-      ? _ExtractArguments<`{${NestedRest}}`> | _ExtractRestArguments<`{${Rest}`>
-      : _ExtractRestArguments<Rest>
+      ? ExtractArguments<`{${NestedRest}}`> | ExtractRestArguments<`{${Rest}`>
+      : ExtractRestArguments<Rest>
     : never;
 
-type _ExtractArgument<S extends string> =
+type ExtractArgument<S extends string> =
   S extends `${string}{${infer Arg}}${string}` ? Arg : never;
 
-type _ExtractSelectArguments<S extends string> =
+type ExtractSelectArguments<S extends string> =
   S extends `${string}{${infer Arg},select,${infer Rest}`
-    ? _ExtractNestedSelectArguments<Arg, Rest>
+    ? ExtractNestedSelectArguments<Arg, Rest>
     : never;
 
-type _ExtractNestedSelectArguments<
+type ExtractNestedSelectArguments<
   Arg extends string,
   Rest extends string,
-> = Arg extends `${string}{${infer B}`
-  ? _ExtractSelectArguments<`{${B},select,${Rest}`>
+> = Arg extends `${string}{${infer Nested}`
+  ? ExtractSelectArguments<`{${Nested},select,${Rest}`>
   :
-      | `${Arg},select,${_ExtractSelectOptions<Rest>}`
-      | _ExtractSelectArguments<Rest>;
+      | `${Arg},select,${ExtractSelectOptions<Rest>}`
+      | ExtractSelectArguments<Rest>;
 
-type _ExtractSelectOptions<S extends string> = S extends `}${string}`
+type ExtractSelectOptions<S extends string> = S extends `}${string}`
   ? never
   : S extends `${infer Option}{${infer Nested}}${infer Rest}`
     ? Nested extends `${string}{${infer NestedRest}`
-      ? _ExtractSelectOptions<`${Option}{${NestedRest}${Rest}`>
-      : Option | _ExtractSelectOptions<Rest>
+      ? ExtractSelectOptions<`${Option}{${NestedRest}${Rest}`>
+      : Option | ExtractSelectOptions<Rest>
     : never;
 
-type _ExtractTags<S extends string> =
+type ExtractTags<S extends string> =
   S extends `${string}</${infer Tag}>${infer Rest}`
-    ? `${Tag},tag` | _ExtractTags<Rest>
+    ? `${Tag},tag` | ExtractTags<Rest>
     : never;
 
 /**
@@ -164,33 +172,37 @@ type NormalizeArguments<Arg extends string> =
     : Arg;
 
 /**
- * Convert ICU type to TS type.
- */
-type Value<T extends string> = T extends "number" | "plural" | "selectordinal"
-  ? number
-  : T extends "date" | "time"
-    ? Date
-    : T extends "tag"
-      ? (children: ReactNode) => ReactNode
-      : T extends `select,${infer Option}`
-        ? Option
-        : string;
-
-/**
  * Create an object mapping the extracted key to its type.
  */
 type ArgumentsMap<S extends string> = {
-  [key in S extends `${infer Key},${string}` ? Key : S]: Extract<
-    S,
-    `${key},${string}`
-  > extends `${string},${infer V}`
-    ? Value<V>
-    : string;
+  [Key in ExtractKeys<S>]: ExtractType<S, Key>;
 };
+
+type ExtractKeys<S extends string> = S extends `${infer Key},${string}`
+  ? Key
+  : S;
+
+type ExtractType<S extends string, Key extends string> =
+  Extract<S, Key | `${Key},${string}`> extends `${string},${infer ArgType}`
+    ? ToTsType<ArgType>
+    : string;
+
+type ToTsType<ArgType extends string> = ArgType extends
+  | "number"
+  | "plural"
+  | "selectordinal"
+  ? number
+  : ArgType extends "date" | "time"
+    ? Date
+    : ArgType extends "tag"
+      ? (children: ReactNode) => ReactNode
+      : ArgType extends `select,${infer Option}`
+        ? Option
+        : string;
 
 /**
  * Create an object mapping all ICU message arguments to their types.
  */
 export type MessageArguments<T extends string> = ArgumentsMap<
-  NormalizeArguments<ExtractArgumentsAngTags<StripEscaped<StripWhitespace<T>>>>
+  NormalizeArguments<ExtractArgumentsAndTags<StripEscaped<StripWhitespace<T>>>>
 >;
