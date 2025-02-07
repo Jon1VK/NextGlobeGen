@@ -18,7 +18,7 @@ export declare const messages: Messages;
 export type MessageKey = keyof Messages[Locale];
 
 /**
- * Utility type fot extractiong all the possible namespaces
+ * Utility type for extracting all the possible namespaces
  */
 type GetNamespaces<K extends string> = K extends `${infer N}.${infer R}`
   ? N | `${N}.${GetNamespaces<R>}`
@@ -93,7 +93,7 @@ type StripEscaped<S extends string> = RemoveAll<
 >;
 
 /**
- * Extract ICU message arguments ang tags from the given string.
+ * Extract ICU message arguments and tags from the given string.
  */
 type ExtractArgumentsAndTags<S extends string> =
   | ExtractArguments<S>
