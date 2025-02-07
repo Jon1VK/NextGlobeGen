@@ -57,14 +57,13 @@ export type Message<
     : never;
 
 /**
- * Utility type to replace a string with another.
+ * Utility type to remove a string from another.
  */
-type ReplaceAll<
+type RemoveAll<
   S extends string,
   R extends string,
-  W extends string,
 > = S extends `${infer Head}${R}${infer Tail}`
-  ? ReplaceAll<`${Head}${W}${Tail}`, R, W>
+  ? RemoveAll<`${Head}${Tail}`, R>
   : S;
 
 /**
@@ -73,17 +72,12 @@ type ReplaceAll<
 type StripWhitespace<S extends string> = StripSpaces<
   StripTabs<StripCarriageReturns<StripLineFeeds<S>>>
 >;
-type StripLineFeeds<S extends string> = ReplaceAll<S, "\n", "">;
-type StripCarriageReturns<S extends string> = ReplaceAll<S, "\r", "">;
-type StripTabs<S extends string> = ReplaceAll<
-  ReplaceAll<S, "\t\t", "">,
-  "\t",
-  ""
->;
-type StripSpaces<S extends string> = ReplaceAll<
-  ReplaceAll<ReplaceAll<S, "    ", "">, "  ", "">,
-  " ",
-  ""
+type StripLineFeeds<S extends string> = RemoveAll<S, "\n">;
+type StripCarriageReturns<S extends string> = RemoveAll<S, "\r">;
+type StripTabs<S extends string> = RemoveAll<RemoveAll<S, "\t\t">, "\t">;
+type StripSpaces<S extends string> = RemoveAll<
+  RemoveAll<RemoveAll<S, "    ">, "  ">,
+  " "
 >;
 
 /**
