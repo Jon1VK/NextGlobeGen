@@ -87,12 +87,10 @@ type StripSpaces<S extends string> = RemoveAll<
  * @example "'{word}" -> "word}"
  * @example "foo '{word1} {word2}'" -> "foo "
  */
-type StripEscaped<S extends string> =
-  S extends `${infer Head}'${string}'${infer Tail}`
-    ? StripEscaped<`${Head}${Tail}`>
-    : S extends `${infer Head}'${string}${infer Tail}`
-      ? `${Head}${Tail}`
-      : S;
+type StripEscaped<S extends string> = RemoveAll<
+  RemoveAll<S, `'${string}'`>,
+  `'${string}`
+>;
 
 /**
  * Extract ICU message arguments ang tags from the given string.
