@@ -8,6 +8,15 @@ type MiddlewareOptions = {
   skipAlternateLinkHeader?: boolean;
 };
 
+const matchRoute = matchRouteFactory(() => schema);
+
+const LOCALE_COOKIE_NAME = "NEXTGLOBEGEN_LOCALE";
+const COOKIE_OPTS = {
+  httpOnly: true,
+  secure: true,
+  sameSite: "strict",
+} as const;
+
 /**
  * The middleware handles locale negotiation and adds alternate links of the page to the response headers.
  *
@@ -52,25 +61,45 @@ export default function middleware(
     return NextResponse.redirect(new URL(routePathname, request.url));
   }
 
+  const locales = domainConfig?.locales ?? schema.locales;
+  const defaultLocale = domainConfig?.defaultLocale ?? schema.defaultLocale;
+
   // Redirect to users preferred locale if the default locale should be prefixed
   const prefixDefaultLocale =
     (domainConfig && domainConfig.prefixDefaultLocale) ||
     schema.unPrefixedLocales.length === 0;
   if (!pathLocale && prefixDefaultLocale) {
-    const matchedLocale = localeMatcher(
-      request,
-      domainConfig?.locales ?? schema.locales,
-      domainConfig?.defaultLocale ?? schema.defaultLocale,
-    );
-    return NextResponse.redirect(
+    const matchedLocale = localeMatcher(request, locales, defaultLocale);
+    const response = NextResponse.redirect(
       new URL(`/${matchedLocale}${routePathname}`, request.url),
     );
+    response.cookies.set(LOCALE_COOKIE_NAME, matchedLocale, COOKIE_OPTS);
+    return response;
   }
 
+  // If there is no locale at this point, we have to be on default locale.
   const locale =
     pathLocale ?? domainConfig?.defaultLocale ?? schema.defaultLocale;
 
+  // Redirect to users preferred locale if has not been done yet
+  const localeCookieValue = request.cookies.get(LOCALE_COOKIE_NAME)?.value;
+  if (!localeCookieValue) {
+    const matchedLocale = localeMatcher(request, locales, defaultLocale);
+    if (matchedLocale !== locale) {
+      const routeMatch = matchRoute(locale, pathname);
+      if (!routeMatch) return NextResponse.next();
+      const { localizedPaths, params } = routeMatch;
+      const localizedPath = localizedPaths[matchedLocale];
+      if (!localizedPath) return NextResponse.next();
+      const path = compile(localizedPath)(params);
+      const response = NextResponse.redirect(new URL(path, request.url));
+      response.cookies.set(LOCALE_COOKIE_NAME, matchedLocale, COOKIE_OPTS);
+      return response;
+    }
+  }
+
   const response = NextResponse.next();
+  response.cookies.set(LOCALE_COOKIE_NAME, locale, COOKIE_OPTS);
 
   // User wants to skip alternate link header, just return a response
   if (opts?.skipAlternateLinkHeader) return response;
@@ -98,8 +127,6 @@ function localeMatcher(
   const negotiator = new Negotiator({ headers });
   return negotiator.language(locales) ?? defaultLocale;
 }
-
-const matchRoute = matchRouteFactory(() => schema);
 
 function getAlternativeLinks(locale: Locale, request: NextRequest) {
   const routeMatch = matchRoute(locale, request.nextUrl.pathname);
