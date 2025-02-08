@@ -62,9 +62,10 @@ export type Message<
 type RemoveAll<
   S extends string,
   R extends string,
+  Acc extends string = "",
 > = S extends `${infer Head}${R}${infer Tail}`
-  ? RemoveAll<`${Head}${Tail}`, R>
-  : S;
+  ? RemoveAll<Tail, R, `${Acc}${Head}`>
+  : `${Acc}${S}`;
 
 /**
  * Utility type to remove all spaces and new lines from the provided string.
