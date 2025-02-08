@@ -61,12 +61,14 @@ vi.mock("next-globe-gen/schema", () => schemaMock);
 
 function createRequest(input: string) {
   const url = new URL(input);
-  return new NextRequest(input, {
+  const request = new NextRequest(input, {
     headers: [
       ["Accept-Language", "en,fi;q=0.9"],
       ["host", url.host],
     ],
   });
+  request.cookies.set("NEXTGLOBEGEN_LOCALE", "en");
+  return request;
 }
 
 describe("middleware", () => {
@@ -201,6 +203,16 @@ describe("middleware", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("Link")).toBe(
       '<http://en.example.com/en-US/profile/1>; rel="alternate"; hreflang="en-US", <http://en.example.com/profile/1>; rel="alternate"; hreflang="en", <http://fi.example.com/profiili/1>; rel="alternate"; hreflang="fi"',
+    );
+  });
+
+  test("redirects to user preferred locale if not done yet", () => {
+    const request = createRequest("http://example.com/fi/profiili/1");
+    request.cookies.clear();
+    const response = middleware(request);
+    expect(response.status).toBe(307);
+    expect(response.headers.get("location")).toBe(
+      "http://example.com/en/profile/1",
     );
   });
 });
