@@ -9,11 +9,6 @@ export function useRouteFactory(useSchema: () => Schema) {
     const locale = useLocale();
     const pathname = usePathname();
     const routeMatch = matchRoute(locale, pathname);
-    if (!routeMatch) {
-      throw new Error(
-        "Hook useRoute was not able to match current pathname to any route.",
-      );
-    }
-    return routeMatch.route;
+    return routeMatch?.route as Route;
   };
 }
