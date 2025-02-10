@@ -14,6 +14,7 @@ export * from "./createTranslator";
 export * from "./getMessages";
 export * from "./LocaleStore";
 export * from "./redirect";
+export * from "./revalidatePath";
 export * from "./withLanguageAlternates";
 
 export const useSchema = () => schema;
