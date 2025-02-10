@@ -4,6 +4,7 @@ import type {
   getMessages as $getMessages,
   permanentRedirect as $permanentRedirect,
   redirect as $redirect,
+  revalidatePath as $revalidatePath,
 } from "../server";
 import { FormFactory } from "../shared/FormFactory";
 import { LinkFactory } from "../shared/LinkFactory";
@@ -51,3 +52,6 @@ export const createTranslator = notSupported(
 ) as unknown as typeof $createTranslator;
 export const createHref = notSupported("createHref") as typeof $createHref;
 export const getMessages = notSupported("getMessages") as typeof $getMessages;
+export const revalidatePath = notSupported(
+  "revalidatePath",
+) as typeof $revalidatePath;
