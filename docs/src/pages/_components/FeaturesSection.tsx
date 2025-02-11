@@ -1,6 +1,6 @@
 import Heading from "@theme/Heading";
 import ArrowPathLogo from "../../images/arrow-path.svg";
-import CookiesLogo from "../../images/cookies.svg";
+import CDNLogo from "../../images/cdn.svg";
 import LinkLogo from "../../images/link.svg";
 import MessagesLogo from "../../images/messages.svg";
 import SwitchLogo from "../../images/switch.svg";
@@ -14,10 +14,10 @@ const features = [
     icon: TSLogo,
   },
   {
-    name: "No cookies or custom headers",
+    name: "Static rendering",
     description:
-      "Static rendering and export output mode are supported since no cookies or custom headers are used.",
-    icon: CookiesLogo,
+      "Static rendering and export output mode are supported out-of-the-box since no custom headers are used.",
+    icon: CDNLogo,
   },
   {
     name: "ICU message format",
