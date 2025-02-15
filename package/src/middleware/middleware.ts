@@ -35,11 +35,7 @@ export default function middleware(
     skipAlternateLinkHeader = false,
     localeNegotiation = "default",
     localeCookieName = "NEXTGLOBEGEN_LOCALE",
-    localeCookieOpts = {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-    },
+    localeCookieOpts = {},
   }: MiddlewareOptions = {},
 ) {
   const pathname = request.nextUrl.pathname;
@@ -70,17 +66,14 @@ export default function middleware(
   const locales = domainConfig?.locales ?? schema.locales;
   const defaultLocale = domainConfig?.defaultLocale ?? schema.defaultLocale;
 
-  // Redirect to users preferred locale if the default locale should be prefixed
+  // Redirect to default locale if no prefix and the default locale should be prefixed
   const prefixDefaultLocale =
     (domainConfig && domainConfig.prefixDefaultLocale) ||
     schema.unPrefixedLocales.length === 0;
   if (!pathLocale && prefixDefaultLocale) {
-    const matchedLocale = localeMatcher(request, locales, defaultLocale);
-    const response = NextResponse.redirect(
-      new URL(`/${matchedLocale}${routePathname}`, request.url),
+    return NextResponse.redirect(
+      new URL(`/${defaultLocale}${routePathname}`, request.url),
     );
-    response.cookies.set(localeCookieName, matchedLocale, localeCookieOpts);
-    return response;
   }
 
   // If there is no locale at this point, we have to be on default locale.
