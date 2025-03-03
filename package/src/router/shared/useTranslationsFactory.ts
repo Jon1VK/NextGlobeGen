@@ -11,7 +11,7 @@ import type {
   NamespaceKey,
 } from "next-globe-gen/messages";
 import type { Locale, Schema } from "next-globe-gen/schema";
-import { cloneElement, type ReactNode } from "react";
+import { cloneElement, useCallback, type ReactNode } from "react";
 
 export function useTranslationsFactory(
   useLocale: () => Locale,
@@ -26,7 +26,8 @@ export function useTranslationsFactory(
     const formats = useSchema().formats;
     const messages = useMessages();
     const formatters = useFormatters();
-    return function t<
+
+    function t<
       K extends NamespaceKey<N>,
       A extends MessageArguments<Message<N, K>> = MessageArguments<
         Message<N, K>
@@ -49,7 +50,10 @@ export function useTranslationsFactory(
         key,
         args,
       }) as TReturnType;
-    };
+    }
+
+    if (typeof window === "undefined") return t;
+    return useCallback(t, [formats, formatters, locale, messages, namespace]);
   };
 }
 
