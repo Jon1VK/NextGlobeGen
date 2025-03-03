@@ -139,7 +139,9 @@ async function addDomainRewrites(
     }
     return {
       ...originalRewrites,
-      afterFiles: [...originalRewrites.afterFiles, ...domainRewrites],
+      afterFiles: originalRewrites.afterFiles
+        ? [...originalRewrites.afterFiles, ...domainRewrites]
+        : domainRewrites,
     };
   };
 }
