@@ -78,7 +78,7 @@ const FILE_EXTENSIONS = [".json", ".yml", ".yaml"];
 function getMessages(this: { originDir: string }, locale: string) {
   return {
     ...getIndexMessages.bind(this)(locale),
-    ...getLocaleDirMessages.bind(this)(locale),
+    ...getDirMessages.bind(this)(locale),
   };
 }
 
@@ -95,16 +95,25 @@ function getIndexMessages(this: { originDir: string }, locale: string) {
   return messages;
 }
 
-function getLocaleDirMessages(this: { originDir: string }, locale: string) {
+function getDirMessages(
+  this: { originDir: string },
+  dir: string,
+): Record<string, unknown> {
   let messages: Record<string, unknown> = {};
-  const localeDirPath = path.join(this.originDir, locale);
-  if (!isDirectory(localeDirPath)) return messages;
-  const files = readdirSync(localeDirPath);
+  const dirPath = path.join(this.originDir, dir);
+  if (!isDirectory(dirPath)) return messages;
+  const files = readdirSync(dirPath, { withFileTypes: true });
   for (const file of files) {
-    const extension = path.extname(file);
+    if (file.isDirectory()) {
+      const dirPath = path.join(dir, file.name);
+      const dirMessages = getDirMessages.bind(this)(dirPath);
+      messages[file.name] = dirMessages;
+      continue;
+    }
+    const extension = path.extname(file.name);
     if (!FILE_EXTENSIONS.includes(extension)) continue;
-    const filePath = path.join(localeDirPath, file);
-    const namespace = file.replace(extension, "");
+    const filePath = path.join(dirPath, file.name);
+    const namespace = file.name.replace(extension, "");
     const content = readFileSync(filePath).toString();
     const parsedContent =
       extension === ".json" ? JSON.parse(content) : parse(content);
