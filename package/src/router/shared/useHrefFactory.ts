@@ -15,6 +15,7 @@ export type HrefOptions<R extends Route> = {
   pathname: R | (string & {});
   locale?: Locale;
   query?: Record<string, string>;
+  hash?: string;
 } & ParamsOption<R>;
 
 export type UseHrefArgs<R extends Route> =
@@ -29,7 +30,7 @@ export function useHrefFactory(
 ) {
   return function useHref<R extends Route>(...args: UseHrefArgs<R>) {
     const schema = useSchema();
-    const { pathname, params, query, locale } = extractHrefOptions(args);
+    const { pathname, params, query, hash, locale } = extractHrefOptions(args);
     return createHrefFactory(
       schema,
       !!locale,
@@ -37,6 +38,7 @@ export function useHrefFactory(
       pathname,
       params,
       query,
+      hash,
       locale: locale ?? useLocale(),
     });
   };
@@ -57,20 +59,29 @@ export type CreateHrefArgs<R extends Route> =
 
 export function createHrefFactory(schema: Schema, includeDomain: boolean) {
   return function createHref<R extends Route>(...args: CreateHrefArgs<R>) {
-    const { pathname, params, query, locale } = extractHrefOptions(
+    const { pathname, params, query, hash, locale } = extractHrefOptions(
       args as UseHrefArgs<R>,
     );
-    if (!locale) return withQuery(pathname, query);
     const localizedPaths = schema.routes[pathname];
-    if (!localizedPaths) return withQuery(pathname, query);
+    if (!locale || !localizedPaths) {
+      return withHash(withQuery(pathname, query), hash);
+    }
     const path = localizedPaths[locale];
-    if (!path) return withQuery(pathname, query);
+    if (!path) return withHash(withQuery(pathname, query), hash);
     const compiledPath = compile(path)(params);
     const domainConfig = includeDomain
       ? schema.domains?.find(({ locales }) => locales.includes(locale))
       : undefined;
-    return withDomain(withQuery(compiledPath, query), domainConfig?.domain);
+    return withDomain(
+      withHash(withQuery(compiledPath, query), hash),
+      domainConfig?.domain,
+    );
   };
+}
+
+function withHash(pathname: string, hash?: string) {
+  if (!hash) return pathname;
+  return `${pathname}#${hash}`;
 }
 
 function withQuery(pathname: string, query?: Record<string, string>) {
@@ -91,5 +102,5 @@ export function extractHrefOptions<R extends Route>(args: UseHrefArgs<R>) {
   const pathname = arg1;
   const params = typeof arg2 === "object" ? arg2 : undefined;
   const locale = typeof arg2 === "object" ? arg3 : arg2;
-  return { pathname, params, locale, query: undefined };
+  return { pathname, params, locale, query: undefined, hash: undefined };
 }
