@@ -1,4 +1,4 @@
-import { readFileSync, rmSync } from "fs";
+import { readFileSync } from "fs";
 import path from "path";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { getExpectedOriginRoutes } from "~/__mocks__/getExpectedOriginRoutes";
@@ -9,21 +9,13 @@ import {
   generateOutDirs,
   generateSchemaFile,
   OUT_DIR,
-  TYPES_DECLARATION_FILE,
 } from "./generateDistFiles";
 
 const LOCALIZED_DIR = `.generate-dist-files-test`;
 
-const typesDeclarationFileContent = `
-/* eslint-disable @typescript-eslint/triple-slash-reference */
-/// <reference path="./.next-globe-gen/schema.ts" />
-/// <reference path="./.next-globe-gen/messages.ts" />
-`.trimStart();
-
 function cleanOutDirs() {
   rmDirectory(OUT_DIR);
   rmDirectory(LOCALIZED_DIR);
-  rmSync(TYPES_DECLARATION_FILE);
 }
 
 describe("generateOutDirs()", () => {
@@ -41,10 +33,6 @@ describe("generateOutDirs()", () => {
     expect(
       readFileSync(path.join(LOCALIZED_DIR, ".gitignore")).toString(),
     ).toBe("*");
-    expect(isFile(TYPES_DECLARATION_FILE)).toBe(true);
-    expect(readFileSync(TYPES_DECLARATION_FILE).toString()).toBe(
-      typesDeclarationFileContent,
-    );
   });
 });
 

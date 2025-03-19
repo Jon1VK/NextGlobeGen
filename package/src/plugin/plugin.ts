@@ -37,8 +37,8 @@ export default function createNextGlobeGenPlugin(
       const userConfig = await compile<{ default: UserConfig }>(configPath);
       useGenerator(configPath, phase);
       addAliases(config, {
-        "next-globe-gen/schema": "./.next-globe-gen/schema.ts",
-        "next-globe-gen/messages": "./.next-globe-gen/messages.ts",
+        "next-globe-gen/schema": "./next-globe-gen/schema.ts",
+        "next-globe-gen/messages": "./next-globe-gen/messages.ts",
       });
       await addDomainRewrites(config, userConfig.default.domains);
       return config;

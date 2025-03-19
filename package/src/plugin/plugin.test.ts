@@ -42,8 +42,8 @@ describe("plugin", () => {
       {} as WebpackConfigContext,
     );
     expect(webpackConfig.resolve.alias).toStrictEqual({
-      "next-globe-gen/schema": path.resolve("/.next-globe-gen/schema.ts"),
-      "next-globe-gen/messages": path.resolve("/.next-globe-gen/messages.ts"),
+      "next-globe-gen/schema": path.resolve("/next-globe-gen/schema.ts"),
+      "next-globe-gen/messages": path.resolve("/next-globe-gen/messages.ts"),
     });
   });
 
@@ -61,9 +61,9 @@ describe("plugin", () => {
     );
     expect(webpackConfig.resolve.alias).toStrictEqual({
       abc: "/abc.js",
-      "next-globe-gen/schema": path.resolve("/home/.next-globe-gen/schema.ts"),
+      "next-globe-gen/schema": path.resolve("/home/next-globe-gen/schema.ts"),
       "next-globe-gen/messages": path.resolve(
-        "/home/.next-globe-gen/messages.ts",
+        "/home/next-globe-gen/messages.ts",
       ),
     });
   });
@@ -74,8 +74,8 @@ describe("plugin", () => {
       "phase-production-server",
     );
     expect(config.experimental?.turbo?.resolveAlias).toStrictEqual({
-      "next-globe-gen/schema": "./.next-globe-gen/schema.ts",
-      "next-globe-gen/messages": "./.next-globe-gen/messages.ts",
+      "next-globe-gen/schema": "./next-globe-gen/schema.ts",
+      "next-globe-gen/messages": "./next-globe-gen/messages.ts",
     });
   });
 
