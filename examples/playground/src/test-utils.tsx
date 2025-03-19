@@ -1,8 +1,8 @@
 import { render, type RenderOptions } from "@testing-library/react";
 import { IntlProvider } from "next-globe-gen/client";
 import type { ReactNode } from "react";
-import { messages } from "../.next-globe-gen/messages";
-import { schema } from "../.next-globe-gen/schema";
+import { messages } from "../next-globe-gen/messages";
+import { schema } from "../next-globe-gen/schema";
 
 const wrapper = ({ children }: { children: ReactNode }) => (
   <IntlProvider
