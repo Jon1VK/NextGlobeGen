@@ -5,7 +5,7 @@ import { build } from "tsup";
 import { pathToFileURL } from "url";
 import { isFile } from "~/utils/fs-utils";
 
-const OUT_DIR = "./.next-globe-gen";
+const OUT_DIR = "./next-globe-gen";
 
 export async function compile<T>(filePath: string) {
   const version = new Date().getTime();

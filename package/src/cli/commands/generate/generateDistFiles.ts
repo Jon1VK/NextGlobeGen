@@ -12,8 +12,7 @@ import { getLocales, getUnPrefixedLocales, type Config } from "~/utils/config";
 import { makeDirectory } from "~/utils/fs-utils";
 import { getMessages } from "./getMessages";
 
-export const OUT_DIR = "./.next-globe-gen";
-export const TYPES_DECLARATION_FILE = "next-globe-gen.d.ts";
+export const OUT_DIR = "./next-globe-gen";
 
 const schemaTemplate = "".concat(
   "export const schema = {schema} as const;\n\n",
@@ -27,16 +26,6 @@ export function generateOutDirs(localizedDir: string) {
   writeFileSync(path.join(OUT_DIR, ".gitignore"), "*");
   makeDirectory(localizedDir);
   writeFileSync(path.join(localizedDir, ".gitignore"), "*");
-  generateDeclarationFile();
-}
-
-function generateDeclarationFile() {
-  const declarationFileContent = "".concat(
-    "/* eslint-disable @typescript-eslint/triple-slash-reference */\n",
-    '/// <reference path="./.next-globe-gen/schema.ts" />\n',
-    '/// <reference path="./.next-globe-gen/messages.ts" />\n',
-  );
-  writeFileSync(TYPES_DECLARATION_FILE, declarationFileContent);
 }
 
 export function generateSchemaFile(
