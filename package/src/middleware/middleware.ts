@@ -133,8 +133,8 @@ function localeMatcher(
 function getAlternativeLinks(locale: Locale, request: NextRequest) {
   const routeMatch = matchRoute(locale, request.nextUrl.pathname);
   if (!routeMatch) return undefined;
-  const { route, localizedPaths, params } = routeMatch;
-  const localeAlternates = schema.locales
+  const { localizedPaths, params } = routeMatch;
+  return schema.locales
     .map((locale) => {
       const localizedPath = localizedPaths[locale];
       if (!localizedPath) return;
@@ -145,16 +145,14 @@ function getAlternativeLinks(locale: Locale, request: NextRequest) {
       );
       if (domainConfig) alternateURL.host = domainConfig.domain;
       alternateURL.search = "";
-      return `<${alternateURL}>; rel="alternate"; hreflang="${locale}"`;
+      const xDefault =
+        locale === schema.defaultLocale
+          ? `, <${alternateURL}>; rel="alternate"; hreflang="x-default"`
+          : "";
+      return `<${alternateURL}>; rel="alternate"; hreflang="${locale}"${xDefault}`;
     })
     .filter((v) => !!v)
     .join(", ");
-  if (schema.domains || route !== "/") return localeAlternates;
-  const defaultURL = new URL(route, request.url);
-  defaultURL.search = "";
-  return localeAlternates.concat(
-    `, <${defaultURL}>; rel="alternate"; hreflang="x-default"`,
-  );
 }
 
 /**
