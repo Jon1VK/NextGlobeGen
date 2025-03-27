@@ -16,10 +16,14 @@ export function withLanguageAlternates<R extends Route>(
 ) {
   const [pathname, params] = args;
   const languages = Object.fromEntries(
-    schema.locales.map((locale) => [
-      locale,
-      createHref({ pathname, params, locale }),
-    ]),
+    schema.locales
+      .map((locale) => [locale, createHref({ pathname, params, locale })])
+      .concat([
+        [
+          "x-default",
+          createHref({ pathname, params, locale: schema.defaultLocale }),
+        ],
+      ]),
   );
   return function injectLanguageAlternates(metadata: Metadata) {
     metadata.alternates ??= {};

@@ -114,7 +114,7 @@ describe("middleware", () => {
     const response = middleware(request);
     expect(response.status).toBe(200);
     expect(response.headers.get("Link")).toBe(
-      '<http://example.com/en>; rel="alternate"; hreflang="en", <http://example.com/fi>; rel="alternate"; hreflang="fi", <http://example.com/>; rel="alternate"; hreflang="x-default"',
+      '<http://example.com/en>; rel="alternate"; hreflang="en", <http://example.com/en>; rel="alternate"; hreflang="x-default", <http://example.com/fi>; rel="alternate"; hreflang="fi"',
     );
   });
 
@@ -123,7 +123,7 @@ describe("middleware", () => {
     const response = middleware(request);
     expect(response.status).toBe(200);
     expect(response.headers.get("Link")).toBe(
-      '<http://example.com/en/profile/1>; rel="alternate"; hreflang="en", <http://example.com/fi/profiili/1>; rel="alternate"; hreflang="fi"',
+      '<http://example.com/en/profile/1>; rel="alternate"; hreflang="en", <http://example.com/en/profile/1>; rel="alternate"; hreflang="x-default", <http://example.com/fi/profiili/1>; rel="alternate"; hreflang="fi"',
     );
   });
 
