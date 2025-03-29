@@ -101,7 +101,9 @@ export default function middleware(
   }
 
   const response = NextResponse.next();
-  response.cookies.set(localeCookieName, locale, localeCookieOpts);
+  if (localeCookieValue !== locale) {
+    response.cookies.set(localeCookieName, locale, localeCookieOpts);
+  }
 
   // User wants to skip alternate link header, just return a response
   if (skipAlternateLinkHeader) return response;
