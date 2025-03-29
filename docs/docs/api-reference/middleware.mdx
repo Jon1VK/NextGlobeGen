@@ -21,10 +21,13 @@ export const config = {
 middleware(request: NextRequest, opts?: { skipAlternateLinkHeader?: boolean });
 ```
 
-| Param                          | Type          | Required | Description                                                            |
-| ------------------------------ | ------------- | -------- | ---------------------------------------------------------------------- |
-| `request`                      | `NextRequest` | Yes      | The request that is passed to Next.js middleware function              |
-| `opts.skipAlternateLinkHeader` | `boolean`     | -        | If the alternate link header should be skipped or not (default: false) |
+| Param                          | Type                             | Required | Description                                                            |
+| ------------------------------ | -------------------------------- | -------- | ---------------------------------------------------------------------- |
+| `request`                      | `NextRequest`                    | Yes      | The request that is passed to Next.js middleware function              |
+| `opts.skipAlternateLinkHeader` | `boolean`                        | -        | If the alternate link header should be skipped or not (default: false) |
+| `opts.localeNegotiation`       | `"force" \| "skip" \| "default"` | -        | Modify if the locale negotiation should be skipped or ran forcefully   |
+| `opts.localeCookieName`        | `string`                         | -        | Custom locale cookie name (default: "NEXTGLOBEGEN_LOCALE")             |
+| `opts.localeCookieOpts`        | `Partial<ResponseCookie>`        | -        | Custom locale cookie options                                           |
 
 ## Returns
 

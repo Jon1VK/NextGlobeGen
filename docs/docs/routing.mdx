@@ -128,6 +128,21 @@ export default function NotFound() {
 </TabItem >
 </Tabs>
 
+## Language alternates
+
+NextGlobeGen package injects [language alternates](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#alternates) to the metadata objects for all page routing files. Alternate language links are required to be defined as absolute URLs. As so the [`metadataBase`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase) property needs to be set in the `src/_app/layout.tsx` file.
+
+```tsx title="src/_app/layout.tsx"
+import type { Metadata } from "next";
+
+export function generateMetadata(): Metadata {
+  return {
+    metadataBase: new URL("https://example.com"),
+    // other metadata properties
+  };
+}
+```
+
 ## `locale` param
 
 Hooks such as `useLocale` cannot be used in functions that are executed outside of rendering contexts. Such functions are for example all metadata routing files and `generateStaticParams` and `generateSitemap` functions.

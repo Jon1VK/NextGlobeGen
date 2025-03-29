@@ -78,4 +78,41 @@ createNextGlobeGenPlugin(configPath?: string);
 
 ### Returns
 
-`createNextGlobeGenPlugin` returns a function, which should be called with your Next.js config object. It returns the given config object with few added import aliases.
+`createNextGlobeGenPlugin` returns a function which will return a [Next.js async config function](https://nextjs.org/docs/pages/api-reference/config/next-config-js#async-configuration) when called with a Next.js config object as an argument.
+
+## With other plugins
+
+If you are using other plugins that return a Next.js config object, such as `@next/mdx`, ensure that `withNextGlobeGen` is the last plugin in the call chain. This is because `withNextGlobeGen` returns a Next.js async config function instead of a config object.
+
+```ts
+import createMDX from "@next/mdx";
+import type { NextConfig } from "next";
+import createNextGlobeGenPlugin from "next-globe-gen/plugin";
+
+const withMDX = createMDX();
+const withNextGlobeGen = createNextGlobeGenPlugin();
+
+const nextConfig: NextConfig = {
+  /* Next.js config options here */
+};
+
+export default withNextGlobeGen(withMDX(nextConfig));
+```
+
+If you are using other plugins that do not return a Next.js config object, such as `next-export-optimize-images`, you might need to define your config with the async config function.
+
+```ts
+import type { NextConfig } from "next";
+import createNextGlobeGenPlugin from "next-globe-gen/plugin";
+import withExportOptimizeImages from "next-export-optimize-images";
+
+const withNextGlobeGen = createNextGlobeGenPlugin();
+
+export default async function (phase: any) {
+  const nextConfig: NextConfig = {
+    /* Next.js config options here */
+  };
+  const config = await withExportImages(nextConfig);
+  return withNextGlobeGen(config)(phase);
+}
+```
