@@ -7,6 +7,7 @@ import {
   type Config,
   type UserConfig,
 } from "~/utils/config";
+import debugLog from "~/utils/debug-print";
 import { isDirectory, isFile, rmDirectory } from "~/utils/fs-utils";
 import { compile } from "~/utils/ts-utils";
 import { configNotFoundError, originDirNotFoundError } from "./errors";
@@ -30,22 +31,48 @@ export const generateCommand = new Command("generate")
   .action(generateAction);
 
 async function generateAction(args: { config: string; watch: boolean }) {
-  if (!isFile(args.config)) throw configNotFoundError(args.config);
+  debugLog(
+    `Starting generate action with config: ${args.config}, watch: ${args.watch}`,
+  );
+
+  if (!isFile(args.config)) {
+    debugLog(`Config file not found: ${args.config}`);
+    throw configNotFoundError(args.config);
+  }
+
+  debugLog(`Compiling user config from: ${args.config}`);
   const userConfig = await compile<{ default: UserConfig }>(args.config);
   const config = mergeConfigs(DEFAULT_CONFIG, userConfig.default);
+
   if (!isDirectory(config.routes.originDir)) {
+    debugLog(`Origin directory not found: ${config.routes.originDir}`);
     throw originDirNotFoundError(config);
   }
+
+  debugLog(
+    `Removing existing localized directory: ${config.routes.localizedDir}`,
+  );
   rmDirectory(config.routes.localizedDir);
+
+  debugLog(`Generating output directories`);
   generateOutDirs(config.routes.localizedDir);
+
+  debugLog(`Generating messages`);
   await generateMessages(config);
+
+  debugLog(`Generating routes`);
   await generateRoutes(config);
+
   if (args.watch) {
+    debugLog(`Watch mode enabled - setting up file watchers`);
     watch(config.routes.originDir, { recursive: true }, (_, fileName) => {
       if (!fileName) return;
+      debugLog(`Route file changed: ${fileName}`);
       debouncedGenerateRoutes(config, `/${fileName}`);
     });
+
     watch(config.messages.originDir, { recursive: true }, () => {
+      debugLog(`Messages directory changed`);
       debouncedGenerateMessages(config);
     });
   }

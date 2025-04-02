@@ -3,6 +3,7 @@ import path from "path";
 import type { OriginRoute } from "~/cli/types";
 import type { Locale } from "~/types/schema";
 import { getLocales, type Config } from "~/utils/config";
+import debugLog from "~/utils/debug-print";
 import { isDirectory, isFile } from "~/utils/fs-utils";
 import { compile } from "~/utils/ts-utils";
 
@@ -19,6 +20,9 @@ export async function getOriginRoutes({
   parentRoute,
   locales_,
 }: GetOriginRoutesParams) {
+  debugLog(
+    `Getting origin routes for directory: ${directory ?? config.routes.originDir}`,
+  );
   const originRoutes: OriginRoute[] = [];
   const currentDir = directory ?? config.routes.originDir;
   const files = getAppRouterFiles(currentDir);
@@ -31,9 +35,17 @@ export async function getOriginRoutes({
     const routeTranslations = isDir
       ? await getRouteTranslations(filePath)
       : undefined;
+    if (routeTranslations) {
+      debugLog(`Found route translations for: ${filePath}`);
+    }
     const localizedPathEntries = locales
       .map((locale) => {
-        if (isDifferentLocaleMarkdownPageFile(file, locale)) return;
+        if (isDifferentLocaleMarkdownPageFile(file, locale)) {
+          debugLog(
+            `Skipping different locale markdown page: ${file.name} for locale: ${locale}`,
+          );
+          return;
+        }
         const prefixDefaultLocale =
           typeof config.routes.prefixDefaultLocale === "boolean"
             ? config.routes.prefixDefaultLocale
@@ -49,6 +61,7 @@ export async function getOriginRoutes({
           routeTranslations?.[locale] ??
           file.name.replace(`.${locale}.mdx`, ".tsx");
         const localizedPath = `${localizedDir}/${localizedSegment}`;
+        debugLog(`Generated localized path for ${locale}: ${localizedPath}`);
         return [locale, localizedPath];
       })
       .filter((v) => !!v);
@@ -59,9 +72,11 @@ export async function getOriginRoutes({
       localizedPaths: Object.fromEntries(localizedPathEntries),
     };
     if (!isDir) {
+      debugLog(`Adding file route: ${routePath}`);
       originRoutes.push(originRoute);
       continue;
     }
+    debugLog(`Processing directory route: ${routePath}`);
     const childRoutes = await getOriginRoutes({
       config,
       directory: filePath,
@@ -117,11 +132,18 @@ type I18N = {
 };
 
 async function getRouteTranslations(directory: string) {
+  debugLog(`Looking for route translations in: ${directory}`);
   for (const file of I18N_FILE_NAMES) {
     const filePath = path.join(directory, file);
     if (!isFile(filePath)) continue;
+
+    debugLog(`Found translation file: ${filePath}`);
     const i18n = (await compile<I18N>(filePath)).default;
-    if (typeof i18n === "function") return await i18n();
+    if (typeof i18n === "function") {
+      debugLog(`Translation file contains a function, executing...`);
+      return await i18n();
+    }
     return i18n;
   }
+  debugLog(`No translation files found in: ${directory}`);
 }

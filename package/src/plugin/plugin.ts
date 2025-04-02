@@ -10,6 +10,7 @@ import type { Rewrite } from "next/dist/lib/load-custom-routes";
 import { spawn, spawnSync } from "node:child_process";
 import { resolve } from "node:path";
 import type { Config, UserConfig } from "~/utils/config";
+import debugLog from "~/utils/debug-print";
 import { compile } from "~/utils/ts-utils";
 
 type Phase =
@@ -32,32 +33,59 @@ type Phase =
 export default function createNextGlobeGenPlugin(
   configPath = "./i18n.config.ts",
 ) {
+  debugLog(`Creating NextGlobeGen plugin with config path: ${configPath}`);
+
   return function withNextGlobeGen(config: NextConfig) {
+    debugLog(`Initializing NextGlobeGen plugin`);
+
     return async (phase: Phase) => {
+      debugLog(`Plugin phase: ${phase}`);
+
+      debugLog(`Compiling user config from: ${configPath}`);
       const userConfig = await compile<{ default: UserConfig }>(configPath);
+
+      debugLog(`Setting up generator`);
       useGenerator(configPath, phase);
+
+      debugLog(`Adding aliases to Next.js config`);
       addAliases(config, {
         "next-globe-gen/schema": "./next-globe-gen/schema.ts",
         "next-globe-gen/messages": "./next-globe-gen/messages.ts",
       });
+
+      debugLog(`Adding domain rewrites`);
       await addDomainRewrites(config, userConfig.default.domains);
+
       return config;
     };
   };
 }
 
 function useGenerator(configPath: string, phase: Phase) {
-  if (process.env.NEXT_PRIVATE_WORKER) return;
-  if (process.env.NEXT_DEPLOYMENT_ID !== undefined) return;
+  debugLog(`Using generator in phase: ${phase}`);
+
+  if (process.env.NEXT_PRIVATE_WORKER) {
+    debugLog(`Skipping generator - NEXT_PRIVATE_WORKER is set`);
+    return;
+  }
+
+  if (process.env.NEXT_DEPLOYMENT_ID !== undefined) {
+    debugLog(`Skipping generator - NEXT_DEPLOYMENT_ID is set`);
+    return;
+  }
+
   try {
     if (phase !== "phase-production-server") {
+      debugLog(`Running next-globe-gen compiler`);
       spawnSync(`npx next-globe-gen --config ${configPath}`, {
         cwd: process.cwd(),
         stdio: "inherit",
         shell: true,
       });
     }
+
     if (phase === "phase-development-server") {
+      debugLog(`Starting next-globe-gen in watch mode`);
       spawn(`npx next-globe-gen --watch --config ${configPath}`, {
         cwd: process.cwd(),
         stdio: "inherit",
@@ -65,7 +93,8 @@ function useGenerator(configPath: string, phase: Phase) {
         detached: false,
       });
     }
-  } catch (_e) {
+  } catch (error) {
+    debugLog(`Failed to spawn NextGlobeGen compiler process: ${error}`);
     console.error("Failed to spawn the NextGlobeGen compiler process");
   }
 }

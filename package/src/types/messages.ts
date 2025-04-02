@@ -20,9 +20,13 @@ export type MessageKey = keyof Messages[Locale];
 /**
  * Utility type for extracting all the possible namespaces
  */
-type GetNamespaces<K extends string> = K extends `${infer N}.${infer R}`
-  ? N | `${N}.${GetNamespaces<R>}`
-  : never;
+type GetNamespaces<K extends string, Depth extends number = 3> = Depth extends 0
+  ? never
+  : K extends `${infer N}.${infer R}`
+    ?
+        | N
+        | `${N}.${GetNamespaces<R, Depth extends 1 ? 0 : Depth extends 2 ? 1 : 2>}`
+    : never;
 
 /**
  * All possible namespaces
@@ -63,9 +67,17 @@ type RemoveAll<
   S extends string,
   R extends string,
   Acc extends string = "",
-> = S extends `${infer Head}${R}${infer Tail}`
-  ? RemoveAll<Tail, R, `${Acc}${Head}`>
-  : `${Acc}${S}`;
+  Depth extends number = 3,
+> = Depth extends 0
+  ? `${Acc}${S}`
+  : S extends `${infer Head}${R}${infer Tail}`
+    ? RemoveAll<
+        Tail,
+        R,
+        `${Acc}${Head}`,
+        Depth extends 1 ? 0 : Depth extends 2 ? 1 : 2
+      >
+    : `${Acc}${S}`;
 
 /**
  * Utility type to remove all spaces and new lines from the provided string.
@@ -105,24 +117,49 @@ type ExtractArguments<S extends string> =
     ? ExtractMultipleArguments<S>
     : ExtractArgument<S>;
 
-type ExtractMultipleArguments<S extends string> =
-  S extends `${string}{${infer Arg}{${infer Rest}`
+type ExtractMultipleArguments<
+  S extends string,
+  Depth extends number = 3,
+> = Depth extends 0
+  ? never
+  : S extends `${string}{${infer Arg}{${infer Rest}`
     ? Arg extends `${infer Head}}${string}`
       ? ExtractArguments<`{${Head}}`> | ExtractArguments<`{${Rest}`>
       : Arg extends `${string},select,${string}`
-        ? ExtractRestArguments<`{${Rest}`>
+        ? ExtractRestArguments<
+            `{${Rest}`,
+            Depth extends 1 ? 0 : Depth extends 2 ? 1 : 2
+          >
         : Arg extends `${string},${string}`
-          ? Arg | ExtractRestArguments<`{${Rest}`>
+          ?
+              | Arg
+              | ExtractRestArguments<
+                  `{${Rest}`,
+                  Depth extends 1 ? 0 : Depth extends 2 ? 1 : 2
+                >
           : never
     : never;
 
-type ExtractRestArguments<S extends string> = S extends `}${infer Rest}`
-  ? ExtractArguments<Rest>
-  : S extends `${string}{${infer Nested}}${infer Rest}`
-    ? Nested extends `${string}{${infer NestedRest}`
-      ? ExtractArguments<`{${NestedRest}}`> | ExtractRestArguments<`{${Rest}`>
-      : ExtractRestArguments<Rest>
-    : never;
+type ExtractRestArguments<
+  S extends string,
+  Depth extends number = 3,
+> = Depth extends 0
+  ? never
+  : S extends `}${infer Rest}`
+    ? ExtractArguments<Rest>
+    : S extends `${string}{${infer Nested}}${infer Rest}`
+      ? Nested extends `${string}{${infer NestedRest}`
+        ?
+            | ExtractArguments<`{${NestedRest}}`>
+            | ExtractRestArguments<
+                `{${Rest}`,
+                Depth extends 1 ? 0 : Depth extends 2 ? 1 : 2
+              >
+        : ExtractRestArguments<
+            Rest,
+            Depth extends 1 ? 0 : Depth extends 2 ? 1 : 2
+          >
+      : never;
 
 type ExtractArgument<S extends string> =
   S extends `${string}{${infer Arg}}${string}` ? Arg : never;
@@ -141,17 +178,33 @@ type ExtractNestedSelectArguments<
       | `${Arg},select,${ExtractSelectOptions<Rest>}`
       | ExtractSelectArguments<Rest>;
 
-type ExtractSelectOptions<S extends string> = S extends `}${string}`
+type ExtractSelectOptions<
+  S extends string,
+  Depth extends number = 3,
+> = Depth extends 0
   ? never
-  : S extends `${infer Option}{${infer Nested}}${infer Rest}`
-    ? Nested extends `${string}{${infer NestedRest}`
-      ? ExtractSelectOptions<`${Option}{${NestedRest}${Rest}`>
-      : Option | ExtractSelectOptions<Rest>
-    : never;
+  : S extends `}${string}`
+    ? never
+    : S extends `${infer Option}{${infer Nested}}${infer Rest}`
+      ? Nested extends `${string}{${infer NestedRest}`
+        ? ExtractSelectOptions<
+            `${Option}{${NestedRest}${Rest}`,
+            Depth extends 1 ? 0 : Depth extends 2 ? 1 : 2
+          >
+        :
+            | Option
+            | ExtractSelectOptions<
+                Rest,
+                Depth extends 1 ? 0 : Depth extends 2 ? 1 : 2
+              >
+      : never;
 
-type ExtractTags<S extends string> =
-  S extends `${string}</${infer Tag}>${infer Rest}`
-    ? `${Tag},tag` | ExtractTags<Rest>
+type ExtractTags<S extends string, Depth extends number = 3> = Depth extends 0
+  ? never
+  : S extends `${string}</${infer Tag}>${infer Rest}`
+    ?
+        | `${Tag},tag`
+        | ExtractTags<Rest, Depth extends 1 ? 0 : Depth extends 2 ? 1 : 2>
     : never;
 
 /**
@@ -188,7 +241,7 @@ type ToTsType<ArgType extends string> = ArgType extends
   : ArgType extends "date" | "time"
     ? Date
     : ArgType extends "tag"
-      ? (children: ReactNode) => ReactNode
+      ? ReactNode
       : ArgType extends `select,${infer Option}`
         ? Option
         : string;
