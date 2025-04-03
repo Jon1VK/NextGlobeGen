@@ -8,7 +8,7 @@ import { isFile } from "~/utils/fs-utils";
 const OUT_DIR = "./next-globe-gen";
 
 export async function compile<T>(filePath: string) {
-  const version = new Date().getTime();
+  const version = Math.random();
   const outputFileName = createHash("md5")
     .update(`${filePath}-${version}`)
     .digest("hex");
