@@ -116,7 +116,7 @@ export default function middleware(
 }
 
 function extractLocaleAndRoutePathname(pathname: string) {
-  const regexp = new RegExp(`\\/(${schema.locales.join("|")})(\\/?.*)`);
+  const regexp = new RegExp(`\\/(${schema.locales.join("|")})(\\/.*)?$`);
   const match = pathname.match(regexp);
   if (!match) return [undefined, pathname] as const;
   return [match[1] as Locale, match[2] || "/"] as const;
