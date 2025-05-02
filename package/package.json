@@ -71,23 +71,22 @@
     "negotiator": "^1.0.0",
     "path-to-regexp": "^8.2.0",
     "tsup": "^8.4.0",
-    "yaml": "^2.7.0"
+    "yaml": "^2.7.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.23.0",
-    "@types/figlet": "^1.7.0",
+    "@eslint/js": "^9.25.1",
     "@types/negotiator": "^0.6.3",
-    "@types/node": "^22.13.14",
+    "@types/node": "^22.15.3",
     "@types/react": "18.2.0",
-    "@vitest/coverage-v8": "^3.0.9",
-    "eslint": "^9.23.0",
-    "next": "^14.2.26",
+    "@vitest/coverage-v8": "^3.1.2",
+    "eslint": "^9.25.1",
+    "next": "^14.2.28",
     "prettier": "^3.5.3",
     "react": "^18.3.1",
     "react-dom": "18.2.0",
-    "typescript": "^5.8.2",
-    "typescript-eslint": "^8.28.0",
-    "vitest": "^3.0.9"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.31.1",
+    "vitest": "^3.1.2"
   },
   "peerDependencies": {
     "next": "^14.0.0",
