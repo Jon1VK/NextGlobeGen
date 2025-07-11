@@ -77,11 +77,10 @@ function useGenerator(configPath: string, phase: Phase) {
  */
 function addAliases(nextConfig: NextConfig, aliases: Record<string, string>) {
   if (process.env.TURBOPACK) {
-    nextConfig.experimental ??= {};
-    nextConfig.experimental.turbo ??= {};
-    nextConfig.experimental.turbo.resolveAlias ??= {};
-    nextConfig.experimental.turbo.resolveAlias = {
-      ...nextConfig.experimental.turbo.resolveAlias,
+    nextConfig.turbopack ??= {};
+    nextConfig.turbopack.resolveAlias ??= {};
+    nextConfig.turbopack.resolveAlias = {
+      ...nextConfig.turbopack.resolveAlias,
       ...aliases,
     };
   } else {

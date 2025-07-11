@@ -73,7 +73,7 @@ describe("plugin", () => {
     const config = await withNextGlobeGenPlugin(CONFIG_PATH)({})(
       "phase-production-server",
     );
-    expect(config.experimental?.turbo?.resolveAlias).toStrictEqual({
+    expect(config.turbopack?.resolveAlias).toStrictEqual({
       "next-globe-gen/schema": "./next-globe-gen/schema.ts",
       "next-globe-gen/messages": "./next-globe-gen/messages.ts",
     });
