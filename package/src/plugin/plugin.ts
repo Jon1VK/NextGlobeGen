@@ -7,6 +7,7 @@ import type {
   PHASE_TEST,
 } from "next/constants";
 import type { Rewrite } from "next/dist/lib/load-custom-routes";
+import type { NextJsWebpackConfig } from "next/dist/server/config-shared";
 import { spawn, spawnSync } from "node:child_process";
 import { resolve } from "node:path";
 import type { Config, UserConfig } from "~/utils/config";
@@ -36,12 +37,13 @@ export default function createNextGlobeGenPlugin(
     return async (phase: Phase) => {
       const userConfig = await compile<{ default: UserConfig }>(configPath);
       useGenerator(configPath, phase);
-      addAliases(config, {
-        "next-globe-gen/schema": "./next-globe-gen/schema.ts",
-        "next-globe-gen/messages": "./next-globe-gen/messages.ts",
-      });
-      await addDomainRewrites(config, userConfig.default.domains);
-      return config;
+      return addDomainRewrites(
+        addAliases(config, {
+          "next-globe-gen/schema": "./next-globe-gen/schema.ts",
+          "next-globe-gen/messages": "./next-globe-gen/messages.ts",
+        }),
+        userConfig.default.domains,
+      );
     };
   };
 }
@@ -74,6 +76,7 @@ function useGenerator(configPath: string, phase: Phase) {
  * Adds an alias to the bundler config.
  * @param config The Next.js config object
  * @param aliases A map of aliases to their relative paths
+ * @returns The modified Next.js config object with the aliases added
  */
 function addAliases(nextConfig: NextConfig, aliases: Record<string, string>) {
   if (process.env.TURBOPACK) {
@@ -84,36 +87,33 @@ function addAliases(nextConfig: NextConfig, aliases: Record<string, string>) {
       ...nextConfig.experimental.turbo.resolveAlias,
       ...aliases,
     };
-  } else {
-    const originalWebpack = nextConfig.webpack;
-    nextConfig.webpack = (nextConfig, options) => {
-      const config = originalWebpack?.(nextConfig, options) ?? nextConfig;
-      const absoluteAliases: Record<string, string> = {};
-      for (const [alias, relativePath] of Object.entries(aliases)) {
-        absoluteAliases[alias] = resolve(config.context, relativePath);
-      }
-      config.resolve ??= {};
-      config.resolve.alias ??= {};
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        ...absoluteAliases,
-      };
-      return config;
-    };
+    return nextConfig;
   }
+  const webpack: NextJsWebpackConfig = (inputConfig, options) => {
+    const config = nextConfig.webpack?.(inputConfig, options) ?? inputConfig;
+    const absoluteAliases: Record<string, string> = {};
+    for (const [alias, relativePath] of Object.entries(aliases)) {
+      absoluteAliases[alias] = resolve(config.context, relativePath);
+    }
+    config.resolve ??= {};
+    config.resolve.alias ??= {};
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      ...absoluteAliases,
+    };
+    return config;
+  };
+  return Object.assign({}, nextConfig, { webpack });
 }
 
 /**
  * Adds domain rewrite rules to the next.js config.
  * @param config The Next.js config object
  * @param domains An array of domain based routes
+ * @return The modified Next.js config object with the domain rewrites added
  */
-async function addDomainRewrites(
-  nextConfig: NextConfig,
-  domains: Config["domains"],
-) {
-  if (!domains) return;
-  const originalRewrites = await nextConfig.rewrites?.();
+function addDomainRewrites(nextConfig: NextConfig, domains: Config["domains"]) {
+  if (!domains) return nextConfig;
   const domainRewrites: Rewrite[] = domains
     .filter(({ prefixDefaultLocale }) => !prefixDefaultLocale)
     .flatMap(({ domain, locales, defaultLocale }) => {
@@ -132,7 +132,8 @@ async function addDomainRewrites(
         },
       ];
     });
-  nextConfig.rewrites = async function rewrites() {
+  const rewrites = async function rewrites() {
+    const originalRewrites = await nextConfig.rewrites?.();
     if (!originalRewrites) return domainRewrites;
     if (Array.isArray(originalRewrites)) {
       return [...originalRewrites, ...domainRewrites];
@@ -144,6 +145,7 @@ async function addDomainRewrites(
         : domainRewrites,
     };
   };
+  return Object.assign({}, nextConfig, { rewrites });
 }
 
 /**
