@@ -16,7 +16,7 @@ export default function Page() {
         {demos.map((section) => {
           return (
             <div key={section.titleKey} className="space-y-5">
-              <div className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+              <div className="text-xs font-semibold tracking-wider text-gray-400 uppercase">
                 {demosT(`client.titles.${section.titleKey}`)}
               </div>
 

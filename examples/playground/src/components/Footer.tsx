@@ -2,7 +2,7 @@ import Logo from "./Logo";
 
 export default function Footer() {
   return (
-    <div className="rounded-lg bg-vc-border-gradient p-px shadow-lg shadow-black/20">
+    <div className="bg-vc-border-gradient rounded-lg p-px shadow-lg shadow-black/20">
       <div className="flex flex-col justify-between space-y-2 rounded-lg bg-black p-3.5 text-sm lg:px-5 lg:py-4">
         <a
           className="group flex w-full items-center gap-x-2"

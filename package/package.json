@@ -6,6 +6,7 @@
   "author": "Joni Vainio-Kaila",
   "license": "MIT",
   "homepage": "https://next-globe-gen.dev",
+  "packageManager": "pnpm@10.14.0",
   "repository": {
     "url": "https://github.com/Jon1VK/NextGlobeGen"
   },
