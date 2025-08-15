@@ -6,7 +6,7 @@ import CodeExample from "./CodeExample";
 
 export default function HeroSection() {
   return (
-    <section className="space-y-24 xl:grid xl:grid-cols-[minmax(0,4fr)_minmax(0,5fr)] xl:items-center xl:gap-x-8">
+    <section className="space-y-24 xl:grid xl:grid-cols-[minmax(0,4fr)_minmax(0,5fr)] xl:items-center xl:space-y-0 xl:gap-x-8">
       <div className="mx-auto max-w-lg text-balance">
         <Heading
           as="h1"
@@ -29,7 +29,7 @@ export default function HeroSection() {
           </Link>
           <Link
             href="https://next-globe-gen-playground.vercel.app"
-            className="whitespace-nowrap rounded-xl bg-sky-300/20 px-6 py-3 text-gray-900 hover:text-gray-900 dark:text-white dark:hover:text-white"
+            className="rounded-xl bg-sky-300/20 px-6 py-3 whitespace-nowrap text-gray-900 hover:text-gray-900 dark:text-white dark:hover:text-white"
           >
             Playground Example <span aria-hidden="true">→</span>
           </Link>

@@ -1,6 +1,20 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 :root {
   --ifm-color-primary: #0c6fc0;
@@ -66,4 +80,9 @@ code {
 
 dd {
   margin: 0;
+}
+
+svg {
+  display: inline;
+  vertical-align: baseline;
 }

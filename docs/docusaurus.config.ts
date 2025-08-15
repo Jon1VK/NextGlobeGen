@@ -1,9 +1,8 @@
 import type * as Preset from "@docusaurus/preset-classic";
 import npm2yarn from "@docusaurus/remark-plugin-npm2yarn";
 import type { Config } from "@docusaurus/types";
-import autoprefixer from "autoprefixer";
+import tailwindcssPlugin from "@tailwindcss/postcss";
 import { themes as prismThemes } from "prism-react-renderer";
-import tailwindcssPlugin from "tailwindcss";
 
 const config: Config = {
   title: "NextGlobeGen",
@@ -78,6 +77,7 @@ const config: Config = {
         src: "img/logo.svg",
         srcDark: "img/logo.dark.svg",
         height: 32,
+        className: "h-8",
         href: "/",
       },
       links: [
@@ -92,7 +92,6 @@ const config: Config = {
         name: "tailwindcss",
         configurePostCss(postcssOptions) {
           postcssOptions.plugins.push(tailwindcssPlugin);
-          postcssOptions.plugins.push(autoprefixer);
           return postcssOptions;
         },
       };

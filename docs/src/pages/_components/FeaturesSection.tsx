@@ -55,7 +55,7 @@ export default function FeaturesSection() {
         >
           Effortless internationalization
         </Heading>
-        <p className="mt-2 text-pretty text-2xl font-semibold tracking-tight sm:text-5xl/tight lg:text-balance">
+        <p className="mt-2 text-2xl font-semibold tracking-tight text-pretty sm:text-5xl/tight lg:text-balance">
           The smoothest DX for Next.js internationalization
         </p>
         <p className="mt-6 sm:text-lg">
@@ -70,7 +70,7 @@ export default function FeaturesSection() {
             <dt className="text-base font-semibold">
               <feature.icon
                 aria-hidden="true"
-                className="absolute left-0 top-2 size-8 sm:size-9"
+                className="absolute top-2 left-0 size-8 sm:size-9"
               />
               {feature.name}
             </dt>

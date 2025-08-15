@@ -21,9 +21,9 @@ function Layout(props: { children: React.ReactNode }) {
 
 export default function CodeExample() {
   return (
-    <div className="-mx-8 bg-gradient-to-b from-sky-500/90 to-white pl-6 pt-8 [clip-path:inset(0)] md:mx-auto md:max-w-3xl md:pl-10 md:pt-12 md:[clip-path:inset(0_round_theme(borderRadius.3xl))] xl:mx-0 xl:max-w-none dark:to-sky-950">
+    <div className="-mx-8 bg-linear-to-b from-sky-500/90 to-white pt-8 pl-6 [clip-path:inset(0)] md:mx-auto md:max-w-3xl md:pt-12 md:pl-10 md:[clip-path:inset(0_round_var(--radius-3xl))] xl:mx-0 xl:mt-24 xl:max-w-none dark:to-sky-950">
       <div
-        className="absolute inset-0 left-1/2 -z-10 ml-10 w-[200%] skew-x-[-30deg] bg-gradient-to-t from-sky-500/90 to-white md:ml-20 lg:ml-36 dark:to-sky-950"
+        className="absolute inset-0 left-1/2 -z-10 ml-10 w-[200%] skew-x-[-30deg] bg-linear-to-t from-sky-500/90 to-white md:ml-20 lg:ml-36 dark:to-sky-950"
         aria-hidden="true"
       />
       <div className="flex overflow-hidden rounded-tl-xl bg-gray-900/50 text-sm/6 font-medium">

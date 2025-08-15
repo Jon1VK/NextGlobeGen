@@ -2,7 +2,6 @@
 
 import { FlatCompat } from "@eslint/eslintrc";
 import eslint from "@eslint/js";
-import tailwind from "eslint-plugin-tailwindcss";
 import globals from "globals";
 import path from "path";
 import tseslint from "typescript-eslint";
@@ -21,6 +20,5 @@ export default tseslint.config(
   eslint.configs.recommended,
   tseslint.configs.recommended,
   compat.extends("plugin:@docusaurus/recommended"),
-  tailwind.configs["flat/recommended"],
   { linterOptions: { reportUnusedDisableDirectives: true } },
 );
