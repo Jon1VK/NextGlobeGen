@@ -4,7 +4,11 @@ import type { ReactNode } from "react";
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface MessagesRegister {}
 
-type MockMessages = Record<Locale, Record<string, string>>;
+interface NestedMessages {
+  [key: string]: NestedMessages | string;
+}
+
+type MockMessages = Record<Locale, NestedMessages>;
 
 export type Messages = MessagesRegister extends { messages: infer S }
   ? S
@@ -12,35 +16,45 @@ export type Messages = MessagesRegister extends { messages: infer S }
 
 export declare const messages: Messages;
 
-/**
- * All possible message keys. Used default locale by default
- */
-export type MessageKey = keyof Messages[Locale];
+type AllMessages = Messages[Locale];
 
 /**
  * Utility type for extracting all the possible namespaces
  */
-type GetNamespaces<K extends string> = K extends `${infer N}.${infer R}`
-  ? N | `${N}.${GetNamespaces<R>}`
-  : never;
+export type GetNamespaces<T> = {
+  [Key in keyof T]: T[Key] extends string
+    ? never
+    : `${Key & string}` | `${Key & string}.${GetNamespaces<T[Key]>}`;
+}[keyof T];
 
 /**
  * All possible namespaces
  */
-export type Namespace = GetNamespaces<MessageKey> | undefined;
+export type Namespace = GetNamespaces<AllMessages> | undefined;
 
-/**
- * Utility type for extracting all keys in the given namespace
- */
-type GetNamespaceKeys<
-  K extends MessageKey,
-  N extends Namespace,
-> = N extends undefined ? K : K extends `${N}.${infer R}` ? R : never;
+export type GetMessageKeys<T> = {
+  [Key in keyof T]: T[Key] extends string
+    ? `${Key & string}`
+    : `${Key & string}.${GetMessageKeys<T[Key]>}`;
+}[keyof T];
 
 /**
  * Get all keys in the given namespace
  */
-export type NamespaceKey<N extends Namespace> = GetNamespaceKeys<MessageKey, N>;
+export type NamespaceKey<N extends Namespace> = N extends string
+  ? GetMessageKeys<GetNestedObjectValue<AllMessages, N>>
+  : GetMessageKeys<AllMessages>;
+
+type GetNestedObjectValue<
+  O,
+  P extends string,
+> = P extends `${infer Key}.${infer Rest}`
+  ? Key extends keyof O
+    ? GetNestedObjectValue<O[Key], Rest>
+    : never
+  : P extends keyof O
+    ? O[P]
+    : never;
 
 /**
  * Get the message type given its namespace and the key in the namespace
@@ -48,13 +62,8 @@ export type NamespaceKey<N extends Namespace> = GetNamespaceKeys<MessageKey, N>;
 export type Message<
   N extends Namespace,
   K extends NamespaceKey<N>,
-> = N extends undefined
-  ? K extends keyof Messages[Locale]
-    ? Messages[Locale][K]
-    : never
-  : `${N}.${K}` extends keyof Messages[Locale]
-    ? Messages[Locale][`${N}.${K}`]
-    : never;
+  M = GetNestedObjectValue<AllMessages, N extends undefined ? K : `${N}.${K}`>,
+> = M extends string ? M : never;
 
 /**
  * Utility type to remove a string from another.

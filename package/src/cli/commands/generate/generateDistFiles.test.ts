@@ -270,22 +270,53 @@ describe("generateSchemaFile()", () => {
 const expectedMessagesFileContents = `
 export const messages = {
 	"fi": {
-		"hello.world": "Hei maailma",
-		"hello.name": "Hei {name}",
+		"hello": {
+			"world": "Hei maailma",
+			"name": "Hei {name}"
+		},
 		"projects": "{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}",
 		"message": "Ei nimiavaruutta viesti",
-		"namespace.message": "Nimiavaruus viesti"
+		"namespace": {
+			"message": "Nimiavaruus viesti"
+		}
 	},
 	"en": {
-		"hello.world": "Hello world",
-		"hello.name": "Hello {name}",
+		"hello": {
+			"world": "Hello world",
+			"name": "Hello {name}"
+		},
 		"projects": "{count, plural, =0 {No project} one {One project} other {# projects}}",
 		"message": "No namespace message",
-		"namespace.message": "Namespaced message"
+		"namespace": {
+			"message": "Namespaced message"
+		}
 	}
 } as const;
 
-export const clientMessages = messages;
+export const clientMessages = {
+	"fi": {
+		"hello": {
+			"world": "Hei maailma",
+			"name": "Hei {name}"
+		},
+		"projects": "{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}",
+		"message": "Ei nimiavaruutta viesti",
+		"namespace": {
+			"message": "Nimiavaruus viesti"
+		}
+	},
+	"en": {
+		"hello": {
+			"world": "Hello world",
+			"name": "Hello {name}"
+		},
+		"projects": "{count, plural, =0 {No project} one {One project} other {# projects}}",
+		"message": "No namespace message",
+		"namespace": {
+			"message": "Namespaced message"
+		}
+	}
+} as const;
 
 declare module "next-globe-gen" {
 	interface MessagesRegister {
@@ -295,33 +326,42 @@ declare module "next-globe-gen" {
 `.trimStart();
 
 const expectedClientFilteredMessagesFileContents = `
-export const serverOnlyMessages = {
+export const messages = {
 	"fi": {
-		"hello.world": "Hei maailma",
-		"hello.name": "Hei {name}",
+		"hello": {
+			"world": "Hei maailma",
+			"name": "Hei {name}"
+		},
 		"projects": "{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}",
-		"message": "Ei nimiavaruutta viesti"
+		"message": "Ei nimiavaruutta viesti",
+		"namespace": {
+			"message": "Nimiavaruus viesti"
+		}
 	},
 	"en": {
-		"hello.world": "Hello world",
-		"hello.name": "Hello {name}",
+		"hello": {
+			"world": "Hello world",
+			"name": "Hello {name}"
+		},
 		"projects": "{count, plural, =0 {No project} one {One project} other {# projects}}",
-		"message": "No namespace message"
+		"message": "No namespace message",
+		"namespace": {
+			"message": "Namespaced message"
+		}
 	}
 } as const;
 
 export const clientMessages = {
 	"fi": {
-		"namespace.message": "Nimiavaruus viesti"
+		"namespace": {
+			"message": "Nimiavaruus viesti"
+		}
 	},
 	"en": {
-		"namespace.message": "Namespaced message"
+		"namespace": {
+			"message": "Namespaced message"
+		}
 	}
-} as const;
-
-export const messages = {
-	"fi": { ...serverOnlyMessages["fi"], ...clientMessages["fi"] },
-	"en": { ...serverOnlyMessages["en"], ...clientMessages["en"] }
 } as const;
 
 declare module "next-globe-gen" {
@@ -332,31 +372,34 @@ declare module "next-globe-gen" {
 `.trimStart();
 
 const expectedEmptyClientKeysFilteredMessagesFileContents = `
-export const serverOnlyMessages = {
+export const messages = {
 	"fi": {
-		"hello.world": "Hei maailma",
-		"hello.name": "Hei {name}",
+		"hello": {
+			"world": "Hei maailma",
+			"name": "Hei {name}"
+		},
 		"projects": "{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}",
 		"message": "Ei nimiavaruutta viesti",
-		"namespace.message": "Nimiavaruus viesti"
+		"namespace": {
+			"message": "Nimiavaruus viesti"
+		}
 	},
 	"en": {
-		"hello.world": "Hello world",
-		"hello.name": "Hello {name}",
+		"hello": {
+			"world": "Hello world",
+			"name": "Hello {name}"
+		},
 		"projects": "{count, plural, =0 {No project} one {One project} other {# projects}}",
 		"message": "No namespace message",
-		"namespace.message": "Namespaced message"
+		"namespace": {
+			"message": "Namespaced message"
+		}
 	}
 } as const;
 
 export const clientMessages = {
 	"fi": {},
 	"en": {}
-} as const;
-
-export const messages = {
-	"fi": { ...serverOnlyMessages["fi"], ...clientMessages["fi"] },
-	"en": { ...serverOnlyMessages["en"], ...clientMessages["en"] }
 } as const;
 
 declare module "next-globe-gen" {
