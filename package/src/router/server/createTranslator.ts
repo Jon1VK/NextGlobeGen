@@ -16,7 +16,7 @@ export function createTranslator<N extends Namespace = undefined>(
 ) {
   return function t<
     K extends NamespaceKey<N>,
-    A extends MessageArguments<Message<N, K>> = MessageArguments<Message<N, K>>,
+    A = MessageArguments<Message<N, K>>,
   >(
     ...params: A extends Record<string, never>
       ? [key: K, args?: undefined]
@@ -33,7 +33,7 @@ export function createTranslator<N extends Namespace = undefined>(
       locale,
       namespace,
       key,
-      args,
+      args: args as Record<string, unknown>,
     }) as TReturnType;
   };
 }

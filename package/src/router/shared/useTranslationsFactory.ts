@@ -27,18 +27,15 @@ export function useTranslationsFactory(
     const messages = useMessages();
     const formatters = useFormatters();
 
-    function t<
-      K extends NamespaceKey<N>,
-      A extends MessageArguments<Message<N, K>> = MessageArguments<
-        Message<N, K>
-      >,
-    >(
+    function t<K extends NamespaceKey<N>, A = MessageArguments<Message<N, K>>>(
       ...params: A extends Record<string, never>
         ? [key: K, args?: undefined]
         : [key: K, args: A]
     ) {
       const [key, args] = params;
-      type TReturnType = ((children: ReactNode) => ReactNode) extends A[keyof A]
+      type TReturnType = ((
+        children: ReactNode,
+      ) => JSX.Element) extends A[keyof A]
         ? ReactNode
         : string;
       return tImpl({
@@ -48,7 +45,7 @@ export function useTranslationsFactory(
         locale,
         namespace,
         key,
-        args,
+        args: args as Record<string, unknown>,
       }) as TReturnType;
     }
 
@@ -60,7 +57,7 @@ export function useTranslationsFactory(
 export function tImpl<
   N extends Namespace,
   K extends NamespaceKey<N>,
-  A extends MessageArguments<Message<N, K>> = MessageArguments<Message<N, K>>,
+  A extends Record<string, unknown>,
 >({
   messages,
   formatters,
@@ -80,7 +77,7 @@ export function tImpl<
 }) {
   const fullKey = namespace ? `${namespace}.${key}` : key;
   const localeFullKey = `${locale}.${fullKey}`;
-  const message = messages?.[fullKey];
+  const message = getMessage(messages, fullKey);
   if (!message) return localeFullKey;
   const isLiteralMessage = !/['{<]/.test(message);
   if (isLiteralMessage) return message;
@@ -95,6 +92,17 @@ export function tImpl<
     console.error(error);
     return localeFullKey;
   }
+}
+
+function getMessage(messages: Messages[Locale] | undefined, key: string) {
+  let current: Messages[Locale] | string | undefined = messages;
+  const parts = key.split(".");
+  for (const part of parts) {
+    if (typeof current !== "object") return undefined;
+    current = current[part];
+  }
+  if (typeof current !== "string") return undefined;
+  return current;
 }
 
 function injectKeysToTagArgs(args?: Record<string, unknown>) {
