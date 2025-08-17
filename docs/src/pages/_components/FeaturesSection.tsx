@@ -70,7 +70,8 @@ export default function FeaturesSection() {
             <dt className="text-base font-semibold">
               <feature.icon
                 aria-hidden="true"
-                className="absolute top-2 left-0 size-8 sm:size-9"
+                className="top-2 left-0 size-8 sm:size-9"
+                style={{ position: "absolute" }}
               />
               {feature.name}
             </dt>
