@@ -1,4 +1,4 @@
-export { middleware } from "next-globe-gen/middleware";
+export { proxy } from "next-globe-gen/proxy";
 
 export const config = {
   // Matcher ignoring next internals and static assets
