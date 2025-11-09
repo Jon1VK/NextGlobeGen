@@ -30,6 +30,3 @@ jobs:
       - if: ${{ github.event.release.prerelease == false }}
         run: echo "TAG=latest" >> "$GITHUB_ENV"
       - run: pnpm publish --no-git-checks --access public --tag $TAG
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
