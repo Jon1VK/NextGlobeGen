@@ -17,10 +17,15 @@ const config: Config = {
   projectName: "NextGlobeGen",
 
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "warn",
 
   // Used to set useful metadata like html lang
   i18n: { defaultLocale: "en", locales: ["en"] },
+
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+    },
+  },
 
   presets: [
     [
