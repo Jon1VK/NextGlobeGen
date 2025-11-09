@@ -1,7 +1,7 @@
 import { type Schema } from "next-globe-gen/schema";
 import { NextRequest } from "next/server";
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { middleware } from ".";
+import { proxy } from ".";
 
 const prefixSchema = vi.hoisted<Schema>(() => {
   return {
@@ -71,7 +71,7 @@ function createRequest(input: string) {
   return request;
 }
 
-describe("middleware", () => {
+describe("proxy", () => {
   afterEach(() => {
     schemaMock.schema = { ...prefixSchema };
   });
@@ -79,7 +79,7 @@ describe("middleware", () => {
   test("removes default locale if prefixDefaultLocale === false", () => {
     schemaMock.schema.unPrefixedLocales = ["en"];
     const request = createRequest("http://example.com/en/profile/1");
-    const response = middleware(request);
+    const response = proxy(request);
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe(
       "http://example.com/profile/1",
@@ -89,13 +89,13 @@ describe("middleware", () => {
   test("does not add prefix with prefixDefaultLocale === false", () => {
     schemaMock.schema.unPrefixedLocales = ["en"];
     const request = createRequest("http://example.com/profile/1");
-    const response = middleware(request);
+    const response = proxy(request);
     expect(response.status).toBe(200);
   });
 
   test("redirects to locale prefixed path if no locale given", () => {
     const request = createRequest("http://example.com/profile/1");
-    const response = middleware(request);
+    const response = proxy(request);
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe(
       "http://example.com/en/profile/1",
@@ -104,14 +104,14 @@ describe("middleware", () => {
 
   test("no alternate link header if skipAlternateLinkHeader === true", () => {
     const request = createRequest("http://example.com/en/profile/1");
-    const response = middleware(request, { skipAlternateLinkHeader: true });
+    const response = proxy(request, { skipAlternateLinkHeader: true });
     expect(response.status).toBe(200);
     expect(response.headers.get("Link")).toBeNull();
   });
 
   test("adds alternate link header correctly on root route", () => {
     const request = createRequest("http://example.com/en");
-    const response = middleware(request);
+    const response = proxy(request);
     expect(response.status).toBe(200);
     expect(response.headers.get("Link")).toBe(
       '<http://example.com/en>; rel="alternate"; hreflang="en", <http://example.com/en>; rel="alternate"; hreflang="x-default", <http://example.com/fi>; rel="alternate"; hreflang="fi"',
@@ -120,7 +120,7 @@ describe("middleware", () => {
 
   test("adds alternate link header correctly on subroute", () => {
     const request = createRequest("http://example.com/en/profile/1");
-    const response = middleware(request);
+    const response = proxy(request);
     expect(response.status).toBe(200);
     expect(response.headers.get("Link")).toBe(
       '<http://example.com/en/profile/1>; rel="alternate"; hreflang="en", <http://example.com/en/profile/1>; rel="alternate"; hreflang="x-default", <http://example.com/fi/profiili/1>; rel="alternate"; hreflang="fi"',
@@ -130,13 +130,13 @@ describe("middleware", () => {
   test("redirects to correct domain if locale differs", () => {
     schemaMock.schema = { ...domainsSchema };
     const firstRequest = createRequest("http://fi.example.com/en-US/profile/1");
-    const firstResponse = middleware(firstRequest);
+    const firstResponse = proxy(firstRequest);
     expect(firstResponse.status).toBe(307);
     expect(firstResponse.headers.get("location")).toBe(
       "http://en.example.com/en-US/profile/1",
     );
     const secondRequest = createRequest("http://en.example.com/fi/profiili/1");
-    const secondResponse = middleware(secondRequest);
+    const secondResponse = proxy(secondRequest);
     expect(secondResponse.status).toBe(307);
     expect(secondResponse.headers.get("location")).toBe(
       "http://fi.example.com/profiili/1",
@@ -146,7 +146,7 @@ describe("middleware", () => {
   test("removes prefix on domain based routing if locale prefix is not wanted", () => {
     schemaMock.schema = { ...domainsSchema };
     const request = createRequest("http://fi.example.com/fi/profiili/1");
-    const response = middleware(request);
+    const response = proxy(request);
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe(
       "http://fi.example.com/profiili/1",
@@ -172,7 +172,7 @@ describe("middleware", () => {
       ],
     };
     const request = createRequest("http://en.example.com/profile/1");
-    const response = middleware(request);
+    const response = proxy(request);
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe(
       "http://en.example.com/en/profile/1",
@@ -182,14 +182,14 @@ describe("middleware", () => {
   test("does not redirect if domain and locale match", () => {
     schemaMock.schema = { ...domainsSchema };
     const request = createRequest("http://en.example.com/en-US/profile/1");
-    const response = middleware(request);
+    const response = proxy(request);
     expect(response.status).toBe(200);
   });
 
   test("adds alternate link header correctly on root route for domain based routing", () => {
     schemaMock.schema = { ...domainsSchema };
     const request = createRequest("http:/fi.example.com");
-    const response = middleware(request);
+    const response = proxy(request);
     expect(response.status).toBe(200);
     expect(response.headers.get("Link")).toBe(
       '<http://en.example.com/en-US>; rel="alternate"; hreflang="en-US", <http://en.example.com/>; rel="alternate"; hreflang="en", <http://fi.example.com/>; rel="alternate"; hreflang="fi"',
@@ -199,7 +199,7 @@ describe("middleware", () => {
   test("adds alternate link header correctly on subroute for domain based routing", () => {
     schemaMock.schema = { ...domainsSchema };
     const request = createRequest("http://fi.example.com/profiili/1");
-    const response = middleware(request);
+    const response = proxy(request);
     expect(response.status).toBe(200);
     expect(response.headers.get("Link")).toBe(
       '<http://en.example.com/en-US/profile/1>; rel="alternate"; hreflang="en-US", <http://en.example.com/profile/1>; rel="alternate"; hreflang="en", <http://fi.example.com/profiili/1>; rel="alternate"; hreflang="fi"',
@@ -209,7 +209,7 @@ describe("middleware", () => {
   test("redirects to user preferred locale if not done yet", () => {
     const request = createRequest("http://example.com/fi/profiili/1");
     request.cookies.clear();
-    const response = middleware(request);
+    const response = proxy(request);
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe(
       "http://example.com/en/profile/1",

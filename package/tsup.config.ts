@@ -21,12 +21,14 @@ export default defineConfig([
       cli: "src/cli/index.ts",
       plugin: "src/plugin/index.ts",
       middleware: "src/middleware/index.ts",
+      proxy: "src/proxy/index.ts",
       "index.server": "src/router/server/index.ts",
     },
     dts: {
       entry: {
         plugin: "src/plugin/index.ts",
         middleware: "src/middleware/index.ts",
+        proxy: "src/proxy/index.ts",
       },
     },
   },

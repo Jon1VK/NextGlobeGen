@@ -49,6 +49,10 @@
       "require": "./dist/middleware.cjs",
       "import": "./dist/middleware.js"
     },
+    "./proxy": {
+      "require": "./dist/proxy.cjs",
+      "import": "./dist/proxy.js"
+    },
     "./plugin": {
       "require": "./dist/plugin.cjs",
       "import": "./dist/plugin.js"
