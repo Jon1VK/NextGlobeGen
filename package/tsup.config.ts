@@ -11,12 +11,16 @@ const nextImportsPlugin: Plugin = {
   },
 };
 
+const sharedConfig: Options = {
+  clean: true,
+  format: ["cjs", "esm"],
+  external: ["next-globe-gen"],
+  splitting: false,
+};
+
 export default defineConfig([
   {
-    clean: true,
-    format: ["cjs", "esm"],
-    external: ["next-globe-gen"],
-    splitting: false,
+    ...sharedConfig,
     entry: {
       cli: "src/cli/index.ts",
       plugin: "src/plugin/index.ts",
@@ -26,6 +30,7 @@ export default defineConfig([
     },
     dts: {
       entry: {
+        "index.client": "src/router/client/index.ts",
         plugin: "src/plugin/index.ts",
         middleware: "src/middleware/index.ts",
         proxy: "src/proxy/index.ts",
@@ -33,14 +38,11 @@ export default defineConfig([
     },
   },
   {
-    clean: true,
-    format: ["cjs", "esm"],
-    external: ["next-globe-gen"],
+    ...sharedConfig,
     esbuildOptions(options) {
       options.banner = { js: '"use client"' };
     },
     plugins: [nextImportsPlugin],
     entry: { "index.client": "src/router/client/index.ts" },
-    dts: true,
   },
 ]);
