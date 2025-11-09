@@ -24,6 +24,7 @@ jobs:
           cache: pnpm
           cache-dependency-path: "**/pnpm-lock.yaml"
           registry-url: "https://registry.npmjs.org"
+      - run: npm install -g npm@latest
       - run: pnpm install
       - run: cp ../README.md ../LICENSE ./
       - run: sed -i "s/0.0.0-placeholder/$GITHUB_REF_NAME/" package.json
@@ -32,6 +33,3 @@ jobs:
       - if: ${{ github.event.release.prerelease == false }}
         run: echo "TAG=next-14" >> "$GITHUB_ENV"
       - run: pnpm publish --no-git-checks --access public --tag $TAG
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
