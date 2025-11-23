@@ -6593,6 +6593,7 @@ snapshots:
 
   next-globe-gen@file:../../package(jiti@2.6.1)(next@16.0.1(@babel/core@7.28.5)(@playwright/test@1.56.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(postcss@8.5.6)(react@19.2.0)(typescript@5.9.3):
     dependencies:
+      '@formatjs/icu-messageformat-parser': 2.11.4
       commander: 13.1.0
       fast-memoize: 2.5.2
       intl-messageformat: 10.7.18

@@ -13,17 +13,25 @@ describe("getMessages()", () => {
     expect(messages).toStrictEqual({
       fi: {
         message: "Ei nimiavaruutta viesti",
-        "namespace.message": "Nimiavaruus viesti",
-        "hello.world": "Hei maailma",
-        "hello.name": "Hei {name}",
+        namespace: {
+          message: "Nimiavaruus viesti",
+        },
+        hello: {
+          world: "Hei maailma",
+          name: "Hei {name}",
+        },
         projects:
           "{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}",
       },
       en: {
         message: "No namespace message",
-        "namespace.message": "Namespaced message",
-        "hello.world": "Hello world",
-        "hello.name": "Hello {name}",
+        namespace: {
+          message: "Namespaced message",
+        },
+        hello: {
+          world: "Hello world",
+          name: "Hello {name}",
+        },
         projects:
           "{count, plural, =0 {No project} one {One project} other {# projects}}",
       },

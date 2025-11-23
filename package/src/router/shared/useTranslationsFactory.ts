@@ -4,8 +4,7 @@ import {
   type Options,
 } from "intl-messageformat";
 import type {
-  Message,
-  MessageArguments,
+  MessageParams,
   Messages,
   Namespace,
   NamespaceKey,
@@ -27,17 +26,19 @@ export function useTranslationsFactory(
     const messages = useMessages();
     const formatters = useFormatters();
 
-    function t<K extends NamespaceKey<N>, A = MessageArguments<Message<N, K>>>(
-      ...params: A extends Record<string, never>
-        ? [key: K, args?: undefined]
-        : [key: K, args: A]
-    ) {
-      const [key, args] = params;
-      type TReturnType = ((
-        children: ReactNode,
-      ) => JSX.Element) extends A[keyof A]
+    function t<
+      K extends NamespaceKey<N>,
+      A = MessageParams<N, K>,
+      R = ((children: ReactNode) => JSX.Element) extends A[keyof A]
         ? ReactNode
-        : string;
+        : string,
+    >(
+      key: K,
+      ...rest: NoInfer<A> extends Record<string, never>
+        ? [args?: never]
+        : [args: NoInfer<A>]
+    ) {
+      const args = rest[0] as Record<string, unknown>;
       return tImpl({
         messages,
         formatters,
@@ -45,8 +46,8 @@ export function useTranslationsFactory(
         locale,
         namespace,
         key,
-        args: args as Record<string, unknown>,
-      }) as TReturnType;
+        args,
+      }) as R;
     }
 
     if (typeof window === "undefined") return t;
