@@ -318,9 +318,21 @@ export const clientMessages = {
 	}
 } as const;
 
+type MessagesParams = {
+	"hello": {
+		"name": {
+			"name": string
+		}
+	},
+	"projects": {
+		"count": number
+	}
+};
+
 declare module "next-globe-gen" {
 	interface MessagesRegister {
 		messages: typeof messages
+		messagesParams: MessagesParams
 	}
 }
 `.trimStart();
@@ -364,9 +376,21 @@ export const clientMessages = {
 	}
 } as const;
 
+type MessagesParams = {
+	"hello": {
+		"name": {
+			"name": string
+		}
+	},
+	"projects": {
+		"count": number
+	}
+};
+
 declare module "next-globe-gen" {
 	interface MessagesRegister {
 		messages: typeof messages
+		messagesParams: MessagesParams
 	}
 }
 `.trimStart();
@@ -402,9 +426,21 @@ export const clientMessages = {
 	"en": {}
 } as const;
 
+type MessagesParams = {
+	"hello": {
+		"name": {
+			"name": string
+		}
+	},
+	"projects": {
+		"count": number
+	}
+};
+
 declare module "next-globe-gen" {
 	interface MessagesRegister {
 		messages: typeof messages
+		messagesParams: MessagesParams
 	}
 }
 `.trimStart();

@@ -65,6 +65,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
+    "@formatjs/icu-messageformat-parser": "^2.11.4",
     "commander": "^13.1.0",
     "fast-memoize": "^2.5.2",
     "intl-messageformat": "^10.7.18",

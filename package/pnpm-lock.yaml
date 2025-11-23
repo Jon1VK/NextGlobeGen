@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@formatjs/icu-messageformat-parser':
+        specifier: ^2.11.4
+        version: 2.11.4
       commander:
         specifier: ^13.1.0
         version: 13.1.0
