@@ -1,7 +1,7 @@
 {
   "hello": {
-    "world": "Hei maailma",
-    "name": "Hei {name}"
+    "world": "Hei maailma"
   },
+  "hello.name": "Hei {name}",
   "projects": "{count, plural, =0 {Ei projekteja} one {Yksi projekti} other {# projektia}}"
 }

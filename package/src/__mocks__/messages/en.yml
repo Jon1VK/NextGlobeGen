@@ -1,6 +1,6 @@
 hello:
   world: Hello world
-  name: Hello {name}
+hello.name: Hello {name}
 projects: >-
   {count, plural,
   =0 {No project}
