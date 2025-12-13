@@ -14,6 +14,14 @@ type RevalidatePathArgs<
   O = { locale: Locale; type?: RevalidateType } & ParamsOption<R>,
 > = [route: R | (string & {}), opts: O];
 
+/**
+ * Revalidates a localized route path on-demand. Calls next/cache's revalidatePath under the hood with the localized path.
+ *
+ * @example
+ * revalidatePath("/about", { locale: "en" });
+ * revalidatePath("/users/[id]", { params: { id: "123" }, locale: "fi" });
+ * revalidatePath("/about", { locale: "en", type: "page" });
+ */
 export function revalidatePath<R extends Route>(
   ...args: RevalidatePathArgs<R>
 ) {

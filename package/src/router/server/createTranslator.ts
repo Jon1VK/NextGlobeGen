@@ -9,6 +9,20 @@ import type { ReactNode } from "react";
 import { formatters } from "../shared/formatters";
 import { tImpl } from "../shared/useTranslationsFactory";
 
+/**
+ * Creates a translation function for a specific locale and optional namespace.
+ *
+ * @param locale - The locale to translate for.
+ * @param namespace - Optional namespace to scope translations.
+ * @returns A translation function that can be used to translate message keys.
+ *
+ * @example
+ * const t = createTranslator("en");
+ * const greeting = t("hello");
+ *
+ * const tCommon = createTranslator("fi", "common");
+ * const title = tCommon("title");
+ */
 export function createTranslator<N extends Namespace = undefined>(
   locale: Locale,
   namespace?: N,
