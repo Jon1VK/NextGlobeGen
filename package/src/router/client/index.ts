@@ -1,7 +1,11 @@
 import type {
   createHref as $createHref,
   createTranslator as $createTranslator,
+  getHref as $getHref,
+  getLocale as $getLocale,
   getMessages as $getMessages,
+  getSchema as $getSchema,
+  getTranslations as $getTranslations,
   permanentRedirect as $permanentRedirect,
   redirect as $redirect,
   revalidatePath as $revalidatePath,
@@ -25,10 +29,54 @@ export type { UserConfig as Config } from "~/utils/config";
 export { IntlProvider, useLocale, useSchema } from "./IntlProvider";
 export * from "./useRouter";
 
+/**
+ * Hook that generates localized URLs for routes.
+ *
+ * @example
+ * const href = useHref("/about");
+ * const href = useHref("/users/[id]", { id: "123" });
+ * const href = useHref("/about", "fi");
+ * const href = useHref({ pathname: "/about", locale: "fi", query: { tab: "overview" } });
+ */
 export const useHref = useHrefFactory(useLocale, useSchema);
+
+/**
+ * Hook that returns the current route pathname.
+ *
+ * @example
+ * const route = useRoute(); // e.g., "/about" or "/users/[id]"
+ */
 export const useRoute = useRouteFactory(useSchema);
+
+/**
+ * Link component with localized routing support.
+ *
+ * @example
+ * <Link href="/about">About</Link>
+ * <Link href="/users/[id]" params={{ id: "123" }}>User</Link>
+ * <Link href="/about" locale="fi">Tietoja</Link>
+ */
 export const Link = LinkFactory(useHref);
+
+/**
+ * Form component with localized routing support.
+ *
+ * @example
+ * <Form action="/search">...</Form>
+ * <Form action="/users/[id]" params={{ id: "123" }}>...</Form>
+ */
 export const Form = FormFactory(useHref);
+
+/**
+ * Hook for accessing and formatting localized messages.
+ *
+ * @example
+ * const t = useTranslations();
+ * const greeting = t("hello");
+ *
+ * const t = useTranslations("common");
+ * const title = t("title");
+ */
 export const useTranslations = useTranslationsFactory(
   useLocale,
   useSchema,
@@ -37,12 +85,12 @@ export const useTranslations = useTranslationsFactory(
 );
 
 // Server functions that are not supported on client
-export const getLocale = notSupported("getLocale") as typeof useLocale;
-export const getSchema = notSupported("getLocale") as typeof useSchema;
-export const getHref = notSupported("getHref") as typeof useHref;
+export const getLocale = notSupported("getLocale") as typeof $getLocale;
+export const getSchema = notSupported("getSchema") as typeof $getSchema;
+export const getHref = notSupported("getHref") as typeof $getHref;
 export const getTranslations = notSupported(
   "getTranslations",
-) as typeof useTranslations;
+) as typeof $getTranslations;
 export const redirect = notSupported("redirect") as unknown as typeof $redirect;
 export const permanentRedirect = notSupported(
   "permanentRedirect",

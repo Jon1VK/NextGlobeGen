@@ -24,11 +24,28 @@ type RedirectArgs<
       opts?: { type?: RedirectType; params?: undefined; locale?: undefined },
     ];
 
+/**
+ * Redirects to a localized route. Calls next/navigation's redirect under the hood with the localized path.
+ *
+ * @example
+ * redirect("/about");
+ * redirect("/users/[id]", { params: { id: "123" } });
+ * redirect("/about", { locale: "fi" });
+ * redirect({ pathname: "/about", locale: "fi", query: { tab: "overview" } });
+ */
 export function redirect<R extends Route>(...args: RedirectArgs<R>) {
   const { hrefOpts, type } = extractRedirectOptions(...args);
   return nextRedirect(useHref(hrefOpts), type);
 }
 
+/**
+ * Performs a permanent redirect (308) to a localized route. Calls next/navigation's permanentRedirect under the hood with the localized path.
+ *
+ * @example
+ * permanentRedirect("/about");
+ * permanentRedirect("/users/[id]", { params: { id: "123" } });
+ * permanentRedirect("/about", { locale: "fi" });
+ */
 export function permanentRedirect<R extends Route>(...args: RedirectArgs<R>) {
   const { hrefOpts, type } = extractRedirectOptions(...args);
   return nextPermanentRedirect(useHref(hrefOpts), type);

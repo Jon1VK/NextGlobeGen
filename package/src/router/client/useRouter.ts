@@ -29,6 +29,17 @@ type RouterArgs<
       opts?: N & { params?: undefined; locale?: undefined },
     ];
 
+/**
+ * Returns a router object with localized navigation methods. Uses next/navigation's useRouter under the hood.
+ *
+ * @returns An object with push, replace, prefetch, back, forward, and refresh methods.
+ *
+ * @example
+ * const router = useRouter();
+ * router.push("/about");
+ * router.push("/users/[id]", { params: { id: "123" } });
+ * router.push("/about", { locale: "fi" });
+ */
 export function useRouter() {
   const router = useNextRouter();
   const schema = useSchema();

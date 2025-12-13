@@ -5,8 +5,11 @@ import { parse } from "yaml";
 import { isDirectory, isFile } from "~/utils/fs-utils";
 
 type PrefixConfig = {
+  /** List of all supported locale codes */
   locales: string[];
+  /** The default locale to use when no locale is specified */
   defaultLocale: string;
+  /** Whether to prefix the default locale in URLs (defaults to true) */
   prefixDefaultLocale?: boolean;
   domains?: never;
 };
@@ -15,13 +18,18 @@ type DomainsConfig = {
   locales?: never;
   defaultLocale?: never;
   prefixDefaultLocale?: never;
+  /** Array of domain configurations, each serving specific locales */
   domains: DomainConfig[];
 };
 
 export type DomainConfig = {
+  /** The domain name (e.g., "example.com" or "example.com:3000") */
   domain: string;
+  /** List of locale codes served from this domain */
   locales: string[];
+  /** The default locale for this domain */
   defaultLocale: string;
+  /** Whether to prefix the default locale in URLs (defaults to true) */
   prefixDefaultLocale?: boolean;
 };
 
@@ -30,15 +38,22 @@ type RoutesConfig = {
    * @deprecated Will be removed on next major release. Use prefixDefaultLocale option at the root level instead.
    */
   prefixDefaultLocale?: boolean;
+  /** Directory containing the original route files (default: "./src/_app") */
   originDir: string;
+  /** Directory where localized routes will be generated (default: "./src/app/(i18n)") */
   localizedDir: string;
+  /** Skip generating language alternates metadata in route files (default: false) */
   skipLanguageAlternatesMetadata?: boolean;
 };
 
 type MessagesConfig = {
+  /** Directory containing message files (default: "./src/messages") */
   originDir: string;
+  /** Regular expressions to filter which message keys are sent to the client */
   clientKeys?: RegExp[] | RegExp;
+  /** Custom format configurations for date, time, number, and plural formatting */
   formats?: Partial<Formats>;
+  /** Function to load messages for a given locale */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getMessages: (locale: string) => Promise<any> | any;
 };
@@ -53,8 +68,30 @@ type DeepPartial<T> =
     ? { [P in keyof T]?: DeepPartial<T[P]> }
     : T;
 
+/**
+ * User-provided configuration for next-globe-gen.
+ * All properties except locale configuration are optional and will be merged with defaults.
+ *
+ * @example
+ * // Basic prefix-based routing
+ * const config = {
+ *   locales: ["en", "fi"],
+ *   defaultLocale: "en",
+ * };
+ *
+ * @example
+ * // Domain-based routing
+ * const config = {
+ *   domains: [
+ *     { domain: "example.com", locales: ["en"], defaultLocale: "en" },
+ *     { domain: "example.fi", locales: ["fi"], defaultLocale: "fi" },
+ *   ],
+ * };
+ */
 export type UserConfig = DeepPartial<{
+  /** Configuration for route generation and localization */
   routes: RoutesConfig;
+  /** Configuration for message loading and formatting */
   messages: MessagesConfig;
 }> &
   (PrefixConfig | DomainsConfig);

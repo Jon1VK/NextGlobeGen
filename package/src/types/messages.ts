@@ -9,6 +9,10 @@ interface NestedMessages {
 
 type MockMessages = Record<Locale, NestedMessages>;
 
+/**
+ * All messages for all locales in your application.
+ * This type is augmented at build time with the actual messages structure.
+ */
 export type Messages = MessagesRegister extends { messages: infer S }
   ? S
   : MockMessages;
@@ -19,6 +23,10 @@ interface NestedMessagesParams {
 
 type MockMessagesParams = NestedMessagesParams;
 
+/**
+ * Type information for message parameters.
+ * This type is augmented at build time to provide type-safe message parameter access.
+ */
 export type MessagesParams = MessagesRegister extends {
   messagesParams: infer P;
 }

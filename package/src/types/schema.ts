@@ -13,13 +13,25 @@ type MockSchema = {
   formats?: Partial<Formats>;
 };
 
+/**
+ * The routing schema containing all routes, locales, and domain configurations.
+ * This type is augmented at build time with the actual schema from your i18n configuration.
+ */
 export type Schema = SchemaRegister extends { schema: infer S }
   ? S
   : MockSchema;
 
 export declare const schema: Schema;
 
+/**
+ * Union type of all locale codes configured in your application.
+ */
 export type Locale = Schema["locales"][number];
+
+/**
+ * Union type of all route pathnames in your application.
+ * Includes both static routes and dynamic routes with parameters.
+ */
 export type Route = keyof Schema["routes"];
 
 /**

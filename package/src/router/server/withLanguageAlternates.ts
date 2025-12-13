@@ -11,6 +11,18 @@ type WithLanguageAlternatesArgs<R extends Route> = R extends StaticRoute
   ? [route: R, _?: undefined]
   : [route: R, params: RouteParams<R>];
 
+/**
+ * Creates a function that injects language alternate links into page metadata.
+ *
+ * @example
+ * export const generateMetadata = withLanguageAlternates("/about")({
+ *   title: "About Us",
+ * });
+ *
+ * export const generateMetadata = withLanguageAlternates("/users/[id]", { id: "123" })({
+ *   title: "User Profile",
+ * });
+ */
 export function withLanguageAlternates<R extends Route>(
   ...args: WithLanguageAlternatesArgs<R>
 ) {
