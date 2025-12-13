@@ -2,12 +2,12 @@
 sidebar_position: 5
 ---
 
-# Middleware
+# Proxy / Middleware
 
-The NextGlobeGen middleware can be enabled in [`middleware.ts`](https://nextjs.org/docs/app/building-your-application/routing/middleware) file. The middleware handles locale negotiation and adds alternate links of the page to the response headers.
+The NextGlobeGen proxy can be enabled in [`proxy.ts`](https://nextjs.org/docs/app/building-your-application/routing/proxy) file. The proxy handles locale negotiation and adds alternate links of the page to the response headers.
 
-```tsx title="src/middleware.ts"
-export { middleware } from "next-globe-gen/middleware";
+```tsx title="src/proxy.ts"
+export { proxy } from "next-globe-gen/proxy";
 
 export const config = {
   // Matcher ignoring next internals and static assets
@@ -15,10 +15,20 @@ export const config = {
 };
 ```
 
+:::info Backward Compatibility
+
+For backward compatibility with Next.js 15 and earlier, the `middleware` export is also available:
+
+```tsx
+export { middleware } from "next-globe-gen/middleware";
+```
+
+:::
+
 ## Parameters
 
 ```tsx
-middleware(request: NextRequest, opts?: { skipAlternateLinkHeader?: boolean });
+proxy(request: NextRequest, opts?: { skipAlternateLinkHeader?: boolean });
 ```
 
 | Param                          | Type                             | Required | Description                                                            |
@@ -31,17 +41,17 @@ middleware(request: NextRequest, opts?: { skipAlternateLinkHeader?: boolean });
 
 ## Returns
 
-`middleware` returns a `NextResponse` instance, which can be further modified.
+`proxy` returns a `NextResponse` instance, which can be further modified.
 
-## With other middleware logic
+## With other proxy logic
 
-If you need to use custom middleware logic, call the middleware yourself with the given request instance and modify the returned response.
+If you need to use custom proxy logic, call the proxy yourself with the given request instance and modify the returned response.
 
-```tsx title="src/middleware.ts"
-import nextGlobeGenMiddleware from "next-globe-gen/middleware";
+```tsx title="src/proxy.ts"
+import nextGlobeGenProxy from "next-globe-gen/proxy";
 
-export function middleware(request: NextRequest) {
-  const response = nextGlobeGenMiddleware(request);
+export function proxy(request: NextRequest) {
+  const response = nextGlobeGenProxy(request);
   /**
    * Other custom logic that possibly modify the response
    */

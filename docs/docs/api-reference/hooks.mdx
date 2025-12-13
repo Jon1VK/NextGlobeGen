@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+toc_max_heading_level: 3
 ---
 
 # Hooks
@@ -41,6 +42,53 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 #### Returns
 
 `useLocale` returns the current locale.
+
+### useSchema
+
+The `useSchema` hook returns the routing schema containing all routes, locales, and configuration.
+
+:::info Alias
+
+An alias `getSchema` is also available for async server components and `generateMetadata` function.
+
+:::
+
+```tsx
+import { useSchema } from "next-globe-gen";
+
+export default function LanguageSwitcher() {
+  const schema = useSchema();
+
+  return (
+    <nav>
+      <ul>
+        {schema.locales.map((locale) => (
+          <li key={locale}>
+            <a href={`/${locale}`}>{locale.toUpperCase()}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+```
+
+#### Parameters
+
+`useSchema` does not take any parameters.
+
+#### Returns
+
+`useSchema` returns the routing schema object with the following properties:
+
+| Property            | Type                                     | Description                                     |
+| ------------------- | ---------------------------------------- | ----------------------------------------------- |
+| `locales`           | `string[]`                               | Array of all supported locale codes             |
+| `defaultLocale`     | `string`                                 | The default locale                              |
+| `unPrefixedLocales` | `string[]`                               | Locales that don't require URL prefixes         |
+| `routes`            | `Record<string, Record<string, string>>` | Mapping of routes to their localized versions   |
+| `domains`           | `DomainConfig[] \| undefined`            | Domain-based routing configuration (if enabled) |
+| `formats`           | `Partial<Formats> \| undefined`          | Custom date/time/number format configurations   |
 
 ### useTranslations
 
@@ -245,5 +293,6 @@ Since ESLint has a rule which disallows calling hooks in async server components
 These aliases are included:
 
 - [`getLocale`](#uselocale)
+- [`getSchema`](#useschema)
 - [`getTranslations`](#usetranslations)
 - [`getHref`](#usehref)

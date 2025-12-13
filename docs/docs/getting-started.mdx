@@ -15,9 +15,9 @@ If you haven't done so already, [create a new Next.js app](https://nextjs.org/do
 
 <details>
 <summary>
-Next.js 15
+Next.js 15+
 </summary>
-A version of the package which is compatible with Next.js 15 is released under the `latest` distribution tag. To install this version of the package, run the following command.
+A version of the package which is compatible with Next.js 15+ is released under the `latest` distribution tag. To install this version of the package, run the following command.
 
 ```bash npm2yarn
 npm install next-globe-gen@latest
@@ -40,6 +40,8 @@ npm install next-globe-gen@next-14
 ## Setup
 
 To setup the package we will be creating the following file structure. The default directory and file locations can be altered by configuration, but let's use the defaults for now.
+
+### File Structure
 
 ```treeview title="File structure"
 ./
@@ -393,8 +395,54 @@ You can inspect what each generated file has eaten, if you would like to know ho
 
 :::
 
-## What Next?
+:::info Avoiding Common Mistakes
 
-- [NextGlobeGen Playground](https://next-globe-gen-playground.vercel.app): Check out the example app.
-- [Configuration](./api-reference/configuration.mdx): Check out how you can modify the default functionality.
-- [API Reference](./api-reference/): See everything this package is capable of.
+New to NextGlobeGen? Check out the [Common Pitfalls](./common-pitfalls.mdx) guide to avoid frequent mistakes and learn best practices.
+
+:::
+
+## Next Steps
+
+Congratulations! You now have a working internationalized Next.js application. Here's what to explore next:
+
+### 🎨 Enhance Your i18n Setup
+
+1. **Add More Locales**
+   - Update `i18n.config.ts` with additional locales
+   - Create corresponding message files
+   - Test language switching between all locales
+
+2. **Organize Messages**
+   - Split messages into namespaced files: `src/messages/en/common.json`, `src/messages/en/dashboard.json`
+   - Use namespaces in components: `useTranslations("common")`
+   - Learn about [message organization](./messages.mdx)
+
+3. **Localize More Routes**
+   - Add `i18n.ts` files to translate pathname segments
+   - Test SEO with translated URLs
+   - Read about [routing strategies](./routing.mdx)
+
+### 🚀 Advanced Features
+
+4. **Optimize Bundle Size**
+   - Configure `clientKeys` to control which messages go to the client
+   - Use `getMessages()` to provide filtered messages to specific routes
+   - See [configuration options](./api-reference/configuration.mdx#clientkeys)
+
+5. **Setup Domain-Based Routing**
+   - Serve different locales from different domains
+   - Configure middleware for domain routing
+   - Read [domain configuration guide](./api-reference/configuration.mdx#domains)
+
+6. **Add Rich Text Formatting**
+   - Use ICU message format for plurals, dates, and numbers
+   - Embed React components in translations
+   - Learn about [message formatting](./messages.mdx)
+
+### 📚 Learn More
+
+- [NextGlobeGen Playground](https://next-globe-gen-playground.vercel.app) - Interactive examples
+- [API Reference](./api-reference/) - Complete API documentation
+- [Configuration](./api-reference/configuration.mdx) - All configuration options
+- [Testing Guide](./testing.mdx) - Testing strategies for i18n
+- [Common Pitfalls](./common-pitfalls.mdx) - Avoid common mistakes and learn best practices

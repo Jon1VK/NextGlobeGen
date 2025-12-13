@@ -1,0 +1,434 @@
+---
+sidebar_position: 7
+---
+
+import TabItem from "@theme/TabItem";
+import Tabs from "@theme/Tabs";
+
+# Common Pitfalls
+
+This guide covers common mistakes when using NextGlobeGen and how to avoid or fix them.
+
+## Modifying Generated Files
+
+**Problem:** Editing files in `src/app/(i18n)` or `src/next-globe-gen/` directly.
+
+**Why it fails:** The plugin regenerates these files automatically, overwriting your changes.
+
+**Solution:** Always create and modify routes in `src/_app/` directory instead.
+
+```
+✗ Edit: src/app/(i18n)/en/about/page.tsx
+✓ Edit: src/_app/about/page.tsx
+```
+
+**Generated files you should never edit:**
+
+- `src/app/(i18n)/**/*` - All localized routes
+- `src/next-globe-gen/messages.ts` - Generated message exports
+- `src/next-globe-gen/schema.ts` - Generated routing schema
+
+---
+
+## Missing metadataBase
+
+**Problem:** Language alternate links not working properly in production, or seeing warnings about metadata.
+
+**Why it fails:** Next.js requires `metadataBase` for generating absolute URLs in metadata, which is necessary for proper SEO and language alternates.
+
+**Solution:** Add `metadataBase` to your root layout metadata:
+
+```tsx title="src/_app/layout.tsx"
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  ),
+  title: "My App",
+  // ... other metadata
+};
+```
+
+**Best practices:**
+
+- Use environment variables for different environments
+- Set `NEXT_PUBLIC_SITE_URL` in production
+- Include protocol (http/https) and domain
+
+---
+
+## Using Next.js Components Directly
+
+**Problem:** Using `next/link` or `next/form` instead of NextGlobeGen versions.
+
+**Why it fails:** Native Next.js components don't handle localized routing automatically. Your links won't be locale-aware and will break the internationalization.
+
+**Solution:** Import from `next-globe-gen`:
+
+```diff
+- import Link from "next/link";
+- import Form from "next/form";
++ import { Link, Form } from "next-globe-gen";
+
+export default function Navigation() {
+  return (
+    <nav>
+-     <Link href="/about">About</Link>
++     <Link href="/about">About</Link>  {/* Now locale-aware! */}
+    </nav>
+  );
+}
+```
+
+**What you should import from NextGlobeGen:**
+
+- `Link` instead of `next/link`
+- `Form` instead of `next/form`
+- `redirect`, `permanentRedirect` instead of `next/navigation`
+- `revalidatePath` instead of `next/cache`
+
+---
+
+## Forgetting Dynamic Route Params
+
+**Problem:** Language switcher breaks on dynamic routes like `/blog/[slug]` or `/users/[id]`.
+
+**Why it fails:** When switching languages on a dynamic route, the Link component needs the dynamic params to generate the correct URL for the other locale.
+
+**Solution:** Pass params from `useParams()`:
+
+```tsx title="src/_app/LanguageSwitcher.tsx"
+"use client";
+
+import { Link, useRoute, type RouteParams } from "next-globe-gen";
+import { useParams } from "next/navigation";
+
+export default function LanguageSwitcher() {
+  const route = useRoute();
+  const params = useParams<RouteParams<typeof route>>();
+
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link href={route} params={params} locale="en">
+            English
+          </Link>
+        </li>
+        <li>
+          <Link href={route} params={params} locale="fi">
+            Suomeksi
+          </Link>
+        </li>
+      </ul>
+    </nav>
+  );
+}
+```
+
+**Common scenarios:**
+
+- Blog posts: `/blog/[slug]` needs `{ slug: "..." }`
+- User profiles: `/users/[id]` needs `{ id: "..." }`
+- Catch-all routes: `/docs/[...path]` needs `{ path: ["..."] }`
+
+---
+
+## Client Components Without IntlProvider
+
+**Problem:** `useLocale()` or `useTranslations()` throws errors in unit tests or standalone client components.
+
+**Why it fails:** Client hooks require React context from `IntlProvider`. For the actual application, this is provided automatically, but in tests or isolated client components, you need to provide it manually.
+
+**Solution:** For tests, wrap components with `IntlProvider`:
+
+```tsx title="src/test-utils.tsx"
+import { render, type RenderOptions } from "@testing-library/react";
+import { IntlProvider } from "next-globe-gen/client";
+import type { ReactNode } from "react";
+import { messages } from "../next-globe-gen/messages";
+import { schema } from "../next-globe-gen/schema";
+
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <IntlProvider
+    schema={schema}
+    messages={messages[schema.defaultLocale]}
+    locale={schema.defaultLocale}
+  >
+    {children}
+  </IntlProvider>
+);
+
+export const customRender = (ui: ReactNode, options?: RenderOptions) => {
+  return render(ui, { wrapper, ...options });
+};
+
+// Re-export everything
+export * from "@testing-library/react";
+export { customRender as render };
+```
+
+See the [Testing guide](./testing.mdx) for more details.
+
+---
+
+## Incorrect Locale Cookie Handling
+
+**Problem:** Users are always redirected to default locale even after choosing a different language.
+
+**Why it fails:** The proxy/middleware locale negotiation might be conflicting with your custom logic, or the cookie is not being set properly.
+
+**Solution:** Configure proxy/middleware cookie options or disable automatic negotiation:
+
+```tsx title="src/proxy.ts"
+import nextGlobeGenProxy from "next-globe-gen/proxy";
+import { NextRequest } from "next/server";
+
+export function proxy(request: NextRequest) {
+  return nextGlobeGenProxy(request, {
+    localeNegotiation: "skip", // Skip automatic negotiation
+    localeCookieName: "PREFERRED_LOCALE", // Custom cookie name
+    localeCookieOpts: {
+      maxAge: 31536000, // 1 year
+      path: "/",
+      sameSite: "lax",
+    },
+  });
+}
+
+export const config = {
+  matcher: ["/((?!_next|.*\\..*).*)"],
+};
+```
+
+---
+
+## Type Errors with Route Params
+
+**Problem:** TypeScript errors when using routes with dynamic segments.
+
+**Why it fails:** TypeScript needs to infer the param types from the route, but the types might not be correctly imported or applied.
+
+**Solution:** Use the `RouteParams` utility type:
+
+```tsx
+import { Link, type RouteParams } from "next-globe-gen";
+
+// ✓ Correct - TypeScript knows id is required
+<Link
+  href="/blog/[slug]"
+  params={{ slug: "hello-world" }}
+>
+  Read Post
+</Link>
+
+// ✗ Wrong - TypeScript error: params is missing
+<Link href="/blog/[slug]">
+  Read Post
+</Link>
+
+// For useParams
+import { useParams } from "next/navigation";
+
+const params = useParams<RouteParams<"/blog/[slug]">>();
+// params.slug is typed as string
+```
+
+---
+
+## Missing Translations Showing Keys
+
+**Problem:** Instead of translated text, you see keys like `"home.title"` or `"en.common.greeting"`.
+
+**Why it fails:** The translation key doesn't exist in your message files, the namespace is incorrect or the `clientKeys` configuration excludes the message from client components.
+
+**Solution:** Check your message files, namespace usage and `i18n.config.ts`:
+
+<Tabs>
+<TabItem value="Problem">
+
+```tsx
+const t = useTranslations("home");
+// Looking for messages.en.home.titel (typo!)
+const title = t("titel");
+```
+
+```json title="src/messages/en.json"
+{
+  "home": {
+    "title": "Welcome" // Correct spelling
+  }
+}
+```
+
+</TabItem>
+<TabItem value="Solution">
+
+```tsx
+const t = useTranslations("home");
+// Correct key
+const title = t("title"); // ✓ Returns "Welcome"
+```
+
+</TabItem>
+</Tabs>
+
+**Debug checklist:**
+
+1. Verify the key exists in your message file
+2. Check spelling and case sensitivity
+3. Ensure namespace matches file structure
+4. Confirm `clientKeys` in `i18n.config.ts` includes the key for client usage
+5. Restart dev server after adding new messages
+
+---
+
+## Build Errors: Cannot Find Module
+
+**Problem:** Build fails with errors like `Cannot find module 'next-globe-gen/messages'` or `Cannot find module 'next-globe-gen/schema'`.
+
+**Why it fails:** The generated files haven't been created yet, or the plugin isn't running.
+
+**Solution:**
+
+1. **Make sure the plugin is enabled** in `next.config.ts`:
+
+```ts title="next.config.ts"
+import createNextGlobeGenPlugin from "next-globe-gen/plugin";
+
+const withNextGlobeGen = createNextGlobeGenPlugin();
+
+export default withNextGlobeGen({
+  // ... config
+});
+```
+
+2. **Run the dev server first** to generate files:
+
+```bash
+npm run dev
+```
+
+3. **Or manually generate files**:
+
+```bash
+npx next-globe-gen
+```
+
+4. **For CI/CD**, ensure files are generated during build:
+   - The plugin automatically generates files during `next build`
+   - Ensure `i18n.config.ts` and message files exist before building
+
+---
+
+## Proxy/Middleware Not Running
+
+**Problem:** Locale negotiation doesn't work, or you always see the default locale.
+
+**Why it fails:** The proxy/middleware matcher might be incorrect, or proxy/middleware isn't enabled.
+
+**Solution:** Check your proxy/middleware configuration:
+
+```tsx title="src/proxy.ts"
+export { proxy } from "next-globe-gen/proxy";
+
+export const config = {
+  // This matcher is critical - make sure it's correct
+  matcher: [
+    // Match all paths except:
+    // - _next (Next.js internals)
+    // - Files with extensions (static files)
+    "/((?!_next|.*\\.).*)",
+  ],
+};
+```
+
+---
+
+## Localized Pathname Not Working
+
+**Problem:** Translated pathnames like `/fi/hallintapaneeli` return 404.
+
+**Why it fails:** The `i18n.ts` file might be missing, misconfigured, or not in the right location.
+
+**Solution:** Verify the `i18n.ts` file structure:
+
+```ts title="src/_app/dashboard/i18n.ts"
+// ✓ Correct - simple object export
+export default {
+  en: "dashboard",
+  fi: "hallintapaneeli",
+};
+
+// ✗ Wrong - not a default export
+export const translations = {
+  en: "dashboard",
+  fi: "hallintapaneeli",
+};
+```
+
+**Requirements:**
+
+- File must be named exactly `i18n.ts` (or `.js`)
+- Must be in the same directory as the route segment
+- Must export translations as default export
+- Keys must match your configured locales
+
+---
+
+## Server Actions Without Explicit Locale
+
+**Problem:** Server actions don't work correctly with localized routes or show wrong language content.
+
+**Why it fails:** Server actions run outside the rendering context and can't infer the current locale.
+
+**Solution:** Pass locale explicitly to server actions:
+
+```tsx title="src/_app/ContactForm.tsx"
+"use client";
+
+import { useLocale } from "next-globe-gen";
+import { submitForm } from "./actions";
+
+export default function ContactForm() {
+  const locale = useLocale();
+  const submitWithLocale = submitForm.bind(null, locale);
+
+  return (
+    <form action={submitWithLocale}>
+      <input name="email" type="email" />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+```ts title="src/_app/actions.ts"
+"use server";
+
+import { createTranslator, type Locale } from "next-globe-gen";
+
+export async function submitForm(locale: Locale, formData: FormData) {
+  const t = createTranslator(locale);
+  const email = formData.get("email");
+
+  // Use translator for success/error messages
+  if (!email) {
+    return { error: t("validation.emailRequired") };
+  }
+
+  // ... process form
+  return { success: t("form.submitted") };
+}
+```
+
+---
+
+## Need More Help?
+
+If you're still experiencing issues:
+
+1. Check the [API Reference](./api-reference/) for detailed documentation
+2. Review the [examples](https://github.com/Jon1VK/NextGlobeGen/tree/main/examples) in the repository
+3. Open an issue on [GitHub](https://github.com/Jon1VK/NextGlobeGen/issues)

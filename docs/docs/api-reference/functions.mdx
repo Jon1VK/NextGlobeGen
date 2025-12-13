@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+toc_max_heading_level: 2
 ---
 
 # Functions
@@ -165,3 +166,46 @@ When `permanentRedirect` is used in Route Handlers or Server Actions, the locale
 ### Returns
 
 `permanentRedirect` does not return a value.
+
+## revalidatePath
+
+The `revalidatePath` function extends the Next.js [`revalidatePath`](https://nextjs.org/docs/app/api-reference/functions/revalidatePath) function to allow you to revalidate localized pathnames on-demand.
+
+This function is useful when you want to purge the cache for a specific localized route, for example after updating data in a Server Action or Route Handler.
+
+```tsx title="Server Action"
+"use server";
+
+import { revalidatePath } from "next-globe-gen";
+
+export async function updateUserProfile(userId: string, data: FormData) {
+  // Update the user profile in database
+  await db.users.update(userId, data);
+
+  // Revalidate the user profile page for all locales
+  revalidatePath("/users/[id]", { params: { id: userId }, locale: "en" });
+  revalidatePath("/users/[id]", { params: { id: userId }, locale: "fi" });
+}
+```
+
+### Parameters
+
+```tsx
+revalidatePath<R extends Route>(
+  route: R,
+  opts: { params?: RouteParams<R>, locale: Locale, type?: "page" | "layout" }
+);
+```
+
+| Param         | Type                 | Required | Description                                  |
+| ------------- | -------------------- | -------- | -------------------------------------------- |
+| `route`       | `Route`              | Yes      | The route to revalidate                      |
+| `opts.params` | `RouteParams<R>`     | \*       | The params for dynamic segments of the route |
+| `opts.locale` | `Locale`             | Yes      | The locale for which to revalidate the route |
+| `opts.type`   | `"page" \| "layout"` | -        | Type of path to revalidate`                  |
+
+**\*** params option is required only if the given route has dynamic segments.
+
+### Returns
+
+`revalidatePath` does not return a value.

@@ -1,0 +1,306 @@
+---
+title: NextGlobeGen vs next-intl
+sidebar_position: 6
+toc_max_heading_level: 2
+---
+
+# NextGlobeGen vs next-intl
+
+Both NextGlobeGen and next-intl are excellent i18n libraries for Next.js App Router applications. This comparison helps you understand their different approaches and choose the right tool for your project.
+
+## Philosophy & Architecture
+
+### next-intl: Configuration-Based
+
+next-intl follows a traditional **configuration-based approach**. You manually create route groups with `[locale]` segments, configure middleware for locale detection, and use wrapper functions for navigation APIs.
+
+```typescript title="Traditional next-intl Setup"
+// You manually create: app/[locale]/layout.tsx
+// You configure: middleware.ts + i18n/routing.ts
+// You wrap: createNavigation(routing)
+
+import { createNavigation } from "next-intl/navigation";
+import { routing } from "./routing";
+
+export const { Link, redirect, useRouter } = createNavigation(routing);
+```
+
+### NextGlobeGen: Generative Programming
+
+NextGlobeGen uses **generative programming** to automatically create localized routes at build time. You write routes once in `src/_app/`, and the plugin generates all locale-specific variants.
+
+```typescript title="NextGlobeGen's Generative Approach"
+// You write: src/_app/page.tsx (once)
+// Plugin generates: src/app/(i18n)/en/page.tsx
+//                   src/app/(i18n)/fi/page.tsx
+//                   + TypeScript types
+
+import { Link } from "next-globe-gen"; // Ready to use, fully typed
+```
+
+**Key Difference**: next-intl requires you to create the routing structure; NextGlobeGen generates it automatically.
+
+## Setup & Developer Experience
+
+### Initial Setup
+
+| Aspect                    | next-intl                    | NextGlobeGen                    |
+| ------------------------- | ---------------------------- | ------------------------------- |
+| **Manual route creation** | ✅ Create `[locale]` folders | ❌ Auto-generated               |
+| **Middleware setup**      | ✅ Required                  | ✅ Required                     |
+| **Navigation wrapper**    | ✅ Call `createNavigation()` | ❌ Auto-generated               |
+| **File structure**        | `app/[locale]/`              | `src/_app/` → `src/app/(i18n)/` |
+
+### Development Experience
+
+#### next-intl
+
+- **Manual route management**: Add new pages by creating them in `app/[locale]/`
+- **Explicit configuration**: All routing behavior defined in config files
+- **Standard Next.js structure**: Familiar `[locale]` pattern
+
+#### NextGlobeGen
+
+- **Automatic route generation**: Create pages in `src/_app/`, all locales generated
+- **Hot reloading**: Changes to routes regenerate automatically
+- **Type generation**: Routes, locales, and messages get TypeScript types instantly
+- **Zero boilerplate**: No need to wrap or configure navigation APIs
+
+## Type Safety
+
+### next-intl
+
+Uses **TypeScript augmentation** via `global.ts`:
+
+```typescript title="global.ts"
+import messages from "./messages/en.json";
+import { routing } from "@/i18n/routing";
+
+declare module "next-intl" {
+  interface AppConfig {
+    Locale: (typeof routing.locales)[number];
+    Messages: typeof messages;
+  }
+}
+```
+
+**Type safety level**:
+
+- ✅ Message keys and arguments
+- ✅ Locale strings
+- ⚠️ Pathname typing requires additional `pathnames` configuration
+- ❌ No automatic route type generation
+
+### NextGlobeGen
+
+TypeScript augmentation files are **automatically generated** for types:
+
+**Type safety level**:
+
+- ✅ Message keys and arguments
+- ✅ Locale strings
+- ✅ Route pathnames (automatically inferred from file structure)
+- ✅ Route parameters (automatically inferred from dynamic segments)
+- ✅ Complete compile-time validation
+
+```typescript
+// NextGlobeGen catches these at compile time:
+useHref("/typo"); // ❌ Type error: Route doesn't exist
+useHref("/blog/[slug]"); // ❌ Type error: Missing params
+useHref("/blog/[slug]", { params: { slug: "hello" } }); // ✅
+```
+
+**Performance note**: NextGlobeGen generates specialized argument types for each message, which provides better TypeScript performance with large message files compared to next-intl's approach of inferring arguments from entire message strings.
+
+## Navigation APIs
+
+### next-intl
+
+Navigation APIs created via wrapper function:
+
+```typescript
+// Setup: i18n/navigation.ts
+import { createNavigation } from 'next-intl/navigation';
+import { routing } from './routing';
+
+export const { Link, redirect, useRouter, usePathname } =
+  createNavigation(routing);
+
+// Usage
+import { Link } from '@/i18n/navigation';
+
+<Link href="/about">About</Link>
+```
+
+### NextGlobeGen
+
+Navigation APIs available directly from the package:
+
+```typescript
+// No setup needed
+import { Link, redirect, useRouter, useHref } from "next-globe-gen";
+
+// Universal - works in both server and client components
+<Link href="/about">About</Link>
+```
+
+## Routing Strategies
+
+### Locale Prefix Routing
+
+Both libraries support prefix-based routing (`/en/`, `/fi/`, etc.).
+
+### Domain-Based Routing
+
+Both support domain-based routing for locale resolution.
+
+### Localized Pathnames
+
+Both libraries can translate URL segments for SEO.
+
+#### next-intl
+
+Requires explicit pathname mapping in a central configuration file:
+
+```typescript title="i18n/routing.ts"
+export const routing = {
+  locales: ["en", "de"],
+  pathnames: {
+    "/": "/",
+    "/about": {
+      en: "/about",
+      de: "/ueber-uns",
+    },
+    "/blog/[slug]": {
+      en: "/blog/[slug]",
+      de: "/blog/[slug]",
+    },
+  },
+};
+```
+
+#### NextGlobeGen
+
+Uses **route-level `i18n.ts` files** for colocated translations:
+
+```ts title="src/_app/about/i18n.ts"
+// Collocated with the route segment
+export default {
+  en: "about",
+  de: "ueber-uns",
+};
+```
+
+```ts title="src/_app/blog/i18n.ts"
+export default {
+  en: "blog",
+  de: "blog", // Same in both languages
+};
+```
+
+**Key Differences**:
+
+- **next-intl** uses centralized configuration for all routes
+- **NextGlobeGen** uses decentralized, colocated `i18n.ts` files per route segment
+- NextGlobeGen only requires `i18n.ts` for segments that need translation (if omitted, directory name is used)
+
+## Messages & Translations
+
+Both libraries use ICU MessageFormat and have similar translation features.
+
+### Message Loading
+
+#### next-intl
+
+```typescript title="i18n/request.ts"
+import { getRequestConfig } from "next-intl/server";
+
+export default getRequestConfig(async ({ locale }) => {
+  return {
+    messages: (await import(`../messages/${locale}.json`)).default,
+  };
+});
+```
+
+#### NextGlobeGen
+
+NextGlobeGen loads messages automatically from the configured directory (defaults to `./src/messages/`):
+
+```typescript title="i18n.config.ts"
+export default {
+  locales: ["en", "fi"],
+  messages: {
+    originDir: "./src/messages", // Default location
+  },
+};
+```
+
+By default, loads from `<locale>.json` and `<locale>/<filename>.json` files. Supports JSON and YAML.
+
+Alternatively, provide a custom loader function:
+
+```typescript title="i18n.config.ts"
+export default {
+  locales: ["en", "fi"],
+  messages: {
+    async getMessages(locale) {
+      // Fetch from CMS, API, or any source
+      return await fetchMessagesFromCMS(locale);
+    },
+  },
+};
+```
+
+## Performance Comparison
+
+| Aspect                  | next-intl           | NextGlobeGen               |
+| ----------------------- | ------------------- | -------------------------- |
+| **Build time overhead** | Minimal             | Moderate (generation step) |
+| **Runtime overhead**    | Minimal             | Near-zero (pre-generated)  |
+| **Route generation**    | Manual              | Automatic                  |
+| **Type generation**     | Manual augmentation | Automatic                  |
+| **Hot reload speed**    | Fast                | Fast (with regeneration)   |
+
+## Community & Ecosystem
+
+### next-intl
+
+- 🏆 Established library with wide adoption
+- 🏢 Used by major companies
+- 📚 Extensive documentation + video course
+- 👥 Large community and ecosystem
+- 🎓 Official learning platform
+
+### NextGlobeGen
+
+- 🆕 **Newer library** with growing adoption
+- 📦 Active development and maintenance
+- 📚 Comprehensive documentation
+- 🔧 Built specifically for App Router
+- 💡 Innovative generative approach
+
+## Which to choose
+
+Choose **next-intl** if you:
+
+- ✅ Want a **battle-tested** solution used by thousands of companies
+- ✅ Prefer **explicit configuration** over code generation
+- ✅ Are working on a **large enterprise** project requiring proven stability
+- ✅ Value a **traditional, predictable** approach
+- ✅ Want **optional routing** (can work without locale-based routing)
+
+Choose **NextGlobeGen** if you:
+
+- ✅ Want **automatic route generation** and less boilerplate
+- ✅ Value **stronger TypeScript integration** with auto-generated types
+- ✅ Prefer **code generation** over manual configuration
+- ✅ Want **zero runtime overhead** with build-time generation
+- ✅ Are building a **new project** and want modern tooling
+
+## Conclusion
+
+Both libraries support the core features you need for internationalization in Next.js App Router applications. Consider trying both in a small project to see which approach feels more natural for your workflow.
+
+---
+
+Have questions? Check out our [Getting Started guide](./getting-started) or explore the [API Reference](./api-reference/hooks).

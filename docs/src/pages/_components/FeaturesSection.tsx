@@ -10,37 +10,37 @@ const features = [
   {
     name: "TypeScript support",
     description:
-      "All hooks and functions are strictly typed. Even the available routes and message interpolation patterns are type-safe.",
+      "Routes, locales, and message arguments are automatically typed. Get full autocomplete without manual configuration.",
     icon: TSLogo,
   },
   {
     name: "Static rendering",
     description:
-      "Static rendering and export output mode are supported out-of-the-box since no custom headers are used.",
+      "Static rendering and export mode supported out-of-the-box. Perfect for deployment on any CDN or static hosting.",
     icon: CDNLogo,
   },
   {
-    name: "ICU message format",
+    name: "Rich text messages",
     description:
-      "The package supports ICU formatted interpolation patterns in messages. Include for example pluralizations and rich text in messages.",
+      "ICU MessageFormat with extensive interpolation patterns. Create dynamic, context-aware translations effortlessly.",
     icon: MessagesLogo,
   },
   {
     name: "Localized pathnames",
     description:
-      "Improve the application SEO by localizing the route pathnames in addition to localizing the content.",
+      "Translate URL segments for better SEO. Each route segment can have its own translations right next to the route code.",
     icon: LinkLogo,
   },
   {
-    name: "Context aware APIs",
+    name: "Universal APIs",
     description:
-      "Package APIs work interchangeably in Server and Client Components. The current locale is inferred through the rendering context.",
+      "Same hooks and components work seamlessly in both Server and Client Components.",
     icon: SwitchLogo,
   },
   {
-    name: "Pre-configured middleware",
+    name: "Smart locale detection",
     description:
-      "The package middleware handles locale detection, redirection and adding alternate link header to responses for improved SEO.",
+      "Built-in proxy handles locale detection. Automatic redirects and SEO-friendly alternate links.",
     icon: ArrowPathLogo,
   },
 ];
@@ -57,11 +57,6 @@ export default function FeaturesSection() {
         </Heading>
         <p className="mt-2 text-2xl font-semibold tracking-tight text-pretty sm:text-5xl/tight lg:text-balance">
           The smoothest DX for Next.js internationalization
-        </p>
-        <p className="mt-6 sm:text-lg">
-          When using NextGlobeGen for localizing your app, you barely even
-          notice it's existence. Every functionality of Next.js App Router is
-          supported out of the box.
         </p>
       </div>
       <dl className="mx-auto mt-16 grid grid-cols-1 gap-10 md:max-w-4xl md:grid-cols-2">

@@ -17,8 +17,8 @@ export default function HeroSection() {
           <span> NextGlobeGen</span>
         </Heading>
         <p className="mt-6 text-lg/8 text-gray-700 dark:text-gray-300">
-          Localize your Next.js App Router routes and content to serve your
-          application for all users around the world.
+          NextGlobeGen makes it effortless to deliver your content in multiple
+          languages with SEO-optimized, localized URLs.
         </p>
         <div className="mt-10 flex flex-wrap items-center gap-6 font-semibold">
           <Link
