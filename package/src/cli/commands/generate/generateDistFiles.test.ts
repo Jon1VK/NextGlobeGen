@@ -5,8 +5,9 @@ import { getExpectedOriginRoutes } from "~/__mocks__/getExpectedOriginRoutes";
 import { DEFAULT_CONFIG, mergeConfigs } from "~/utils/config";
 import { isDirectory, isFile, rmDirectory } from "~/utils/fs-utils";
 import {
+  generateLocalizedDir,
   generateMessagesFile,
-  generateOutDirs,
+  generateOutDir,
   generateSchemaFile,
   OUT_DIR,
 } from "./generateDistFiles";
@@ -18,16 +19,26 @@ function cleanOutDirs() {
   rmDirectory(LOCALIZED_DIR);
 }
 
-describe("generateOutDirs()", () => {
+describe("generateOutDir()", () => {
   afterEach(() => {
     cleanOutDirs();
   });
 
   test("works correctly", () => {
-    generateOutDirs(LOCALIZED_DIR);
+    generateOutDir();
     expect(isDirectory(OUT_DIR)).toBe(true);
     expect(isFile(path.join(OUT_DIR, ".gitignore"))).toBe(true);
     expect(readFileSync(path.join(OUT_DIR, ".gitignore")).toString()).toBe("*");
+  });
+});
+
+describe("generateLocalizedDir()", () => {
+  afterEach(() => {
+    cleanOutDirs();
+  });
+
+  test("works correctly", () => {
+    generateLocalizedDir(LOCALIZED_DIR);
     expect(isDirectory(LOCALIZED_DIR)).toBe(true);
     expect(isFile(path.join(LOCALIZED_DIR, ".gitignore"))).toBe(true);
     expect(
@@ -174,7 +185,7 @@ declare module "next-globe-gen" {
 
 describe("generateSchemaFile()", () => {
   beforeEach(() => {
-    generateOutDirs(LOCALIZED_DIR);
+    generateOutDir();
   });
 
   afterEach(() => {
@@ -447,7 +458,7 @@ declare module "next-globe-gen" {
 
 describe("generateMessagesFile()", () => {
   beforeEach(() => {
-    generateOutDirs(LOCALIZED_DIR);
+    generateOutDir();
   });
 
   afterEach(() => {
