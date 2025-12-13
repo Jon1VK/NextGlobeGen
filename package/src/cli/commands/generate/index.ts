@@ -11,42 +11,55 @@ import { isDirectory, isFile, rmDirectory } from "~/utils/fs-utils";
 import { compile } from "~/utils/ts-utils";
 import { configNotFoundError, originDirNotFoundError } from "./errors";
 import {
+  generateLocalizedDir,
   generateMessagesFile,
-  generateOutDirs,
+  generateOutDir,
   generateSchemaFile,
 } from "./generateDistFiles";
 import { generateLocalizedRoutes } from "./generateLocalizedRoutes";
 import { getOriginRoutes } from "./getOriginRoutes";
 
 export const generateCommand = new Command("generate")
-  .summary("generate localized routes")
-  .description("generate localizes routes")
+  .summary("generate localized routes and compile messages")
+  .description("generate localized routes and compile messages")
   .option(
     "-c, --config <path>",
     "custom path to a configuration file",
     "i18n.config.ts",
   )
   .option("-w, --watch", "enables watch mode")
+  .option("--no-routes", "skip routes generation")
+  .option("--no-messages", "skip messages compilation")
   .action(generateAction);
 
-async function generateAction(args: { config: string; watch: boolean }) {
-  if (!isFile(args.config)) throw configNotFoundError(args.config);
-  const userConfig = await compile<{ default: UserConfig }>(args.config);
+async function generateAction(opts: {
+  config: string;
+  watch: boolean;
+  routes: boolean;
+  messages: boolean;
+}) {
+  if (!isFile(opts.config)) throw configNotFoundError(opts.config);
+  const userConfig = await compile<{ default: UserConfig }>(opts.config);
   const config = mergeConfigs(DEFAULT_CONFIG, userConfig.default);
   if (!isDirectory(config.routes.originDir)) {
     throw originDirNotFoundError(config);
   }
+  if (opts.routes) await generateRoutesSubAction(config, opts);
+  if (opts.messages) await generateMessagesSubAction(config, opts);
+}
+
+async function generateRoutesSubAction(
+  config: Config,
+  opts: { watch: boolean },
+) {
+  generateOutDir();
   rmDirectory(config.routes.localizedDir);
-  generateOutDirs(config.routes.localizedDir);
-  await generateMessages(config);
+  generateLocalizedDir(config.routes.localizedDir);
   await generateRoutes(config);
-  if (args.watch) {
+  if (opts.watch) {
     watch(config.routes.originDir, { recursive: true }, (_, fileName) => {
       if (!fileName) return;
       debouncedGenerateRoutes(config, `/${fileName}`);
-    });
-    watch(config.messages.originDir, { recursive: true }, () => {
-      debouncedGenerateMessages(config);
     });
   }
 }
@@ -64,6 +77,19 @@ async function generateRoutes(config: Config, updatedOriginPath?: string) {
     );
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
+  }
+}
+
+async function generateMessagesSubAction(
+  config: Config,
+  opts: { watch: boolean },
+) {
+  generateOutDir();
+  await generateMessages(config);
+  if (opts.watch) {
+    watch(config.messages.originDir, { recursive: true }, () => {
+      debouncedGenerateMessages(config);
+    });
   }
 }
 

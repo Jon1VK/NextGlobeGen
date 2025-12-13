@@ -27,9 +27,12 @@ const schemaTemplate = "".concat(
   "\t\tschema: typeof schema\n\t}\n}\n",
 );
 
-export function generateOutDirs(localizedDir: string) {
+export function generateOutDir() {
   makeDirectory(OUT_DIR);
   writeFileSync(path.join(OUT_DIR, ".gitignore"), "*");
+}
+
+export function generateLocalizedDir(localizedDir: string) {
   makeDirectory(localizedDir);
   writeFileSync(path.join(localizedDir, ".gitignore"), "*");
 }

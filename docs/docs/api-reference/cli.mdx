@@ -12,7 +12,7 @@ npx next-globe-gen [command] [options]
 
 ## `generate` command
 
-The `next-globe-gen generate` command runs the generator which generates the localized routes, messages and the types for the package. The [`plugin`](./plugin.mdx) uses this CLI command internally.
+The `next-globe-gen generate` command runs the generator which generates the localized routes, compiles messages and generates the types for the package. The [`plugin`](./plugin.mdx) uses this CLI command internally.
 
 ```bash
 npx next-globe-gen generate [options]
@@ -24,4 +24,6 @@ npx next-globe-gen generate [options]
 | ----------------------- | -------------------------------------------------------------- |
 | `-c`, `--config <path>` | custom path to a configuration file (default: `i18n.config.ts) |
 | `-w`, `--watch`         | enables watch mode                                             |
+| `--no-routes`           | skip routes generation                                         |
+| `--no-messages`         | skip messages compilation                                      |
 | `-h`, `--help`          | display help for command                                       |
