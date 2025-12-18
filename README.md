@@ -36,45 +36,6 @@ NextGlobeGen is a powerful TypeScript-first internationalization (i18n) library 
 - **Smart Locale Detection** - Automatic user locale negotiation with cookie persistence
 - **Dynamic Routes** - Full support for dynamic segments, catch-all routes, and parallel routes
 
-## How It Works
-
-NextGlobeGen uses a generative approach that runs during development and build:
-
-```
-┌─────────────────────┐
-│   You create        │
-|   src/messages/     │  ← Your message files
-│   src/_app/         │  ← Your origin routes
-│   - page.tsx        │
-│   - dashboard/      │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│   Plugin watches    │  ← NextGlobeGen in next.config.ts
-│   & auto-generates  │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│   Generated output  │
-│   src/app/(i18n)/   │  ← Localized routes
-│   ├─ en/            │
-│   └─ fi/            │
-│                     │
-│   next-globe-gen/   │  ← Type definitions
-│   ├─ schema.ts      │     (routes, locales)
-│   └─ messages.ts    │     (messages)
-└─────────────────────┘
-```
-
-1. **You write messages** in `src/messages/` using ICU format
-2. **You write routes** in `src/_app/` directory using standard Next.js conventions
-3. **Plugin watches** for changes and analyzes your routing structure
-4. **Auto-generates** localized routes in `src/app/(i18n)/[locale]/` for each language
-5. **Creates types** for routes, locales, and messages for full TypeScript support
-6. **Your app** uses type-safe hooks and components that work seamlessly
-
 ## Quick Example
 
 ```tsx title="src/_app/page.tsx"
