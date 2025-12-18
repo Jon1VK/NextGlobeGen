@@ -42,9 +42,7 @@ export function IntlProvider(props: IntlProviderProps) {
 }
 
 /**
- * Returns the current locale from the IntlProvider context.
- *
- * @returns The current locale.
+ * Returns the current locale code.
  */
 export const useLocale = (): Locale => use(IntlContext).locale;
 export const useMessages = (): Messages[Locale] => use(IntlContext).messages;
@@ -52,8 +50,6 @@ export const useFormatters = (): Options["formatters"] =>
   use(IntlContext).formatters;
 
 /**
- * Returns the routing schema from the IntlProvider context.
- *
- * @returns The routing schema containing routes and locale configuration.
+ * Returns the routing schema.
  */
 export const useSchema = (): Schema => use(IntlContext).schema;
