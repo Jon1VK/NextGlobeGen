@@ -40,9 +40,7 @@ import { Link } from "next-globe-gen"; // Ready to use, fully typed
 
 **Key Difference**: next-intl requires you to create the routing structure; NextGlobeGen generates it automatically.
 
-## Setup & Developer Experience
-
-### Initial Setup
+## Initial Setup
 
 | Aspect                    | next-intl                    | NextGlobeGen                    |
 | ------------------------- | ---------------------------- | ------------------------------- |
@@ -51,20 +49,7 @@ import { Link } from "next-globe-gen"; // Ready to use, fully typed
 | **Navigation wrapper**    | ✅ Call `createNavigation()` | ❌ Auto-generated               |
 | **File structure**        | `app/[locale]/`              | `src/_app/` → `src/app/(i18n)/` |
 
-### Development Experience
-
-#### next-intl
-
-- **Manual route management**: Add new pages by creating them in `app/[locale]/`
-- **Explicit configuration**: All routing behavior defined in config files
-- **Standard Next.js structure**: Familiar `[locale]` pattern
-
-#### NextGlobeGen
-
-- **Automatic route generation**: Create pages in `src/_app/`, all locales generated
-- **Hot reloading**: Changes to routes regenerate automatically
-- **Type generation**: Routes, locales, and messages get TypeScript types instantly
-- **Zero boilerplate**: No need to wrap or configure navigation APIs
+**Key Difference**: NextGlobeGen minimizes boilerplate by generating routes and types automatically.
 
 ## Type Safety
 
@@ -110,7 +95,9 @@ useHref("/blog/[slug]"); // ❌ Type error: Missing params
 useHref("/blog/[slug]", { params: { slug: "hello" } }); // ✅
 ```
 
-**Performance note**: NextGlobeGen generates specialized argument types for each message, which provides better TypeScript performance with large message files compared to next-intl's approach of inferring arguments from entire message strings.
+**Key Difference**: NextGlobeGen provides stronger, automatic type safety for routes and parameters without manual configuration.
+
+**Performance Comparison**: NextGlobeGen generates specialized argument types for each message, which provides better TypeScript performance with large message files compared to next-intl's approach of inferring arguments from entire message strings.
 
 ## Navigation APIs
 
@@ -143,6 +130,8 @@ import { Link, redirect, useRouter, useHref } from "next-globe-gen";
 // Universal - works in both server and client components
 <Link href="/about">About</Link>
 ```
+
+**Key Difference**: NextGlobeGen provides ready-to-use navigation APIs without additional setup.
 
 ## Routing Strategies
 
@@ -251,15 +240,7 @@ export default {
 };
 ```
 
-## Performance Comparison
-
-| Aspect                  | next-intl           | NextGlobeGen               |
-| ----------------------- | ------------------- | -------------------------- |
-| **Build time overhead** | Minimal             | Moderate (generation step) |
-| **Runtime overhead**    | Minimal             | Near-zero (pre-generated)  |
-| **Route generation**    | Manual              | Automatic                  |
-| **Type generation**     | Manual augmentation | Automatic                  |
-| **Hot reload speed**    | Fast                | Fast (with regeneration)   |
+**Key Difference**: NextGlobeGen offers flexible message loading with built-in conventions and custom loader support.
 
 ## Community & Ecosystem
 
