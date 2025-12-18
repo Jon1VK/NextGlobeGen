@@ -1,5 +1,8 @@
 import type { Locale } from "next-globe-gen/schema";
 
+/**
+ * An interface to be augmented automatically by NextGlobeGen with the actual messages structure.
+ */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface MessagesRegister {}
 
@@ -17,6 +20,13 @@ export type Messages = MessagesRegister extends { messages: infer S }
   ? S
   : MockMessages;
 
+/**
+ * All messages for all locales in your application.
+ */
+export declare const messages: Messages;
+
+type AllMessages = Messages[Locale];
+
 interface NestedMessagesParams {
   [key: string]: NestedMessagesParams | Record<string, unknown>;
 }
@@ -33,10 +43,6 @@ export type MessagesParams = MessagesRegister extends {
   ? P
   : MockMessagesParams;
 
-export declare const messages: Messages;
-
-type AllMessages = Messages[Locale];
-
 /**
  * Utility type for extracting all the possible namespaces
  */
@@ -51,6 +57,9 @@ export type GetNamespaces<T> = {
  */
 export type Namespace = GetNamespaces<AllMessages> | undefined;
 
+/**
+ * Utility type for extracting all the possible message keys from a nested object
+ */
 export type GetMessageKeys<T> = {
   [Key in keyof T]: T[Key] extends string
     ? `${Key & string}`

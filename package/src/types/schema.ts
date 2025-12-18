@@ -1,6 +1,9 @@
 import type { Formats } from "intl-messageformat";
 import type { DomainConfig } from "~/utils/config";
 
+/**
+ * An interface to be augmented automatically by NextGlobeGen with the actual schema structure.
+ */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface SchemaRegister {}
 
@@ -15,12 +18,15 @@ type MockSchema = {
 
 /**
  * The routing schema containing all routes, locales, and domain configurations.
- * This type is augmented at build time with the actual schema from your i18n configuration.
+ * This type is augmented automatically by NextGlobeGen with the actual schema from your i18n configuration.
  */
 export type Schema = SchemaRegister extends { schema: infer S }
   ? S
   : MockSchema;
 
+/**
+ * The routing schema containing all routes, locales, and domain configurations.
+ */
 export declare const schema: Schema;
 
 /**

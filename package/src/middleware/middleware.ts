@@ -18,7 +18,9 @@ export type MiddlewareOptions = ProxyOptions;
  *   matcher: ["/((?!_next|.*\\.).*)"],
  * };
  */
-export default proxy;
+const middleware = proxy;
+
+export default middleware;
 
 /**
  * The middleware handles locale negotiation and adds alternate links of the page to the response headers.
@@ -30,6 +32,6 @@ export default proxy;
  *   matcher: ["/((?!_next|.*\\.).*)"],
  * };
  */
-const middleware = proxy;
+const middlewareExport = proxy;
 
-export { middleware };
+export { middlewareExport as middleware };
