@@ -1,4 +1,4 @@
-import { Command } from "commander";
+import { Command, Option } from "commander";
 import { watch } from "fs";
 import { debounce } from "~/cli/utils/debounce";
 import {
@@ -30,14 +30,18 @@ export const generateCommand = new Command("generate")
   .option("-w, --watch", "enables watch mode")
   .option("--no-routes", "skip routes generation")
   .option("--no-messages", "skip messages compilation")
+  .addOption(new Option("--plugin").hideHelp())
   .action(generateAction);
 
-async function generateAction(opts: {
+type Options = {
   config: string;
   watch: boolean;
   routes: boolean;
   messages: boolean;
-}) {
+  plugin: boolean;
+};
+
+async function generateAction(opts: Options) {
   if (!isFile(opts.config)) throw configNotFoundError(opts.config);
   const userConfig = await compile<{ default: UserConfig }>(opts.config);
   const config = mergeConfigs(DEFAULT_CONFIG, userConfig.default);
@@ -48,14 +52,13 @@ async function generateAction(opts: {
   if (opts.messages) await generateMessagesSubAction(config, opts);
 }
 
-async function generateRoutesSubAction(
-  config: Config,
-  opts: { watch: boolean },
-) {
-  generateOutDir();
-  rmDirectory(config.routes.localizedDir);
-  generateLocalizedDir(config.routes.localizedDir);
-  await generateRoutes(config);
+async function generateRoutesSubAction(config: Config, opts: Options) {
+  if (!(opts.plugin && opts.watch)) {
+    generateOutDir();
+    rmDirectory(config.routes.localizedDir);
+    generateLocalizedDir(config.routes.localizedDir);
+    await generateRoutes(config);
+  }
   if (opts.watch) {
     watch(config.routes.originDir, { recursive: true }, (_, fileName) => {
       if (!fileName) return;
@@ -80,12 +83,11 @@ async function generateRoutes(config: Config, updatedOriginPath?: string) {
   }
 }
 
-async function generateMessagesSubAction(
-  config: Config,
-  opts: { watch: boolean },
-) {
-  generateOutDir();
-  await generateMessages(config);
+async function generateMessagesSubAction(config: Config, opts: Options) {
+  if (!(opts.plugin && opts.watch)) {
+    generateOutDir();
+    await generateMessages(config);
+  }
   if (opts.watch) {
     watch(config.messages.originDir, { recursive: true }, () => {
       debouncedGenerateMessages(config);

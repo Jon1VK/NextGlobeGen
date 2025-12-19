@@ -85,32 +85,6 @@ describe("plugin", () => {
     expect(spawnSync).not.toBeCalled();
   });
 
-  test("spawns generator first sync and then async watch mode when in dev", async () => {
-    await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-development-server");
-    expect(spawnSync).toHaveBeenCalledWith(
-      "npx next-globe-gen --config ./src/__mocks__/i18n.config.ts",
-      expect.objectContaining({
-        stdio: "inherit",
-        shell: true,
-      }),
-    );
-    expect(spawn).toHaveBeenCalledWith(
-      "npx next-globe-gen --watch --config ./src/__mocks__/i18n.config.ts",
-      expect.objectContaining({
-        stdio: "inherit",
-        shell: true,
-        detached: false,
-      }),
-    );
-  });
-
-  test("does not spawn child processes when executed in a dev worker", async () => {
-    vi.stubEnv("NEXT_PRIVATE_WORKER", "1");
-    await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-development-server");
-    expect(spawn).not.toBeCalled();
-    expect(spawnSync).not.toBeCalled();
-  });
-
   test("skip another spawn in build phase", async () => {
     vi.stubEnv("NEXT_DEPLOYMENT_ID", "1");
     await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-production-build");
@@ -122,7 +96,7 @@ describe("plugin", () => {
     await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-production-build");
     expect(spawn).not.toBeCalled();
     expect(spawnSync).toHaveBeenCalledWith(
-      "npx next-globe-gen --config ./src/__mocks__/i18n.config.ts",
+      "npx next-globe-gen --plugin --config ./src/__mocks__/i18n.config.ts",
       expect.objectContaining({
         stdio: "inherit",
         shell: true,
