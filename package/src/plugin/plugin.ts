@@ -9,6 +9,7 @@ import type {
 import type { Rewrite } from "next/dist/lib/load-custom-routes";
 import type { NextJsWebpackConfig } from "next/dist/server/config-shared";
 import { spawn, spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import type { Config, UserConfig } from "~/utils/config";
 import { compile } from "~/utils/ts-utils";
@@ -36,7 +37,7 @@ export default function createNextGlobeGenPlugin(
   return function withNextGlobeGen(config: NextConfig) {
     return async (phase: Phase) => {
       const userConfig = await compile<{ default: UserConfig }>(configPath);
-      useGenerator(configPath, phase);
+      await useGenerator(configPath, phase);
       return addDomainRewrites(
         addAliases(config, {
           "next-globe-gen/schema": "./next-globe-gen/schema.ts",
@@ -48,28 +49,51 @@ export default function createNextGlobeGenPlugin(
   };
 }
 
-function useGenerator(configPath: string, phase: Phase) {
-  if (process.env.NEXT_PRIVATE_WORKER) return;
+async function useGenerator(configPath: string, phase: Phase) {
+  const nextjsVersion = getNextJSVersion();
+  // prettier-ignore
+  if (nextjsVersion.major >= 16 && phase === "phase-development-server" && !process.env.NEXT_PRIVATE_WORKER) return;
+  if (nextjsVersion.major < 16 && process.env.NEXT_PRIVATE_WORKER) return;
   if (process.env.NEXT_DEPLOYMENT_ID !== undefined) return;
   try {
     if (phase !== "phase-production-server") {
-      spawnSync(`npx next-globe-gen --config ${configPath}`, {
+      spawnSync(`npx next-globe-gen --plugin --config ${configPath}`, {
         cwd: process.cwd(),
         stdio: "inherit",
         shell: true,
       });
     }
     if (phase === "phase-development-server") {
-      spawn(`npx next-globe-gen --watch --config ${configPath}`, {
+      const abortController = new AbortController();
+      process.on("exit", () => {
+        abortController.abort();
+      });
+      process.on("SIGINT", () => {
+        abortController.abort();
+        process.exit();
+      });
+      process.on("SIGTERM", () => {
+        abortController.abort();
+        process.exit();
+      });
+      spawn(`npx next-globe-gen --plugin --watch --config ${configPath}`, {
         cwd: process.cwd(),
         stdio: "inherit",
         shell: true,
         detached: false,
+        signal: abortController.signal,
       });
     }
   } catch (_e) {
     console.error("Failed to spawn the NextGlobeGen compiler process");
   }
+}
+
+function getNextJSVersion() {
+  const requireFunc = createRequire(process.cwd() + "/package.json");
+  const version = requireFunc("next/package.json").version;
+  const [major, minor, patch] = version.split(".").map(Number);
+  return { major, minor, patch };
 }
 
 /**
