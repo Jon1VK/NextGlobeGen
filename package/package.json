@@ -70,28 +70,28 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@formatjs/icu-messageformat-parser": "^2.11.4",
+    "@formatjs/icu-messageformat-parser": "^3.0.4",
     "commander": "^13.1.0",
     "fast-memoize": "^2.5.2",
-    "intl-messageformat": "^10.7.18",
+    "intl-messageformat": "^11.0.4",
     "negotiator": "^1.0.0",
     "path-to-regexp": "^8.3.0",
-    "tsup": "^8.5.0",
-    "yaml": "^2.8.1"
+    "tsup": "^8.5.1",
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^9.39.2",
     "@types/negotiator": "^0.6.4",
-    "@types/node": "^22.19.0",
-    "@types/react": "^19.2.2",
-    "@vitest/coverage-v8": "^4.0.8",
-    "eslint": "^9.39.1",
-    "next": "^16.0.1",
-    "prettier": "^3.6.2",
-    "react": "^19.2.0",
+    "@types/node": "^22.19.3",
+    "@types/react": "^19.2.7",
+    "@vitest/coverage-v8": "^4.0.16",
+    "eslint": "^9.39.2",
+    "next": "^16.1.0",
+    "prettier": "^3.7.4",
+    "react": "^19.2.3",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.3",
-    "vitest": "^4.0.8"
+    "typescript-eslint": "^8.50.0",
+    "vitest": "^4.0.16"
   },
   "peerDependencies": {
     "next": "^15.3.0 || ^16.0.0",
