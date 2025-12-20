@@ -40,7 +40,7 @@ NextGlobeGen is a powerful TypeScript-first internationalization (i18n) library 
 
 ## Quick Example
 
-```tsx title="src/_app/page.tsx"
+```tsx
 import { useTranslations, Link } from "next-globe-gen";
 
 export default function HomePage() {
@@ -56,7 +56,7 @@ export default function HomePage() {
 }
 ```
 
-```json title="src/messages/en.json"
+```json
 {
   "welcome": "Welcome!",
   "description": "{name} makes i18n effortless",
