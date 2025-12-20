@@ -9,7 +9,7 @@ function createLocaleStore(): LocaleStore {
 
 const getLocaleStore = cache(createLocaleStore);
 
-export function useLocale() {
+export function useLocale(): Locale {
   return getLocaleStore().locale;
 }
 

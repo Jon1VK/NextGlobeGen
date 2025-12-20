@@ -1,5 +1,5 @@
 import { messages } from "next-globe-gen/messages";
-import { schema } from "next-globe-gen/schema";
+import { schema, type Schema } from "next-globe-gen/schema";
 import { formatters } from "../shared/formatters";
 import { FormFactory } from "../shared/FormFactory";
 import { LinkFactory } from "../shared/LinkFactory";
@@ -17,7 +17,7 @@ export * from "./redirect";
 export * from "./revalidatePath";
 export * from "./withLanguageAlternates";
 
-export const useSchema = () => schema;
+export const useSchema = (): Schema => schema;
 export const useHref = useHrefFactory(useLocale, useSchema);
 export const createHref = createHrefFactory(schema, true);
 export const Link = LinkFactory(useHref);
