@@ -16,7 +16,7 @@ const compat = new FlatCompat({
 });
 
 export default defineConfig(
-  { ignores: [".docusaurus"] },
+  { ignores: [".docusaurus", "build"] },
   { languageOptions: { globals: { ...globals.node } } },
   eslint.configs.recommended,
   tseslint.configs.recommended,
