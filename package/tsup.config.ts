@@ -16,6 +16,7 @@ const sharedConfig: Options = {
   format: ["cjs", "esm"],
   external: ["next-globe-gen"],
   splitting: false,
+  shims: true,
 };
 
 export default defineConfig([

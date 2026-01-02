@@ -1,6 +1,9 @@
 hello:
+  # hello.world description
   world: Hello world
+# hello.name description
 hello.name: Hello {name}
+# projects description
 projects: >-
   {count, plural,
   =0 {No project}

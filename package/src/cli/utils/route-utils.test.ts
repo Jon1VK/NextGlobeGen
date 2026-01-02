@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, test } from "vitest";
-import type { RouteType } from "../commands/generate/getOriginRoutes";
-import type { OriginRoute } from "../types";
+import type {
+  OriginRoute,
+  RouteType,
+} from "../commands/generate/getOriginRoutes";
 import { getRouteName, getRoutePath, isPageOriginRoute } from "./route-utils";
 
 const mocks: { originRoute: OriginRoute } = {

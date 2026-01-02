@@ -5,18 +5,22 @@ import {
 } from "@formatjs/icu-messageformat-parser";
 import { writeFileSync } from "fs";
 import path from "path";
-import type { OriginRoute } from "~/cli/types";
-import { flatten, unflatten } from "~/cli/utils/obj-utils";
 import {
   getRouteName,
   getRoutePath,
   isPageOriginRoute,
 } from "~/cli/utils/route-utils";
-import type { Messages } from "~/types/messages";
+import {
+  getLocales,
+  getUnPrefixedLocales,
+  type Config,
+  type MessageEntry,
+} from "~/config";
 import type { Schema } from "~/types/schema";
-import { getLocales, getUnPrefixedLocales, type Config } from "~/utils/config";
 import { makeDirectory } from "~/utils/fs-utils";
-import { getMessages } from "./getMessages";
+import { unflatten } from "~/utils/obj-utils";
+import { getMessageEntries } from "./getMessageEntries";
+import type { OriginRoute } from "./getOriginRoutes";
 
 export const OUT_DIR = "./next-globe-gen";
 
@@ -109,10 +113,11 @@ const messagesTemplate = "".concat(
 );
 
 export async function generateMessagesFile(config: Config) {
-  const { allMessages, clientMessages } = await getFilteredMessages(config);
-  const messagesParamsJson = generateMessagesParamsJson(allMessages);
-  const jsonMessages = JSON.stringify(allMessages, null, "\t");
-  const jsonClientMessages = JSON.stringify(clientMessages, null, "\t");
+  const { allMessageEntries, clientMessageEntries } =
+    await getFilteredMessages(config);
+  const jsonMessages = generateMessagesJson(allMessageEntries);
+  const jsonClientMessages = generateMessagesJson(clientMessageEntries);
+  const messagesParamsJson = generateMessagesParamsJson(allMessageEntries);
   const messagesFile = messagesTemplate
     .replace("{messages}", jsonMessages)
     .replace("{clientMessages}", jsonClientMessages)
@@ -122,31 +127,42 @@ export async function generateMessagesFile(config: Config) {
 }
 
 async function getFilteredMessages(config: Config) {
-  const allMessages = await getMessages(config);
+  const allMessageEntries = await getMessageEntries(config);
   const clientKeys =
     config.messages.clientKeys instanceof RegExp
       ? [config.messages.clientKeys]
       : config.messages.clientKeys;
-  const clientMessages: Record<string, unknown> = {};
-  Object.entries(allMessages).forEach(([locale, localeMessages]) => {
-    const flattenedLocaleMessages = flatten(localeMessages);
-    const flattenedClientMessages: Record<string, string> = {};
-    Object.entries(flattenedLocaleMessages).forEach(([key, message]) => {
+  const clientMessageEntries: Record<string, MessageEntry[]> = {};
+  Object.entries(allMessageEntries).forEach(([locale, localeEntries]) => {
+    const clientEntries: MessageEntry[] = [];
+    localeEntries.forEach((entry) => {
       const matchesClientKey =
-        !clientKeys || clientKeys.some((regExp) => regExp.test(key));
-      if (matchesClientKey) flattenedClientMessages[key] = message;
+        !clientKeys || clientKeys.some((regExp) => regExp.test(entry.key));
+      if (matchesClientKey) clientEntries.push(entry);
     });
-    clientMessages[locale] = unflatten(flattenedClientMessages);
+    clientMessageEntries[locale] = clientEntries;
   });
-  return { allMessages, clientMessages };
+  return { allMessageEntries, clientMessageEntries };
 }
 
-function generateMessagesParamsJson(messages: Messages) {
+function generateMessagesJson(messageEntries: Record<string, MessageEntry[]>) {
+  const allMessages: Record<string, unknown> = {};
+  Object.entries(messageEntries).forEach(([locale, entries]) => {
+    const localeMessages = Object.fromEntries(
+      entries.map((entry) => [entry.key, entry.message]),
+    );
+    allMessages[locale] = unflatten(localeMessages);
+  });
+  return JSON.stringify(allMessages, null, "\t");
+}
+
+function generateMessagesParamsJson(
+  messageEntries: Record<string, MessageEntry[]>,
+) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const messagesParams: Record<string, any> = {};
-  Object.values(messages).forEach((localeMessages) => {
-    const flattenedMessages = flatten(localeMessages);
-    Object.entries(flattenedMessages).forEach(([key, message]) => {
+  Object.values(messageEntries).forEach((entries) => {
+    entries.forEach(({ key, message }) => {
       const ast = parse(message, { requiresOtherClause: false });
       const messageParams = astToMessageParams(ast);
       if (Object.keys(messageParams).length === 0) return;

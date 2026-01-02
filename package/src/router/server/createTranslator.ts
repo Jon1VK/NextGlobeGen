@@ -1,5 +1,6 @@
 import {
   messages as allMessages,
+  type ExtractionParams,
   type MessageParams,
   type Namespace,
   type NamespaceKey,
@@ -22,8 +23,8 @@ export function createTranslator<N extends Namespace = undefined>(
   >(
     key: K,
     ...rest: NoInfer<A> extends Record<string, never>
-      ? [args?: never]
-      : [args: NoInfer<A>]
+      ? [args?: ExtractionParams]
+      : [args: NoInfer<A> & ExtractionParams]
   ) {
     const args = rest[0] as Record<string, unknown> | undefined;
     const messages = allMessages[locale];

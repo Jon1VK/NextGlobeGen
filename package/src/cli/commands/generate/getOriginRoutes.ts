@@ -1,10 +1,15 @@
 import { readdirSync } from "fs";
 import path from "path";
-import type { OriginRoute } from "~/cli/types";
+import { getLocales, type Config } from "~/config";
 import type { Locale } from "~/types/schema";
-import { getLocales, type Config } from "~/utils/config";
 import { isDirectory, isFile } from "~/utils/fs-utils";
 import { compile } from "~/utils/ts-utils";
+
+export type OriginRoute = {
+  type: RouteType;
+  path: string;
+  localizedPaths: Record<string, string>;
+};
 
 type GetOriginRoutesParams = {
   config: Config;

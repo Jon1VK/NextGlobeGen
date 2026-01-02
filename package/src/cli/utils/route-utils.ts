@@ -1,4 +1,4 @@
-import type { OriginRoute } from "../types";
+import type { OriginRoute } from "../commands/generate/getOriginRoutes";
 
 export function isPageOriginRoute(originRoute: OriginRoute) {
   return originRoute.type === "page" || originRoute.type === "markdown";

@@ -25,7 +25,8 @@ import { useRouteFactory } from "./useRoute";
 
 export type * from "next-globe-gen/messages";
 export type * from "next-globe-gen/schema";
-export type { UserConfig as Config } from "~/utils/config";
+export type * from "~/config/types";
+export type { UserConfig as Config } from "~/config/types";
 export { IntlProvider, useLocale, useSchema } from "./IntlProvider";
 export * from "./useRouter";
 

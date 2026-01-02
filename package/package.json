@@ -59,7 +59,9 @@
     }
   },
   "scripts": {
-    "build": "tsup",
+    "build": "pnpm run --sequential /^build:/",
+    "build:package": "tsup",
+    "build:key-extractor": "cd ../key-extractor && pnpm run build && cp ./target/wasm32-wasip1/release/key_extractor.wasm ../package/dist/key_extractor.wasm",
     "check": "pnpm run /^check:/",
     "check:types": "tsc",
     "check:lint": "eslint .",
@@ -71,6 +73,7 @@
   },
   "dependencies": {
     "@formatjs/icu-messageformat-parser": "^3.0.4",
+    "@swc/core": "^1.10.0",
     "commander": "^13.1.0",
     "fast-memoize": "^2.5.2",
     "intl-messageformat": "^11.0.4",

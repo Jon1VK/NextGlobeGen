@@ -1,5 +1,10 @@
 import type { Locale } from "next-globe-gen/schema";
 
+export type ExtractionParams = {
+  /** Used to add description comments to translation files without affecting runtime behavior */
+  _description?: string;
+};
+
 /**
  * An interface to be augmented automatically by NextGlobeGen with the actual messages structure.
  */
