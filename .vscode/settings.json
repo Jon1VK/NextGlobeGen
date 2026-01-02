@@ -1,4 +1,5 @@
 {
+  "rust-analyzer.linkedProjects": ["./key-extractor/Cargo.toml"],
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit"
   }

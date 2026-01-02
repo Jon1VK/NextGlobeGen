@@ -1,0 +1,11 @@
+{
+  "name": "key-extractor",
+  "scripts": {
+    "build": "cargo build --release --target wasm32-wasip1",
+    "check": "pnpm run /^check:/",
+    "check:build": "cargo check",
+    "check:lint": "cargo clippy",
+    "check:format": "cargo fmt --check",
+    "test": "cargo test"
+  }
+}
