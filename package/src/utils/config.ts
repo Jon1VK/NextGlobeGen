@@ -1,7 +1,7 @@
-import { readdirSync, readFileSync } from "fs";
+import { readdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import type { Formats } from "intl-messageformat";
 import path from "path";
-import { parse } from "yaml";
+import { parse, stringify } from "yaml";
 import { isDirectory, isFile } from "~/utils/fs-utils";
 
 type PrefixConfig = {
@@ -49,6 +49,8 @@ type RoutesConfig = {
 type MessagesConfig = {
   /** Directory containing message files (default: "./src/messages") */
   originDir: string;
+  /** Format of message files: "json" or "yaml" (default: "json") */
+  fileFormat: "json" | "yaml";
   /** Regular expressions to filter which message keys are sent to the client */
   clientKeys?: RegExp[] | RegExp;
   /** Custom format configurations for date, time, number, and plural formatting */
@@ -56,6 +58,17 @@ type MessagesConfig = {
   /** Function to load messages for a given locale */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getMessages: (locale: string) => Promise<any> | any;
+  /** Function to write messages for a given locale. Used to persist updated message keys during key extraction. */
+  writeMessages: (
+    locale: string,
+    messages: Record<string, unknown>,
+  ) => Promise<void> | void;
+  /** Directories to scan for translation key usage. Set to an empty array to disable extraction. (defaults to ["./src"]) */
+  keyExtractionDirs: string[];
+  /** Remove unused keys from message files when extracting (default: false) */
+  pruneUnusedKeys?: boolean;
+  /** Regular expressions to whitelist keys from being pruned */
+  whitelistedKeys?: RegExp[] | RegExp;
 };
 
 export type Config = {
@@ -106,7 +119,10 @@ export const DEFAULT_CONFIG: Config = {
   },
   messages: {
     originDir: "./src/messages",
+    fileFormat: "json",
     getMessages,
+    writeMessages,
+    keyExtractionDirs: ["./src"],
   },
 };
 
@@ -161,6 +177,94 @@ function getDirMessages(
     }
   }
   return messages;
+}
+
+function writeMessages(
+  this: { originDir: string },
+  locale: string,
+  messages: Record<string, unknown>,
+) {
+  writeDirMessages.bind(this)(locale, messages);
+  writeIndexMessages.bind(this)(locale, messages);
+}
+
+function writeDirMessages(
+  this: { originDir: string },
+  dir: string,
+  messages: Record<string, unknown>,
+) {
+  const dirPath = path.join(this.originDir, dir);
+  if (!isDirectory(dirPath)) return;
+  const files = readdirSync(dirPath, { withFileTypes: true });
+  const { subDirs, namespaceFiles, indexFiles } = Object.groupBy(
+    files,
+    (file) => {
+      if (file.isDirectory()) return "subDirs";
+      if (!file.isFile()) return "skip";
+      const extension = path.extname(file.name);
+      if (!FILE_EXTENSIONS.includes(extension)) return "skip";
+      const namespace = file.name.replace(extension, "");
+      if (namespace === "index") return "indexFiles";
+      return "namespaceFiles";
+    },
+  );
+  subDirs?.forEach((subDir) => {
+    const nestedDir = path.join(dir, subDir.name);
+    const nestedMessages = messages[subDir.name];
+    if (!nestedMessages || typeof nestedMessages !== "object") return;
+    writeDirMessages.bind(this)(
+      nestedDir,
+      nestedMessages as Record<string, unknown>,
+    );
+    if (Object.keys(nestedMessages).length === 0) {
+      delete messages[subDir.name];
+    }
+  });
+  namespaceFiles?.forEach((file) => {
+    const filePath = path.join(dirPath, file.name);
+    const extension = path.extname(file.name);
+    const namespace = file.name.replace(extension, "");
+    const namespaceMessages = messages[namespace];
+    if (!namespaceMessages || typeof namespaceMessages !== "object") {
+      rmSync(filePath);
+      return;
+    }
+    const content =
+      extension === ".json"
+        ? JSON.stringify(namespaceMessages, null, 2)
+        : stringify(namespaceMessages, { lineWidth: 0 });
+    writeFileSync(filePath, content);
+    delete messages[namespace];
+  });
+  const indexFile = indexFiles?.at(0);
+  if (!indexFile) return;
+  const extension = path.extname(indexFile.name);
+  const filePath = path.join(dirPath, indexFile.name);
+  const content =
+    extension === ".json"
+      ? JSON.stringify(messages, null, 2)
+      : stringify(messages, { lineWidth: 0 });
+  writeFileSync(filePath, content);
+  for (const key of Object.keys(messages)) {
+    delete messages[key];
+  }
+}
+
+function writeIndexMessages(
+  this: { originDir: string },
+  locale: string,
+  messages: Record<string, unknown>,
+) {
+  for (const extension of FILE_EXTENSIONS) {
+    const filePath = path.join(this.originDir, `${locale}${extension}`);
+    if (!isFile(filePath)) continue;
+    const content =
+      extension === ".json"
+        ? JSON.stringify(messages, null, 2)
+        : stringify(messages, { lineWidth: 0 });
+    writeFileSync(filePath, content);
+    return;
+  }
 }
 
 export function mergeConfigs(a: Config, b: DeepPartial<Config>) {
