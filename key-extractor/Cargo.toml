@@ -1,0 +1,26 @@
+[package]
+name = "key-extractor"
+version = "1.0.0"
+edition = "2024"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+rustc-hash = "2.1.0"
+serde = "1.0.203"
+serde_json = "1.0.117"
+swc_common = "18.0.0"
+swc_core = { version = "54.0.0", features = ["ecma_plugin_transform"] }
+swc_ecma_ast = "19.0.0"
+swc_ecma_visit = "19.0.0"
+swc_plugin_macro = "1.0.0"
+
+[dev-dependencies]
+swc_core = { version = "54.0.0", features = ["ecma_parser"] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+strip = "symbols"

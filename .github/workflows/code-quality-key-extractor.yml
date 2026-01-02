@@ -1,0 +1,38 @@
+name: Key Extractor Code Quality
+
+on:
+  pull_request:
+    paths:
+      - key-extractor/**
+
+defaults:
+  run:
+    working-directory: ./key-extractor
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: nightly-2025-05-06
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: key-extractor
+      - run: pnpm check
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: nightly-2025-05-06
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: key-extractor
+      - run: pnpm test
