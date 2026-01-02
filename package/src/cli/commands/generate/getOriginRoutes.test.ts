@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { getExpectedOriginRoutes } from "~/__mocks__/getExpectedOriginRoutes";
-import { DEFAULT_CONFIG, mergeConfigs } from "~/utils/config";
+import { DEFAULT_CONFIG, mergeConfigs } from "~/config";
 import { getOriginRoutes } from "./getOriginRoutes";
 
 const exampleDir = "./src/__mocks__/_app";

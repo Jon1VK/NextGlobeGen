@@ -4,6 +4,7 @@ import {
   type Options,
 } from "intl-messageformat";
 import type {
+  ExtractionParams,
   MessageParams,
   Messages,
   Namespace,
@@ -35,8 +36,8 @@ export function useTranslationsFactory(
     >(
       key: K,
       ...rest: NoInfer<A> extends Record<string, never>
-        ? [args?: never]
-        : [args: NoInfer<A>]
+        ? [args?: ExtractionParams]
+        : [args: NoInfer<A> & ExtractionParams]
     ) {
       const args = rest[0] as Record<string, unknown>;
       return tImpl({

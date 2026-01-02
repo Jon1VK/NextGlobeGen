@@ -11,7 +11,7 @@ import type { NextJsWebpackConfig } from "next/dist/server/config-shared";
 import { spawn, spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
-import type { Config, UserConfig } from "~/utils/config";
+import type { Config, UserConfig } from "~/config";
 import { compile } from "~/utils/ts-utils";
 
 type Phase =

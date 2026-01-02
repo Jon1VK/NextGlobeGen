@@ -1,4 +1,4 @@
-import type { OriginRoute } from "~/cli/types";
+import type { OriginRoute } from "~/cli/commands/generate/getOriginRoutes";
 
 export const getExpectedOriginRoutes = (
   prefixDefaultLocale: boolean,

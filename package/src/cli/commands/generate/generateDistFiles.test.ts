@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import path from "path";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { getExpectedOriginRoutes } from "~/__mocks__/getExpectedOriginRoutes";
-import { DEFAULT_CONFIG, mergeConfigs } from "~/utils/config";
+import { DEFAULT_CONFIG, mergeConfigs } from "~/config";
 import { isDirectory, isFile, rmDirectory } from "~/utils/fs-utils";
 import {
   generateLocalizedDir,
