@@ -5,8 +5,12 @@ import { type ReactNode } from "react";
 export function generateMetadata() {
   const t = getTranslations("demos");
   return {
-    title: t("client.titles.locale-param"),
-    description: t("descriptions.locale-param"),
+    title: t("client.titles.locale-param", {
+      _description: "Page title for locale parameter demo",
+    }),
+    description: t("descriptions.locale-param", {
+      _description: "Page description for locale parameter demo",
+    }),
   };
 }
 

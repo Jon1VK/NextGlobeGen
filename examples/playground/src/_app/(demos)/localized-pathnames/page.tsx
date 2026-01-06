@@ -5,8 +5,12 @@ import { getTranslations, useTranslations } from "next-globe-gen";
 export function generateMetadata(): Metadata {
   const t = getTranslations("demos");
   return {
-    title: t("client.titles.localized-pathnames"),
-    description: t("descriptions.localized-pathnames"),
+    title: t("client.titles.localized-pathnames", {
+      _description: "Page title for localized pathnames demo",
+    }),
+    description: t("descriptions.localized-pathnames", {
+      _description: "Page description for localized pathnames demo",
+    }),
   };
 }
 
@@ -18,6 +22,7 @@ export default function Page() {
       <h1>{tDemos("client.titles.localized-pathnames")}</h1>
       {tDemos("content.localized-pathnames", {
         p: (children) => <p>{children}</p>,
+        _description: "Explanatory content about localized URL pathnames",
       })}
       <div className="flex gap-2">
         <ExternalLink href="https://next-globe-gen.dev/docs/api-reference/routing#localized-pathnames">

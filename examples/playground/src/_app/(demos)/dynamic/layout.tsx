@@ -5,8 +5,12 @@ import { type ReactNode } from "react";
 export function generateMetadata() {
   const t = getTranslations("demos");
   return {
-    title: t("client.titles.dynamic"),
-    description: t("descriptions.dynamic"),
+    title: t("client.titles.dynamic", {
+      _description: "Page title for dynamic segments demo",
+    }),
+    description: t("descriptions.dynamic", {
+      _description: "Page description for dynamic segments demo",
+    }),
   };
 }
 

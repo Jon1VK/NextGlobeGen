@@ -8,8 +8,12 @@ export default function Page() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-xl font-medium text-white">{homeT("title")}</h1>
-        <p className="mt-4 text-sm text-gray-300">{homeT("description")}</p>
+        <h1 className="text-xl font-medium text-white">
+          {homeT("title", { _description: "Homepage main heading" })}
+        </h1>
+        <p className="mt-4 text-sm text-gray-300">
+          {homeT("description", { _description: "Homepage introductory text" })}
+        </p>
       </div>
 
       <div className="space-y-10 text-white">

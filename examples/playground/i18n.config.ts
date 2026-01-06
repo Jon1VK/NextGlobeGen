@@ -20,6 +20,12 @@ const config: Config = {
   // ],
   messages: {
     clientKeys: /client\./,
+    pruneUnusedKeys: true,
+    whitelistedKeys: [
+      // These keys are used dynamically via template literals and cannot be statically extracted
+      /^demos\.client\.titles\.(components|hooks|messages|misc|routing)$/,
+      /^demos\.descriptions\.not-found$/,
+    ],
   },
 };
 

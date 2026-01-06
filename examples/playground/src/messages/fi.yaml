@@ -1,84 +1,140 @@
 common:
-  docs: Dokumentaatio
-  code: Koodi
   client:
+    # Mobile navigation menu toggle button
     menu: Valikko
-home:
-  title: NextGlobeGen leikkipaikka
-  description: Leikkipaikka NextGlobeGen-ominaisuuksien tutkimiseen.
-posts: Julkaisut
+  # Link text for source code
+  code: Koodi
+  # Link text for documentation
+  docs: Dokumentaatio
 demos:
   client:
     titles:
-      routing: Reititys
-      messages: Viestit
+      # Section title for components demos
       components: Komponentit
-      hooks: Hooksit
-      misc: Sekalaista
-      localized-pathnames: Lokalisoidut polut
-      markdown: Markdown-sivut
-      not-found: Lokalisoitu 404 sivu
-      locale-param: Locale parametri
-      link-component: Link komponentti
-      form-component: Form komponentti
-      use-locale: useLocale
-      use-translations: useTranslations
-      use-href: useHref
-      use-route: useRoute
-      use-router: useRouter
-      t-function: Kääntäjäfunktio
+      # Page title for dynamic segments demo
       dynamic: Dynaaminen segmentti
+      # Page title for Form component demo
+      form-component: Form komponentti
+      # Section title for hooks demos
+      hooks: Hooksit
+      # Page title for Link component demo
+      link-component: Link komponentti
+      # Page title for locale parameter demo
+      locale-param: Locale parametri
+      # Page title for localized pathnames demo
+      localized-pathnames: Lokalisoidut polut
+      # Page title for markdown pages demo
+      markdown: Markdown-sivut
+      # Section title for messages demos
+      messages: Viestit
+      # Section title for miscellaneous demos
+      misc: Sekalaista
+      # Page title for 404 not found page
+      not-found: Lokalisoitu 404 sivu
+      # Section title for routing demos
+      routing: Reititys
+      # Page title for translator function demo
+      t-function: Kääntäjäfunktio
+      # Page title for useHref hook demo
+      use-href: useHref
+      # Page title for useLocale hook demo
+      use-locale: useLocale
+      # Page title for useRoute hook demo
+      use-route: useRoute
+      # Page title for useRouter hook demo
+      use-router: useRouter
+      # Page title for useTranslations hook demo
+      use-translations: useTranslations
     useRouter:
+      # Button label to navigate to homepage
       homepage: Kotisivu
+      # Button label to navigate to homepage with alternative locale
       homepageAlt: Kotisivu (englanniksi)
-      withQuery: Kyselyparametrilla
+      # Button label to navigate with dynamic route parameters
       withDynamicParams: Dynaamisilla parametreilla
-  descriptions:
-    localized-pathnames: Käännä sivujen URL-osoitteessa olevat polut.
-    markdown: Kirjoita sivujen lokalisoitu sisältö MDX-muodossa.
-    not-found: Tutustu dokumentaatioon ja koodiesimerkkiin lokalisoidun 404-sivun toteuttamiseksi.
-    locale-param: Käytä locale-parametria renderöintikontekstien ulkopuolella.
-    link-component: Navigoi lokalisoituihin polkuihin '<Link>' komponentin avulla.
-    form-component: Käytä '<Form>'-komponenttia navigoidaksesi paikallistettuihin polkunimiin syötteet kyselynä.
-    use-locale: useLocale-hook palauttaa nykyisen kielen.
-    use-translations: Käytä annetun nimiavaruuden kääntäjäfunktiota.
-    use-href: Rakenna reittien paikallistettuja href-osoitteita.
-    use-route: useRoute-hook palauttaa sivun nykyisen reitin.
-    use-router: Navigoi paikallistettuihin polkunimiin ohjelmallisesti.
-    t-function: Renderöi viestit nykyisellä kielellä.
-    dynamic: Esimerkki dynaamisten segmenttien kääntämisestä.
+      # Button label to navigate with query parameters
+      withQuery: Kyselyparametrilla
   content:
-    localized-pathnames: >-
-      <p>URL-osoitteiden polut täytyy usein kääntää hakukoneoptimoinnin (SEO)
-      parantamiseksi. NextGlobeGenissä tämä tehdään jokaiselle polun segmentille
-      (hakemistolle) erikseen erityisillä i18n.ts-tiedostoilla. Tämän
-      lähestymistavan avulla polun segmenttihakemisto ja sen paikalliset
-      käännökset voivat sijaita samassa paikassa.</p>
-      <p>Kokeile vaihtaa kielten välillä ja tarkista osoiterivi.</p>
+    # Explanatory content about localized URL pathnames
+    localized-pathnames: <p>URL-osoitteiden polut täytyy usein kääntää hakukoneoptimoinnin (SEO) parantamiseksi. NextGlobeGenissä tämä tehdään jokaiselle polun segmentille (hakemistolle) erikseen erityisillä i18n.ts-tiedostoilla. Tämän lähestymistavan avulla polun segmenttihakemisto ja sen paikalliset käännökset voivat sijaita samassa paikassa.</p> <p>Kokeile vaihtaa kielten välillä ja tarkista osoiterivi.</p>
+  descriptions:
+    # Page description for dynamic segments demo
+    dynamic: Esimerkki dynaamisten segmenttien kääntämisestä.
+    # Page description for Form component demo
+    form-component: Käytä '<Form>'-komponenttia navigoidaksesi paikallistettuihin polkunimiin syötteet kyselynä.
+    # Page description for Link component demo
+    link-component: Navigoi lokalisoituihin polkuihin '<Link>' komponentin avulla.
+    # Page description for locale parameter demo
+    locale-param: Käytä locale-parametria renderöintikontekstien ulkopuolella.
+    # Page description for localized pathnames demo
+    localized-pathnames: Käännä sivujen URL-osoitteessa olevat polut.
+    # Page description for markdown pages demo
+    markdown: Kirjoita sivujen lokalisoitu sisältö MDX-muodossa.
+    # Page description for 404 not found page
+    not-found: Tutustu dokumentaatioon ja koodiesimerkkiin lokalisoidun 404-sivun toteuttamiseksi.
+    # Page description for translator function demo
+    t-function: Renderöi viestit nykyisellä kielellä.
+    # Page description for useHref hook demo
+    use-href: Rakenna reittien paikallistettuja href-osoitteita.
+    # Page description for useLocale hook demo
+    use-locale: useLocale-hook palauttaa nykyisen kielen.
+    # Page description for useRoute hook demo
+    use-route: useRoute-hook palauttaa sivun nykyisen reitin.
+    # Page description for useRouter hook demo
+    use-router: Navigoi paikallistettuihin polkunimiin ohjelmallisesti.
+    # Page description for useTranslations hook demo
+    use-translations: Käytä annetun nimiavaruuden kääntäjäfunktiota.
   t-function:
-    simple: "Yksinkertainen: viesti ilman interpolointikuvioita."
-    withString: "Merkkijono: {value}."
-    withNumber: "Numero: {value, number}."
-    withInteger: "Kokonaisluku: {value, number, integer}."
-    withCurrency: "Valuutta: {value, number, :: currency/USD}."
-    withPercent: "Prosentti: {value, number, percent}."
-    withDate: "Päivämäärä: {value, date}."
-    withDateShort: "Lyhyt päivämäärä: {value, date, short}."
-    withDateMedium: "Keskipitkä päivämäärä: {value, date, medium}."
-    withDateLong: "Pitkä päivämäärä: {value, date, long}."
-    withDateFull: "Täydellinen päivämäärä: {value, date, full}."
-    withTime: "Aika: {value, time}."
-    withTimeShort: "Lyhyt aika: {value, time, short}."
-    withTimeMedium: "Keskipitkä aika: {value, time, medium}."
-    withTimeLong: "Pitkä aika: {value, time, long}."
-    withTimeFull: "Täydellinen aika: {value, time, full}."
-    withRichText: "Rikastettu teksti: <b>lihavoitu</b>."
-    escaped: "Escapetettu: '{interpolation}' '<b>Lihavoitu</b>' ''lainausmerkit''"
-    plural: "Monikollinen: Sinulla {count, plural, =0 {ei ole seuraajia vielä} =1 {on yksi seuraaja} other {on # seuraajaa}}."
-    complex: >-
+    # Complex example with rich text, plurals, and multiple variables
+    complex: |-
       Monimutkainen: {num_guests, plural, offset:1
         =0 {<b>{host}</b> ei järjestä juhlia.}
         =1 {<b>{host}</b> kutsuu henkilön <b>{guest}</b> juhliinsa.}
         =2 {<b>{host}</b> kutsuu henkilön <b>{guest}</b> ja yhden muun henkilön juhliinsa.}
         other {<b>{host}</b> kutsuu henkilön <b>{guest}</b> ja # muuta henkilöä juhliinsa.}
       }
+    # Shows how to escape special characters in ICU syntax
+    escaped: "Escapetettu: '{interpolation}' '<b>Lihavoitu</b>' ''lainausmerkit''"
+    # Demonstrates plural forms based on count
+    plural: "Monikollinen: Sinulla {count, plural, =0 {ei ole seuraajia vielä} =1 {on yksi seuraaja} other {on # seuraajaa}}."
+    # Basic message without any interpolation
+    simple: "Yksinkertainen: viesti ilman interpolointikuvioita."
+    # Currency formatting with locale-specific symbol
+    withCurrency: "Valuutta: {value, number, :: currency/USD}."
+    # Default date formatting
+    withDate: "Päivämäärä: {value, date}."
+    # Full date format with weekday
+    withDateFull: "Täydellinen päivämäärä: {value, date, full}."
+    # Long date format with full month name
+    withDateLong: "Pitkä päivämäärä: {value, date, long}."
+    # Medium date format
+    withDateMedium: "Keskipitkä päivämäärä: {value, date, medium}."
+    # Short date format (e.g., 1/5/26)
+    withDateShort: "Lyhyt päivämäärä: {value, date, short}."
+    # Number formatting truncated to integer
+    withInteger: "Kokonaisluku: {value, number, integer}."
+    # Number formatting with locale-specific decimal separator
+    withNumber: "Numero: {value, number}."
+    # Percentage formatting
+    withPercent: "Prosentti: {value, number, percent}."
+    # Demonstrates embedding HTML tags in messages
+    withRichText: "Rikastettu teksti: <b>lihavoitu</b>."
+    # String interpolation example
+    withString: "Merkkijono: {value}."
+    # Default time formatting
+    withTime: "Aika: {value, time}."
+    # Full time format with full timezone name
+    withTimeFull: "Täydellinen aika: {value, time, full}."
+    # Long time format with timezone
+    withTimeLong: "Pitkä aika: {value, time, long}."
+    # Medium time format
+    withTimeMedium: "Keskipitkä aika: {value, time, medium}."
+    # Short time format (hours and minutes)
+    withTimeShort: "Lyhyt aika: {value, time, short}."
+home:
+  # Homepage introductory text
+  description: Leikkipaikka NextGlobeGen-ominaisuuksien tutkimiseen.
+  # Homepage main heading
+  title: NextGlobeGen leikkipaikka
+# Heading for the blog posts list
+posts: Julkaisut

@@ -1,80 +1,92 @@
 common:
-  docs: Docs
-  code: Code
   client:
+    # Mobile navigation menu toggle button
     menu: Menu
-home:
-  title: NextGlobeGen Playground
-  description: A playground to explore NextGlobeGen features.
-posts: Posts
+  # Link text for source code
+  code: Code
+  # Link text for documentation
+  docs: Docs
 demos:
   client:
     titles:
-      routing: Routing
-      messages: Messages
+      # Section title for components demos
       components: Components
-      hooks: Hooks
-      misc: Misc
-      localized-pathnames: Localized Pathnames
-      markdown: Markdown Pages
-      not-found: Localized 404 page
-      locale-param: Locale Param
-      link-component: Link Component
-      form-component: Form Component
-      use-locale: useLocale
-      use-translations: useTranslations
-      use-href: useHref
-      use-route: useRoute
-      use-router: useRouter
-      t-function: Translator Function
+      # Page title for dynamic segments demo
       dynamic: Dynamic route
+      # Page title for Form component demo
+      form-component: Form Component
+      # Section title for hooks demos
+      hooks: Hooks
+      # Page title for Link component demo
+      link-component: Link Component
+      # Page title for locale parameter demo
+      locale-param: Locale Param
+      # Page title for localized pathnames demo
+      localized-pathnames: Localized Pathnames
+      # Page title for markdown pages demo
+      markdown: Markdown Pages
+      # Section title for messages demos
+      messages: Messages
+      # Section title for miscellaneous demos
+      misc: Misc
+      # Page title for 404 not found page
+      not-found: Localized 404 page
+      # Section title for routing demos
+      routing: Routing
+      # Page title for translator function demo
+      t-function: Translator Function
+      # Page title for useHref hook demo
+      use-href: useHref
+      # Page title for useLocale hook demo
+      use-locale: useLocale
+      # Page title for useRoute hook demo
+      use-route: useRoute
+      # Page title for useRouter hook demo
+      use-router: useRouter
+      # Page title for useTranslations hook demo
+      use-translations: useTranslations
     useRouter:
+      # Button label to navigate to homepage
       homepage: Homepage
+      # Button label to navigate to homepage with alternative locale
       homepageAlt: Homepage (In Finnish)
-      withQuery: With a query
+      # Button label to navigate with dynamic route parameters
       withDynamicParams: With dynamic params
-  descriptions:
-    localized-pathnames: Translate the pathnames in the URL for the pages.
-    markdown: Write the localized content of the pages as MDX.
-    not-found: Check out the docs and code example for how to implement a localized 404 page.
-    locale-param: Use the locale param outside of rendering contexts.
-    link-component: Navigate to localized pathnames with '<Link>' component.
-    form-component: Use '<Form>' component to navigate to localized pathnames with inputs as a query.
-    use-locale: The useLocale hook returns the current locale.
-    use-translations: Get the translator function for the given namespace.
-    use-href: Construct localized hrefs of the routes.
-    use-route: The useRoute hook returns the current route of the page.
-    use-router: Navigate to localized pathnames programmatically.
-    t-function: Render messages in the current locale.
-    dynamic: Example of how to translate dynamic segments.
+      # Button label to navigate with query parameters
+      withQuery: With a query
   content:
-    localized-pathnames: >-
-      <p>The pathnames in the url often need to be translated to improve SEO. In
-      NextGlobeGen this is done for each route segment (directory) separately
-      with special i18n.ts files. With this approach the route segment and
-      it's localizations can be colocated.</p>
-      <p>Try changing between languages and check the address bar.</p>
+    # Explanatory content about localized URL pathnames
+    localized-pathnames: <p>The pathnames in the url often need to be translated to improve SEO. In NextGlobeGen this is done for each route segment (directory) separately with special i18n.ts files. With this approach the route segment and it's localizations can be colocated.</p> <p>Try changing between languages and check the address bar.</p>
+  descriptions:
+    # Page description for dynamic segments demo
+    dynamic: Example of how to translate dynamic segments.
+    # Page description for Form component demo
+    form-component: Use '<Form>' component to navigate to localized pathnames with inputs as a query.
+    # Page description for Link component demo
+    link-component: Navigate to localized pathnames with '<Link>' component.
+    # Page description for locale parameter demo
+    locale-param: Use the locale param outside of rendering contexts.
+    # Page description for localized pathnames demo
+    localized-pathnames: Translate the pathnames in the URL for the pages.
+    # Page description for markdown pages demo
+    markdown: Write the localized content of the pages as MDX.
+    # Page description for 404 not found page
+    not-found: Check out the docs and code example for how to implement a localized 404 page.
+    # Page description for translator function demo
+    t-function: Render messages in the current locale.
+    # Page description for useHref hook demo
+    use-href: Construct localized hrefs of the routes.
+    # Page description for useLocale hook demo
+    use-locale: The useLocale hook returns the current locale.
+    # Page description for useRoute hook demo
+    use-route: The useRoute hook returns the current route of the page.
+    # Page description for useRouter hook demo
+    use-router: Navigate to localized pathnames programmatically.
+    # Page description for useTranslations hook demo
+    use-translations: Get the translator function for the given namespace.
   t-function:
-    simple: "Simple: message without any interpolations patterns."
-    withString: "String: {value}."
-    withNumber: "Number: {value, number}."
-    withInteger: "Integer: {value, number, integer}."
-    withCurrency: "Currency: {value, number, :: currency/USD}."
-    withPercent: "Percent: {value, number, percent}."
-    withDate: "Date: {value, date}."
-    withDateShort: "Short date: {value, date, short}."
-    withDateMedium: "Medium date: {value, date, medium}."
-    withDateLong: "Long date: {value, date, long}."
-    withDateFull: "Full date: {value, date, full}."
-    withTime: "Time: {value, time}."
-    withTimeShort: "Short time: {value, time, short}."
-    withTimeMedium: "Medium time: {value, time, medium}."
-    withTimeLong: "Long time: {value, time, long}."
-    withTimeFull: "Full time: {value, time, full}."
-    withRichText: "Rich text : <b>bold</b>."
-    escaped: "Escaped: '{interpolation}' '<b>Bold</b>' ''quoted''"
-    plural: "Plural: You have {count, plural, =0 {no followers yet} =1 {one follower} other {# followers}}."
-    complex: >-
+    # Complex example with rich text, plurals, and multiple variables
+    complex: |-
       Complex: {gender_of_host, select, 
         female {
           {num_guests, plural, offset:1
@@ -101,3 +113,48 @@ demos:
           }
         }
       }
+    # Shows how to escape special characters in ICU syntax
+    escaped: "Escaped: '{interpolation}' '<b>Bold</b>' ''quoted''"
+    # Demonstrates plural forms based on count
+    plural: "Plural: You have {count, plural, =0 {no followers yet} =1 {one follower} other {# followers}}."
+    # Basic message without any interpolation
+    simple: "Simple: message without any interpolations patterns."
+    # Currency formatting with locale-specific symbol
+    withCurrency: "Currency: {value, number, :: currency/USD}."
+    # Default date formatting
+    withDate: "Date: {value, date}."
+    # Full date format with weekday
+    withDateFull: "Full date: {value, date, full}."
+    # Long date format with full month name
+    withDateLong: "Long date: {value, date, long}."
+    # Medium date format
+    withDateMedium: "Medium date: {value, date, medium}."
+    # Short date format (e.g., 1/5/26)
+    withDateShort: "Short date: {value, date, short}."
+    # Number formatting truncated to integer
+    withInteger: "Integer: {value, number, integer}."
+    # Number formatting with locale-specific decimal separator
+    withNumber: "Number: {value, number}."
+    # Percentage formatting
+    withPercent: "Percent: {value, number, percent}."
+    # Demonstrates embedding HTML tags in messages
+    withRichText: "Rich text : <b>bold</b>."
+    # String interpolation example
+    withString: "String: {value}."
+    # Default time formatting
+    withTime: "Time: {value, time}."
+    # Full time format with full timezone name
+    withTimeFull: "Full time: {value, time, full}."
+    # Long time format with timezone
+    withTimeLong: "Long time: {value, time, long}."
+    # Medium time format
+    withTimeMedium: "Medium time: {value, time, medium}."
+    # Short time format (hours and minutes)
+    withTimeShort: "Short time: {value, time, short}."
+home:
+  # Homepage introductory text
+  description: A playground to explore NextGlobeGen features.
+  # Homepage main heading
+  title: NextGlobeGen Playground
+# Heading for the blog posts list
+posts: Posts

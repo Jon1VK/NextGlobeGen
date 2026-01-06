@@ -37,7 +37,9 @@ export default function GlobalNav() {
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="font-medium text-gray-100 group-hover:text-gray-400">
-          {commonT("client.menu")}
+          {commonT("client.menu", {
+            _description: "Mobile navigation menu toggle button",
+          })}
         </div>
         {isOpen ? (
           <XMarkIcon className="block w-6 text-gray-400" />

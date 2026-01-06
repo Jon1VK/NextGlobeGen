@@ -12,13 +12,18 @@ export default function UseRouterExample() {
         className="inline-flex gap-x-2 rounded-lg bg-gray-700 px-3 py-1 text-sm font-medium text-gray-100 no-underline hover:bg-gray-500 hover:text-white"
         onClick={() => router.push("/")}
       >
-        {t("homepage")}
+        {t("homepage", {
+          _description: "Button label to navigate to homepage",
+        })}
       </button>
       <button
         className="inline-flex gap-x-2 rounded-lg bg-gray-700 px-3 py-1 text-sm font-medium text-gray-100 no-underline hover:bg-gray-500 hover:text-white"
         onClick={() => router.push("/", { locale: "fi" })}
       >
-        {t("homepageAlt")}
+        {t("homepageAlt", {
+          _description:
+            "Button label to navigate to homepage with alternative locale",
+        })}
       </button>
       <button
         className="inline-flex gap-x-2 rounded-lg bg-gray-700 px-3 py-1 text-sm font-medium text-gray-100 no-underline hover:bg-gray-500 hover:text-white"
@@ -26,7 +31,9 @@ export default function UseRouterExample() {
           router.replace({ pathname: "/use-router", query: { q: "query" } })
         }
       >
-        {t("withQuery")}
+        {t("withQuery", {
+          _description: "Button label to navigate with query parameters",
+        })}
       </button>
       <button
         className="inline-flex gap-x-2 rounded-lg bg-gray-700 px-3 py-1 text-sm font-medium text-gray-100 no-underline hover:bg-gray-500 hover:text-white"
@@ -36,7 +43,10 @@ export default function UseRouterExample() {
           })
         }
       >
-        {t("withDynamicParams")}
+        {t("withDynamicParams", {
+          _description:
+            "Button label to navigate with dynamic route parameters",
+        })}
       </button>
     </div>
   );

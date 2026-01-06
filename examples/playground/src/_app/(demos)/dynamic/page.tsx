@@ -8,7 +8,7 @@ export default async function Page() {
 
   return (
     <>
-      <h1>{t("posts")}</h1>
+      <h1>{t("posts", { _description: "Heading for the blog posts list" })}</h1>
       <ul>
         {posts.map((post) => (
           <li key={post.id}>

@@ -5,8 +5,12 @@ import { type ReactNode } from "react";
 export function generateMetadata() {
   const t = getTranslations("demos");
   return {
-    title: t("client.titles.t-function"),
-    description: t("descriptions.t-function"),
+    title: t("client.titles.t-function", {
+      _description: "Page title for translator function demo",
+    }),
+    description: t("descriptions.t-function", {
+      _description: "Page description for translator function demo",
+    }),
   };
 }
 
