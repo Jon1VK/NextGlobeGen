@@ -1,5 +1,6 @@
 import { Command, Option } from "commander";
 import { watch } from "fs";
+import path from "path";
 import { debounce } from "~/cli/utils/debounce";
 import {
   DEFAULT_CONFIG,
@@ -38,7 +39,6 @@ export const generateCommand = new Command("generate")
   )
   .option("-w, --watch", "enables watch mode")
   .option("--no-routes", "skip routes generation")
-  .option("--no-extract-keys", "skip extracting message keys from source files")
   .option("--no-messages", "skip messages compilation")
   .addOption(new Option("--plugin").hideHelp())
   .action(generateAction);
@@ -47,7 +47,6 @@ type Options = {
   config: string;
   watch: boolean;
   routes: boolean;
-  extractKeys: boolean;
   messages: boolean;
   plugin: boolean;
 };
@@ -57,7 +56,6 @@ async function generateAction(opts: Options) {
   const userConfig = await compile<{ default: UserConfig }>(opts.config);
   const config = mergeConfigs(DEFAULT_CONFIG, userConfig.default);
   if (opts.routes) await generateRoutesSubAction(config, opts);
-  if (opts.extractKeys) await extractKeysSubAction(config, opts);
   if (opts.messages) await generateMessagesSubAction(config, opts);
 }
 
@@ -88,7 +86,7 @@ async function generateRoutes(config: Config, updatedOriginPath?: string) {
     const endTime = process.hrtime(startTime);
     const timeDiffInMs = (endTime[0] * 1000 + endTime[1] / 1000000).toFixed(2);
     console.info(
-      `\x1b[32mNextGlobeGen\x1b[37m - Localized ${originRoutes.length} files in ${timeDiffInMs}ms`,
+      `\x1b[32mNextGlobeGen\x1b[37m - Localized routes (${timeDiffInMs}ms)`,
     );
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
@@ -98,16 +96,32 @@ async function generateRoutes(config: Config, updatedOriginPath?: string) {
 const debouncedGenerateRoutes = debounce(generateRoutes, DEBOUNCE_DELAY);
 
 async function generateMessagesSubAction(config: Config, opts: Options) {
-  if (!isDirectory(config.messages.originDir)) {
+  const messagesOriginDir = config.messages.originDir;
+  const keyExtractionDirs = config.messages.keyExtractionDirs;
+  if (!isDirectory(messagesOriginDir)) {
     throw messagesOriginDirNotFoundError(config);
+  }
+  if (keyExtractionDirs.some((dir) => !isDirectory(dir))) {
+    throw keyExtractionDirsNotFoundError(config);
   }
   if (!(opts.plugin && opts.watch)) {
     generateOutDir();
+    await extractKeys(config);
     await generateMessages(config);
   }
   if (opts.watch) {
     watch(config.messages.originDir, { recursive: true }, () => {
       debouncedGenerateMessages(config);
+    });
+    config.messages.keyExtractionDirs.forEach((dir) => {
+      watch(dir, { recursive: true }, (_, fileName) => {
+        const filePath = fileName ? path.resolve(dir, fileName) : undefined;
+        const messagesOriginDir = path.resolve(config.messages.originDir);
+        const routesLocalizedDir = path.resolve(config.routes.localizedDir);
+        if (filePath?.startsWith(messagesOriginDir)) return;
+        if (filePath?.startsWith(routesLocalizedDir)) return;
+        debouncedExtractKeys(config);
+      });
     });
   }
 }
@@ -115,11 +129,11 @@ async function generateMessagesSubAction(config: Config, opts: Options) {
 async function generateMessages(config: Config) {
   try {
     const startTime = process.hrtime();
-    generateMessagesFile(config);
+    await generateMessagesFile(config);
     const endTime = process.hrtime(startTime);
     const timeDiffInMs = (endTime[0] * 1000 + endTime[1] / 1000000).toFixed(2);
     console.info(
-      `\x1b[32mNextGlobeGen\x1b[37m - Generated messages in ${timeDiffInMs}ms`,
+      `\x1b[32mNextGlobeGen\x1b[37m - Compiled messages (${timeDiffInMs}ms)`,
     );
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
@@ -128,25 +142,8 @@ async function generateMessages(config: Config) {
 
 const debouncedGenerateMessages = debounce(generateMessages, DEBOUNCE_DELAY);
 
-async function extractKeysSubAction(config: Config, opts: Options) {
-  if (config.messages.keyExtractionDirs.length === 0) return;
-  if (config.messages.keyExtractionDirs.some((dir) => !isDirectory(dir))) {
-    throw keyExtractionDirsNotFoundError(config);
-  }
-  if (!(opts.plugin && opts.watch)) {
-    await extractKeys(config);
-  }
-  if (opts.watch) {
-    config.messages.keyExtractionDirs.forEach((dir) => {
-      watch(dir, { recursive: true }, (_, fileName) => {
-        if (!fileName) return;
-        debouncedExtractKeys(config);
-      });
-    });
-  }
-}
-
 async function extractKeys(config: Config) {
+  if (config.messages.keyExtractionDirs.length === 0) return;
   try {
     const startTime = process.hrtime();
     const extractedKeys = await extractKeysFromSourceFiles(config);
@@ -154,7 +151,7 @@ async function extractKeys(config: Config) {
     const endTime = process.hrtime(startTime);
     const timeDiffInMs = (endTime[0] * 1000 + endTime[1] / 1000000).toFixed(2);
     console.info(
-      `\x1b[32mNextGlobeGen\x1b[37m - Extracted keys in ${timeDiffInMs}ms`,
+      `\x1b[32mNextGlobeGen\x1b[37m - Extracted keys (${timeDiffInMs}ms)`,
     );
   } catch (error: unknown) {
     if (error instanceof Error) console.error(error.message);
