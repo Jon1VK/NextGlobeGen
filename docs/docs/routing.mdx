@@ -63,6 +63,63 @@ export default async function generateSegmentTranslations() {
 
 :::
 
+## Domain-based routing
+
+By default, NextGlobeGen uses prefix-based routing where locales appear in the URL path (e.g., `/en/about`, `/fi/about`). Alternatively, you can serve different locales from different domains.
+
+### Configuration
+
+Use the `domains` option instead of `locales` and `defaultLocale`:
+
+```ts title="i18n.config.ts"
+import type { Config } from "next-globe-gen";
+
+const config: Config = {
+  domains: [
+    {
+      domain: "example.com",
+      locales: ["en"],
+      defaultLocale: "en",
+    },
+    {
+      domain: "example.fi",
+      locales: ["fi"],
+      defaultLocale: "fi",
+    },
+    {
+      domain: "example.de",
+      locales: ["de", "de-AT"],
+      defaultLocale: "de",
+      prefixDefaultLocale: true, // Serve default from /de instead of /
+    },
+  ],
+};
+
+export default config;
+```
+
+### How it works
+
+- Each domain serves one or more locales
+- The middleware redirects users to the correct domain based on their locale preference
+- Links automatically point to the correct domain when switching locales
+- SEO alternate links include the full domain URLs
+
+### Requirements
+
+- **Middleware is required** - Domain routing relies on the middleware for redirects
+- **DNS configuration** - Each domain must be configured to point to your application
+
+```tsx title="src/middleware.ts"
+export { middleware } from "next-globe-gen/middleware";
+
+export const config = {
+  matcher: ["/((?!_next|.*\\.).*)"],
+};
+```
+
+See the [configuration reference](./api-reference/configuration.mdx#domains) for more details.
+
 ## Markdown pages
 
 NextGlobeGen has a support for MDX pages by using a locale specific file convention. To use markdown pages, first follow [Next.js MDX docs](https://nextjs.org/docs/app/building-your-application/configuring/mdx) on how to configure Next.js so it can process MDX.

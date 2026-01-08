@@ -158,21 +158,91 @@ const config: Config = {
 };
 ```
 
-#### getMessages
+#### keyExtractionDirs
 
-An async function which handles loading the messages. The `getMessages` function must return a possibly deeply nested object with message translations as values.
+Directories to scan for translation key usage. The generator uses an SWC plugin to statically analyze your source files and extract all translation keys.
+
+```tsx
+const config: Config = {
+  messages: {
+    // highlight-next-line
+    keyExtractionDirs: ["./src"], // Default: ["./src"]
+  },
+};
+```
+
+:::tip Disabling extraction
+
+Set to an empty array `[]` to disable automatic key extraction.
+
+:::
+
+#### pruneUnusedKeys
+
+When enabled, keys that are no longer found in your source code will be removed from message files during extraction.
+
+```tsx
+const config: Config = {
+  messages: {
+    // highlight-next-line
+    pruneUnusedKeys: true, // Default: false
+  },
+};
+```
+
+:::warning
+
+Be careful when enabling this option. Keys that are used dynamically (e.g., `t(variable)`) cannot be statically extracted and will be pruned. Use [`whitelistedKeys`](#whitelistedkeys) to protect such keys.
+
+:::
+
+#### whitelistedKeys
+
+A regular expression or array of regular expressions that protect matching keys from being pruned, even if they're not found in source code.
+
+```tsx
+const config: Config = {
+  messages: {
+    pruneUnusedKeys: true,
+    // highlight-start
+    whitelistedKeys: [
+      /^dynamic\./, // Protect all keys under "dynamic" namespace
+      /^server\.errors\./, // Protect server error messages
+    ],
+    // highlight-end
+  },
+};
+```
+
+#### loadMessageEntries
+
+An async function that loads message entries for a given locale. Must return an array of `MessageEntry` objects containing the key, message, and optional description.
 
 ```tsx
 const config: Config = {
   messages: {
     // highlight-start
-    async getMessages(locale) {
+    loadMessageEntries(
+      locale: string,
+    ): Promise<MessageEntry[]> | MessageEntry[] {
       /* fetch messages for example from an external provider */
     },
     // highlight-end
   },
 };
 ```
+
+:::info MessageEntry type
+
+```ts
+type MessageEntry = {
+  key: string; // Dot-separated key (e.g., "common.buttons.submit")
+  message: string; // The message content (ICU format supported)
+  description?: string; // Optional description for translators
+};
+```
+
+:::
 
 :::info Default message loading
 
@@ -187,6 +257,25 @@ The messages from the `<locale>/<filename>.json` file are put under `<filename>`
 The package supports also messages in YAML files using `.yaml` or `.yml` extensions.
 
 :::
+
+#### writeMessageEntries
+
+An async function that persists updated message entries for a given locale. Used during key extraction to write discovered keys back to your message store.
+
+```tsx
+const config: Config = {
+  messages: {
+    // highlight-start
+    writeMessageEntries(
+      locale: string,
+      messageEntries: MessageEntry[],
+    ): Promise<void> | void {
+      /* store messages for example to an external provider */
+    },
+    // highlight-end
+  },
+};
+```
 
 #### clientKeys
 

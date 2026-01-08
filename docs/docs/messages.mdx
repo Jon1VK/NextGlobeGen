@@ -4,11 +4,15 @@ sidebar_position: 4
 
 # Messages
 
+NextGlobeGen provides a powerful message system for translating your application. This page covers three key aspects: the **ICU Message Syntax** for formatting dynamic, locale-aware content with features like pluralization and rich text, **Message Files** for organizing your translations, and **Key Extraction** which automatically discovers translation keys from your source code to keep your message files in sync.
+
+## ICU Message Syntax
+
 NextGlobeGen uses [ICU](https://unicode-org.github.io/icu/userguide/format_parse/messages/) formatted interpolation patterns in the messages. Let's see what is possible using this format.
 
 Check out the reference for the [t-function](./api-reference/functions.mdx#t-function), which is used in the following examples.
 
-## Dynamic values
+### Dynamic values
 
 Dynamic values can be inserted to the messages by wrapping a parameter name in curly braces:
 
@@ -119,7 +123,7 @@ t("current-date", { currentDate: new Date() }); // Current date: Friday, January
 t("current-time", { currentTime: new Date() }); // Current time: 8:34 PM
 ```
 
-## Pluralization
+### Pluralization
 
 By using a `plural` interpolation value, it is possible to define different messages for different count of items:
 
@@ -138,7 +142,7 @@ t("followers", { count: 1 }); // You have one follower.
 t("followers", { count: 43 }); // You have 43 followers.
 ```
 
-## Ordinalization
+### Ordinalization
 
 By using a `selectordinal` interpolation value, it is possible to define different messages for different ordinal values:
 
@@ -159,7 +163,7 @@ t("victory-count", { count: 3 }); // It is your 3rd victory.
 t("victory-count", { count: 11 }); // It is your 11th victory.
 ```
 
-## Select by enum
+### Select by enum
 
 By using a `select` interpolation value, it is possible to define different messages for enumeration options:
 
@@ -175,7 +179,7 @@ message: {gender, select,
 t("message", { gender: "other" }); // They use NextGlobeGen for internationalization.
 ```
 
-## Rich text
+### Rich text
 
 By using tags in the messages, it is possible to interpolate react components to the translations:
 
@@ -192,7 +196,7 @@ t("playground", {
 // Check out <a href="https://next-globe-gen-playground.vercel.app/en">Playground</a>.
 ```
 
-## Escaping reserved chars
+### Escaping reserved chars
 
 Reserved characters can be escaped by prefixing them with `'` character or by wrapping escaped sections with `'` characters.
 
@@ -203,3 +207,179 @@ escaped: "'{interpolation}' '<b>Bold</b>' ''quoted'' single char escaped '{"
 ```tsx
 t("escaped"); // {interpolation} <b>Bold</b> 'quoted' single char escaped {
 ```
+
+## Message Files
+
+NextGlobeGen loads messages from files in the `src/messages` directory by default. This section covers how to organize your message files.
+
+### File Structure
+
+Messages can be organized in two ways:
+
+**Single file per locale:**
+
+```treeview
+src/messages/
+├── en.json
+└── fi.json
+```
+
+**Namespaced files:**
+
+```treeview
+src/messages/
+├── en/
+│   ├── index.json
+│   ├── common.json
+│   └── dashboard.json
+└── fi/
+    ├── index.json
+    ├── common.json
+    └── dashboard.json
+```
+
+With namespaced files, keys from `<locale>/<namespace>.json` are prefixed with the namespace. The special `index.json` file provides keys without a prefix.
+
+```tsx
+// From en/common.json: { "submit": "Submit" }
+const t = useTranslations("common");
+t("submit"); // "Submit"
+
+// From en/index.json: { "title": "Welcome" }
+const t = useTranslations();
+t("title"); // "Welcome"
+```
+
+### Supported Formats
+
+NextGlobeGen supports both JSON and YAML message files:
+
+```json title="en.json"
+{
+  "greeting": "Hello {name}!",
+  "nested": {
+    "key": "Nested value"
+  }
+}
+```
+
+```yaml title="en.yaml"
+greeting: "Hello {name}!"
+nested:
+  key: Nested value
+```
+
+:::tip YAML benefits
+
+YAML is often preferred for messages because:
+
+- Multi-line strings are easier to read
+- Comments can document message context
+- Less visual noise from quotes and brackets
+
+:::
+
+### Nested Keys
+
+Messages can be nested in objects. Access them using dot notation:
+
+```json title="en.json"
+{
+  "buttons": {
+    "submit": "Submit",
+    "cancel": "Cancel"
+  }
+}
+```
+
+```tsx
+const t = useTranslations();
+t("buttons.submit"); // "Submit"
+
+// Or use a namespace
+const t = useTranslations("buttons");
+t("submit"); // "Submit"
+```
+
+### Custom Message Loading
+
+For advanced use cases (e.g., loading from a CMS or database), you can provide custom loading functions:
+
+```tsx title="i18n.config.ts"
+const config: Config = {
+  messages: {
+    // Load messages from a custom source
+    async loadMessageEntries(locale) {
+      const response = await fetch(
+        `https://cms.example.com/messages/${locale}`,
+      );
+      const messages = await response.json();
+      return Object.entries(messages).map(([key, message]) => ({
+        key,
+        message: message as string,
+      }));
+    },
+
+    // Write extracted keys back to your source
+    async writeMessageEntries(locale, entries) {
+      await fetch(`https://cms.example.com/messages/${locale}`, {
+        method: "PUT",
+        body: JSON.stringify(entries),
+      });
+    },
+  },
+};
+```
+
+See the [configuration reference](./api-reference/configuration.mdx#loadmessageentries) for more details.
+
+## Key Extraction
+
+NextGlobeGen can automatically extract translation keys from your source code, keeping your message files in sync with your codebase.
+
+### How it works
+
+When you run the generator (via the plugin or CLI), NextGlobeGen scans your source files for translator function calls (`useTranslations`, `getTranslations`, `createTranslator`) and extracts all translation keys. New keys are added to your message files, and optionally, unused keys can be pruned.
+
+### Inline default messages
+
+You can provide a default message directly in your code using the `_defaultMessage` option. This is especially useful for new keys that haven't been translated yet:
+
+```tsx
+const t = useTranslations("home");
+
+// Key extracted as "home.welcome" with default message "Welcome to our site!"
+t("welcome", { _defaultMessage: "Welcome to our site!" });
+
+// With a description for translators
+t("greeting", {
+  name: "Jon",
+  _defaultMessage: "Hello, {name}!",
+  _description: "Personalized greeting shown on the homepage",
+});
+```
+
+The `_defaultMessage` and `_description` are only used during extraction and have no effect on the runtime code.
+
+### Configuration
+
+Configure key extraction in your `i18n.config.ts`:
+
+```tsx
+const config: Config = {
+  messages: {
+    keyExtractionDirs: ["./src"], // Directories to scan (default: ["./src"])
+    pruneUnusedKeys: true, // Remove keys not found in code
+    whitelistedKeys: [/^dynamic\./], // Protect dynamic keys from pruning
+  },
+};
+```
+
+See the [configuration reference](./api-reference/configuration.mdx#keyextractiondirs) for more details.
+
+### Limitations
+
+- **Dynamic keys**: Keys using variables (e.g., `t(keyVar)`) cannot be statically extracted
+- **Template literals with expressions**: Template literals containing `${...}` are skipped
+
+For dynamic keys, use the [`whitelistedKeys`](./api-reference/configuration.mdx#whitelistedkeys) option to prevent them from being pruned.

@@ -425,6 +425,53 @@ export async function submitForm(locale: Locale, formData: FormData) {
 
 ---
 
+## Dynamic Translation Keys Being Pruned
+
+**Problem:** Translation keys that are constructed dynamically disappear from your message files when `pruneUnusedKeys` is enabled.
+
+**Why it fails:** The key extraction uses static analysis to find translation keys. Keys that are built using variables or template expressions cannot be detected:
+
+```tsx
+// ✗ These keys CANNOT be extracted statically
+const key = condition ? "success" : "error";
+t(key);
+
+const section = "dashboard";
+t(`${section}.title`);
+
+items.forEach((item) => t(item.labelKey));
+```
+
+```tsx
+// ✓ These keys CAN be extracted
+t("success");
+t("error");
+t("dashboard.title");
+```
+
+**Solution:** Use the `whitelistedKeys` configuration to protect dynamic keys from being pruned:
+
+```tsx title="i18n.config.ts"
+const config: Config = {
+  messages: {
+    pruneUnusedKeys: true,
+    whitelistedKeys: [
+      /^dashboard\./, // Protect all dashboard keys
+      /^items\.labels\./, // Protect item label keys
+    ],
+  },
+};
+```
+
+**Best practices:**
+
+- Prefer static keys when possible for better type safety
+- Document which keys are used dynamically with comments
+- Use specific regex patterns to avoid over-whitelisting
+- Consider restructuring code to use static keys with conditional rendering
+
+---
+
 ## Need More Help?
 
 If you're still experiencing issues:

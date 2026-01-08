@@ -1,8 +1,8 @@
 import Heading from "@theme/Heading";
 import ArrowPathLogo from "../../images/arrow-path.svg";
-import CDNLogo from "../../images/cdn.svg";
 import LinkLogo from "../../images/link.svg";
 import MessagesLogo from "../../images/messages.svg";
+import ScanLogo from "../../images/scan.svg";
 import SwitchLogo from "../../images/switch.svg";
 import TSLogo from "../../images/typescript.svg";
 
@@ -14,10 +14,10 @@ const features = [
     icon: TSLogo,
   },
   {
-    name: "Static rendering",
+    name: "Automatic key extraction",
     description:
-      "Static rendering and export mode supported out-of-the-box. Perfect for deployment on any CDN or static hosting.",
-    icon: CDNLogo,
+      "Translation keys are discovered from your source code. Message files stay in sync with your codebase automatically.",
+    icon: ScanLogo,
   },
   {
     name: "Rich text messages",

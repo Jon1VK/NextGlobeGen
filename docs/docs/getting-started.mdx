@@ -369,7 +369,6 @@ src/
 │   ├── messages.ts
 │   └── schema.ts
 └── app/
-    ├── favicon.ico
     └── (i18n)/
         ├── en/
         │   ├── dashboard/
@@ -407,37 +406,50 @@ Congratulations! You now have a working internationalized Next.js application. H
 
 ### 🎨 Enhance Your i18n Setup
 
-1. **Add More Locales**
-   - Update `i18n.config.ts` with additional locales
-   - Create corresponding message files
-   - Test language switching between all locales
+**Add More Locales**
 
-2. **Organize Messages**
-   - Split messages into namespaced files: `src/messages/en/common.json`, `src/messages/en/dashboard.json`
-   - Use namespaces in components: `useTranslations("common")`
-   - Learn about [message organization](./messages.mdx)
+- Update `i18n.config.ts` with additional locales
+- Create corresponding message files
+- Test language switching between all locales
 
-3. **Localize More Routes**
-   - Add `i18n.ts` files to translate pathname segments
-   - Test SEO with translated URLs
-   - Read about [routing strategies](./routing.mdx)
+**Organize Messages**
+
+- Split messages into namespaced files: `src/messages/en/common.json`, `src/messages/en/dashboard.json`
+- Use namespaces in components: `useTranslations("common")`
+- Learn about [message organization](./messages.mdx)
+
+**Localize More Routes**
+
+- Add `i18n.ts` files to translate pathname segments
+- Test SEO with translated URLs
+- Read about [routing strategies](./routing.mdx)
 
 ### 🚀 Advanced Features
 
-4. **Optimize Bundle Size**
-   - Configure `clientKeys` to control which messages go to the client
-   - Use `getMessages()` to provide filtered messages to specific routes
-   - See [configuration options](./api-reference/configuration.mdx#clientkeys)
+**Use Automatic Key Extraction**
 
-5. **Setup Domain-Based Routing**
-   - Serve different locales from different domains
-   - Configure middleware for domain routing
-   - Read [domain configuration guide](./api-reference/configuration.mdx#domains)
+- Let NextGlobeGen discover translation keys from your code
+- Add `_defaultMessage` for inline defaults: `t("key", { _defaultMessage: "Default" })`
+- Enable `pruneUnusedKeys` to remove stale translations
+- Learn about [key extraction](./messages.mdx#key-extraction)
 
-6. **Add Rich Text Formatting**
-   - Use ICU message format for plurals, dates, and numbers
-   - Embed React components in translations
-   - Learn about [message formatting](./messages.mdx)
+**Optimize Bundle Size**
+
+- Configure `clientKeys` to control which messages go to the client
+- Use `getMessages()` to provide filtered messages to specific routes
+- See [configuration options](./api-reference/configuration.mdx#clientkeys)
+
+**Setup Domain-Based Routing**
+
+- Serve different locales from different domains
+- Configure middleware for domain routing
+- Read [domain configuration guide](./api-reference/configuration.mdx#domains)
+
+**Add Rich Text Formatting**
+
+- Use ICU message format for plurals, dates, and numbers
+- Embed React components in translations
+- Learn about [message formatting](./messages.mdx)
 
 ### 📚 Learn More
 

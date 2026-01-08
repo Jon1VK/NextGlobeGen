@@ -50,6 +50,7 @@ NextGlobeGen is a powerful TypeScript-first internationalization (i18n) library 
 
 ### 💪 Powerful Features
 
+- **Automatic Key Extraction** - Automatically discover translation keys from your source code
 - **ICU Message Format** - Rich text formatting with plurals, dates, numbers, and embedded React components
 - **Localized Pathnames** - Translate URL segments for better SEO (e.g., `/en/about` → `/fi/tietoja`)
 - **Smart Locale Detection** - Automatic user locale negotiation with cookie persistence
@@ -139,6 +140,29 @@ t("welcome", { name: "Jon" });
 t("posts", { count: 5 });
 t("updated", { date: new Date() });
 t("richText", { link: (children) => <Link href="/guide">{children}</Link> });
+```
+
+### Automatic Key Extraction
+
+NextGlobeGen automatically scans your source files and extracts translation keys, keeping your message files in sync with your code:
+
+```tsx
+// Keys are automatically extracted from your source files
+const t = useTranslations("home");
+t("title"); // Extracted as "home.title"
+t("welcome", { _defaultMessage: "Welcome!" }); // Extracted with default message
+```
+
+Configure extraction behavior in your config:
+
+```ts
+const config = {
+  messages: {
+    keyExtractionDirs: ["./src"], // Directories to scan
+    pruneUnusedKeys: true, // Remove keys no longer in code
+    whitelistedKeys: [/^dynamic\./], // Protect dynamic keys from pruning
+  },
+};
 ```
 
 ### Flexible Routing Options
