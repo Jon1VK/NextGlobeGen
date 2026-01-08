@@ -5,7 +5,7 @@ import { getMessageEntries } from "./getMessageEntries";
 const prevStringifiedMessages: Record<Locale, string> = {};
 
 export async function syncMessages(
-  messagesMap: Map<string, MessageEntry>,
+  extractedMessages: Map<string, MessageEntry>,
   config: Config,
 ) {
   const locales = getLocales(config);
@@ -13,11 +13,11 @@ export async function syncMessages(
   locales.forEach((locale) => {
     const entries = messageEntries[locale] || [];
     const existingEntries = new Map(entries.map((entry) => [entry.key, entry]));
-    existingEntries.forEach((entry, key) => {
-      if (messagesMap.has(key)) {
-        const extractedEntry = messagesMap.get(key)!;
-        extractedEntry.message = entry.message;
-        extractedEntry.description ??= entry.description;
+    existingEntries.forEach((existingEntry, key) => {
+      if (extractedMessages.has(key)) {
+        const extractedEntry = extractedMessages.get(key)!;
+        extractedEntry.message = existingEntry.message;
+        extractedEntry.description ??= existingEntry.description;
         return;
       }
       const whitelistedKeys =
@@ -27,9 +27,9 @@ export async function syncMessages(
       const shouldBePruned =
         config.messages.pruneUnusedKeys &&
         !whitelistedKeys?.some((regExp) => regExp.test(key));
-      if (!shouldBePruned) messagesMap.set(key, entry);
+      if (!shouldBePruned) extractedMessages.set(key, existingEntry);
     });
-    const sortedMessages = messagesMap
+    const sortedMessages = extractedMessages
       .values()
       .toArray()
       .sort((a, b) => a.key.localeCompare(b.key));

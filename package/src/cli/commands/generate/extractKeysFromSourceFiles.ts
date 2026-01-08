@@ -17,7 +17,7 @@ export async function extractKeysFromSourceFiles(config: Config) {
     const keys = await extractKeysFromSourceFile(filePath);
     keys.forEach((k) => {
       const description = k.description ?? keysMap.get(k.key)?.description;
-      keysMap.set(k.key, { ...k, description, message: "EXTRACTED" });
+      keysMap.set(k.key, { ...k, description });
     });
   }
   return keysMap;

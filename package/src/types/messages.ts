@@ -3,6 +3,8 @@ import type { Locale } from "next-globe-gen/schema";
 export type ExtractionParams = {
   /** Used to add description comments to translation files without affecting runtime behavior */
   _description?: string;
+  /** Used to provide default messages for translation files without affecting runtime behavior */
+  _defaultMessage?: string;
 };
 
 /**

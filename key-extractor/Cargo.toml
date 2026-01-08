@@ -8,9 +8,10 @@ publish = false
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-rustc-hash = "2.1.0"
-serde = "1.0.203"
-serde_json = "1.0.117"
+rustc-hash = "2.0.0"
+serde = "1.0.0"
+serde_json = "1.0.0"
+serde_with = "3.0.0"
 swc_common = "18.0.0"
 swc_core = { version = "54.0.0", features = ["ecma_plugin_transform"] }
 swc_ecma_ast = "19.0.0"

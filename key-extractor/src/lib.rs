@@ -6,6 +6,7 @@ mod tests;
 use rustc_hash::FxHashMap;
 use serde::Serialize;
 use serde_json::to_string;
+use serde_with::skip_serializing_none;
 use swc_core::{
     plugin::proxies::TransformPluginProgramMetadata, transform_common::output::experimental_emit,
 };
@@ -29,10 +30,11 @@ fn next_globe_gen_key_extractor(
     program
 }
 
-#[derive(Serialize)]
+#[skip_serializing_none]
+#[derive(Debug, PartialEq, Serialize)]
 pub struct ExtractedKey {
     pub key: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
+    pub message: String,
     pub description: Option<String>,
 }
 
@@ -164,11 +166,17 @@ impl KeyExtractorVisitor {
         let key = namespace
             .as_ref()
             .map_or_else(|| ns_key.clone(), |ns| format!("{}{}{}", ns, ".", ns_key));
-        let description = call
+        let (message, description) = call
             .args
             .get(1)
-            .and_then(|arg| Self::extract_static_description(&arg.expr));
-        self.extracted_keys.push(ExtractedKey { key, description });
+            .map(|arg| Self::extract_options(&arg.expr))
+            .unwrap_or_default();
+        let message = message.unwrap_or_else(|| "[missing]".to_string());
+        self.extracted_keys.push(ExtractedKey {
+            key,
+            message,
+            description,
+        });
     }
 
     fn extract_static_string(expr: &Expr) -> Option<String> {
@@ -182,10 +190,12 @@ impl KeyExtractorVisitor {
         }
     }
 
-    fn extract_static_description(expr: &Expr) -> Option<String> {
+    fn extract_options(expr: &Expr) -> (Option<String>, Option<String>) {
         let Expr::Object(ObjectLit { props, .. }) = expr else {
-            return None;
+            return Default::default();
         };
+        let mut default_message = None;
+        let mut description = None;
         for prop in props {
             let PropOrSpread::Prop(prop) = prop else {
                 continue;
@@ -193,16 +203,17 @@ impl KeyExtractorVisitor {
             let Prop::KeyValue(KeyValueProp { key, value }) = prop.as_ref() else {
                 continue;
             };
-            let is_description_key = match key {
-                PropName::Ident(ident) => ident.sym.as_ref() == "_description",
-                PropName::Str(s) => s.value == "_description",
-                _ => false,
+            let key_name = match key {
+                PropName::Ident(ident) => ident.sym.to_string(),
+                PropName::Str(s) => s.value.to_string_lossy().into_owned(),
+                _ => continue,
             };
-            if !is_description_key {
-                continue;
-            };
-            return Self::extract_static_string(value);
+            match key_name.as_str() {
+                "_defaultMessage" => default_message = Self::extract_static_string(value),
+                "_description" => description = Self::extract_static_string(value),
+                _ => {}
+            }
         }
-        None
+        (default_message, description)
     }
 }

@@ -23,97 +23,113 @@ fn parse_module(code: &str) -> Module {
     parser.parse_module().unwrap()
 }
 
-fn extract_keys(code: &str) -> Vec<ExtractedKey> {
+fn assert_extracted_keys_eq(code: &str, expected_keys: Vec<ExtractedKey>) {
     let mut module = parse_module(code);
     let mut visitor = KeyExtractorVisitor::new();
     module.visit_mut_with(&mut visitor);
-    visitor.extracted_keys
+    assert_eq!(visitor.extracted_keys, expected_keys);
 }
 
 #[test]
 fn use_translations() {
-    let code = r#"
+    assert_extracted_keys_eq(
+        r#"
         import { useTranslations } from 'next-globe-gen';
         
         function Component() {
             const t = useTranslations('common');
-            return t('greeting', { _description: 'A welcome message' });
+            return t('greeting', { _defaultMessage: 'Welcome!', _description: 'A welcome message' });
         }
-    "#;
-    let keys = extract_keys(code);
-    assert_eq!(keys.len(), 1);
-    assert_eq!(keys[0].key, "common.greeting");
-    assert_eq!(keys[0].description, Some("A welcome message".to_string()));
+    "#,
+        vec![ExtractedKey {
+            key: "common.greeting".into(),
+            message: "Welcome!".into(),
+            description: Some("A welcome message".into()),
+        }],
+    );
 }
 
 #[test]
 fn use_translations_without_namespace() {
-    let code = r#"
+    assert_extracted_keys_eq(
+        r#"
         import { useTranslations } from 'next-globe-gen';
 
         function Component() {
             const t = useTranslations();
-            return t('hello', { _description: 'Hello message' });
+            return t('hello', { _defaultMessage: 'Hello World', _description: 'Hello message' });
         }
-    "#;
-    let keys = extract_keys(code);
-    assert_eq!(keys.len(), 1);
-    assert_eq!(keys[0].key, "hello");
-    assert_eq!(keys[0].description, Some("Hello message".to_string()));
+    "#,
+        vec![ExtractedKey {
+            key: "hello".into(),
+            message: "Hello World".into(),
+            description: Some("Hello message".into()),
+        }],
+    );
 }
 
 #[test]
-fn use_translations_without_description() {
-    let code = r#"
+fn use_translations_without_description_and_message() {
+    assert_extracted_keys_eq(
+        r#"
         import { useTranslations } from 'next-globe-gen';
 
         function Component() {
             const t = useTranslations('ns');
             return t('key');
         }
-    "#;
-    let keys = extract_keys(code);
-    assert_eq!(keys.len(), 1);
-    assert_eq!(keys[0].key, "ns.key");
-    assert_eq!(keys[0].description, None);
+    "#,
+        vec![ExtractedKey {
+            key: "ns.key".into(),
+            message: "[missing]".into(),
+            description: None,
+        }],
+    );
 }
 
 #[test]
 fn get_translations_async() {
-    let code = r#"
+    assert_extracted_keys_eq(
+        r#"
         import { getTranslations } from 'next-globe-gen';
 
         async function Page() {
             const t = await getTranslations('page');
-            return t('title', { _description: 'Page title' });
+            return t('title', { _defaultMessage: 'Page Title', _description: 'Page title' });
         }
-    "#;
-    let keys = extract_keys(code);
-    assert_eq!(keys.len(), 1);
-    assert_eq!(keys[0].key, "page.title");
-    assert_eq!(keys[0].description, Some("Page title".to_string()));
+    "#,
+        vec![ExtractedKey {
+            key: "page.title".into(),
+            message: "Page Title".into(),
+            description: Some("Page title".into()),
+        }],
+    );
 }
 
 #[test]
 fn create_translator_server_function() {
-    let code = r#"
+    assert_extracted_keys_eq(
+        r#"
         import { createTranslator } from 'next-globe-gen';
 
         export async function serverFunction() {
             "use server";
             const t = createTranslator('en', 'server');
-            return t('key', { _description: 'Server function key' });
+            return t('key', { _defaultMessage: 'Server Key', _description: 'Server function key' });
         }
-    "#;
-    let keys = extract_keys(code);
-    assert_eq!(keys.len(), 1);
-    assert_eq!(keys[0].key, "server.key");
-    assert_eq!(keys[0].description, Some("Server function key".to_string()));
+    "#,
+        vec![ExtractedKey {
+            key: "server.key".into(),
+            message: "Server Key".into(),
+            description: Some("Server function key".into()),
+        }],
+    );
 }
 
 #[test]
 fn multiple_translators() {
-    let code = r#"
+    assert_extracted_keys_eq(
+        r#"
         import { useTranslations } from 'next-globe-gen';
 
         function Component() {
@@ -121,124 +137,80 @@ fn multiple_translators() {
             const tPage = useTranslations('page');
             return (
                 <>
-                    {t('header', { _description: 'Header text'})}
-                    {tPage('content', { _description: 'Page content'})}
+                    {t('header', { _defaultMessage: 'Header', _description: 'Header text'})}
+                    {tPage('content', { _defaultMessage: 'Content', _description: 'Page content'})}
                 </>
             );
         }
-    "#;
-    let keys = extract_keys(code);
-    assert_eq!(keys.len(), 2);
-    assert_eq!(keys[0].key, "common.header");
-    assert_eq!(keys[0].description, Some("Header text".to_string()));
-    assert_eq!(keys[1].key, "page.content");
-    assert_eq!(keys[1].description, Some("Page content".to_string()));
+    "#,
+        vec![
+            ExtractedKey {
+                key: "common.header".into(),
+                message: "Header".into(),
+                description: Some("Header text".into()),
+            },
+            ExtractedKey {
+                key: "page.content".into(),
+                message: "Content".into(),
+                description: Some("Page content".into()),
+            },
+        ],
+    );
 }
 
 #[test]
-fn template_literal_key() {
-    let code = r#"
+fn values_as_template_literals() {
+    assert_extracted_keys_eq(
+        r#"
         import { useTranslations } from 'next-globe-gen';
 
         function Component() {
             const t = useTranslations('ns');
-            return t(`staticKey`);
+            return t(`staticKey`, { _defaultMessage: `Static message`, _description: `Static description` });
         }
-    "#;
-    let keys = extract_keys(code);
-    assert_eq!(keys.len(), 1);
-    assert_eq!(keys[0].key, "ns.staticKey");
-}
-
-#[test]
-fn dynamic_key_skipped() {
-    let code = r#"
-        import { useTranslations } from 'next-globe-gen';
-
-        function Component({ key }) {
-            const t = useTranslations();
-            return t(key);
-        }
-    "#;
-    let keys = extract_keys(code);
-    assert_eq!(keys.len(), 0); // Dynamic keys cannot be extracted
+    "#,
+        vec![ExtractedKey {
+            key: "ns.staticKey".into(),
+            message: "Static message".into(),
+            description: Some("Static description".into()),
+        }],
+    );
 }
 
 #[test]
 fn renamed_import() {
-    let code = r#"
+    assert_extracted_keys_eq(
+        r#"
         import { useTranslations as useT } from 'next-globe-gen';
 
         function Component() {
             const translate = useT('ns');
             return translate('key');
         }
-    "#;
-    let keys = extract_keys(code);
-    assert_eq!(keys.len(), 1);
-    assert_eq!(keys[0].key, "ns.key");
+    "#,
+        vec![ExtractedKey {
+            key: "ns.key".into(),
+            message: "[missing]".into(),
+            description: None,
+        }],
+    );
 }
 
 #[test]
 fn nested_key() {
-    let code = r#"
+    assert_extracted_keys_eq(
+        r#"
         import { useTranslations } from 'next-globe-gen';
 
         function Component() {
             const t = useTranslations('section');
             return t('nested.deep.key');
         }
-    "#;
-    let keys = extract_keys(code);
-    assert_eq!(keys.len(), 1);
-    assert_eq!(keys[0].key, "section.nested.deep.key");
-}
-
-#[test]
-fn template_literals_with_expressions_are_skipped() {
-    let code = r#"
-        import { useTranslations } from 'next-globe-gen';
-
-        function Component({ type }) {
-            const t = useTranslations('messages');
-            return t(`dynamic.${type}.key`);
-        }
-    "#;
-    let keys = extract_keys(code);
-    assert_eq!(keys.len(), 0);
-}
-
-#[test]
-fn dynamic_description_is_skipped() {
-    let code = r#"
-        import { useTranslations } from 'next-globe-gen';
-
-        function Component({ desc }) {
-            const t = useTranslations('ns');
-            return t('key', { _description: desc });
-        }
-    "#;
-    let keys = extract_keys(code);
-    assert_eq!(keys.len(), 1);
-    assert_eq!(keys[0].key, "ns.key");
-    assert_eq!(keys[0].description, None);
-}
-
-#[test]
-fn description_with_template_literal() {
-    let code = r#"
-        import { useTranslations } from 'next-globe-gen';
-
-        function Component() {
-            const t = useTranslations('ns');
-            return t('key', { _description: `Static template description` });
-        }
-    "#;
-    let keys = extract_keys(code);
-    assert_eq!(keys.len(), 1);
-    assert_eq!(keys[0].key, "ns.key");
-    assert_eq!(
-        keys[0].description,
-        Some("Static template description".to_string())
+    "#,
+        vec![ExtractedKey {
+            key: "section.nested.deep.key".into(),
+            message: "[missing]".into(),
+            description: None,
+        }],
     );
 }
