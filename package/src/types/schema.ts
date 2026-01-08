@@ -1,5 +1,5 @@
 import type { Formats } from "intl-messageformat";
-import type { DomainConfig } from "~/config";
+import type { DomainConfig } from "~/config/types";
 
 /**
  * An interface to be augmented automatically by NextGlobeGen with the actual schema structure.

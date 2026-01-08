@@ -1,4 +1,4 @@
-import type { UserConfig } from "~/config";
+import type { UserConfig } from "~/config/types";
 
 const config: UserConfig = {
   domains: [

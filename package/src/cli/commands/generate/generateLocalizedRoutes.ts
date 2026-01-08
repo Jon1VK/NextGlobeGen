@@ -7,7 +7,7 @@ import {
 } from "fs";
 import path from "path";
 import { toPascalCase } from "~/cli/utils/string-utils";
-import type { Config } from "~/config";
+import type { Config } from "~/config/types";
 import { makeDirectory, toPosixPath } from "~/utils/fs-utils";
 import type { OriginRoute } from "./getOriginRoutes";
 import { getTemplateCompiler } from "./getTemplateCompiler";

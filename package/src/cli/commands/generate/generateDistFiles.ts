@@ -10,12 +10,8 @@ import {
   getRoutePath,
   isPageOriginRoute,
 } from "~/cli/utils/route-utils";
-import {
-  getLocales,
-  getUnPrefixedLocales,
-  type Config,
-  type MessageEntry,
-} from "~/config";
+import type { Config, MessageEntry } from "~/config/types";
+import { getLocales, getUnPrefixedLocales } from "~/config/utils";
 import type { Schema } from "~/types/schema";
 import { makeDirectory } from "~/utils/fs-utils";
 import { unflatten } from "~/utils/obj-utils";

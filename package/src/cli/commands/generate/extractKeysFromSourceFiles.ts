@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import { readdirSync } from "node:fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import type { Config, MessageEntry } from "~/config";
+import type { Config, MessageEntry } from "~/config/types";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PLUGIN_PATH = path.resolve(__dirname, "key_extractor.wasm");

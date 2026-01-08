@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { DEFAULT_CONFIG, mergeConfigs } from "~/config";
+import { DEFAULT_CONFIG } from "~/config";
+import { mergeConfigs } from "~/config/utils";
 import { getMessageEntries } from "./getMessageEntries";
 
 describe("getMessageEntries()", () => {

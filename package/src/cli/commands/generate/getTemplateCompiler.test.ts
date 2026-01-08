@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, test } from "vitest";
-import { DEFAULT_CONFIG, mergeConfigs, type Config } from "~/config";
+import { DEFAULT_CONFIG } from "~/config";
+import type { Config } from "~/config/types";
+import { mergeConfigs } from "~/config/utils";
 import type { OriginRoute } from "./getOriginRoutes";
 import { getTemplateCompiler } from "./getTemplateCompiler";
 

@@ -1,4 +1,5 @@
-import { getLocales, type Config, type MessageEntry } from "~/config";
+import type { Config, MessageEntry } from "~/config/types";
+import { getLocales } from "~/config/utils";
 import { flatten } from "~/utils/obj-utils";
 
 export async function getMessageEntries(config: Config) {
