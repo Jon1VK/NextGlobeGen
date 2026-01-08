@@ -2,12 +2,9 @@ import { Command, Option } from "commander";
 import { watch } from "fs";
 import path from "path";
 import { debounce } from "~/cli/utils/debounce";
-import {
-  DEFAULT_CONFIG,
-  mergeConfigs,
-  type Config,
-  type UserConfig,
-} from "~/config";
+import { DEFAULT_CONFIG } from "~/config";
+import type { Config, UserConfig } from "~/config/types";
+import { mergeConfigs } from "~/config/utils";
 import { isDirectory, isFile, rmDirectory } from "~/utils/fs-utils";
 import { compile } from "~/utils/ts-utils";
 import {

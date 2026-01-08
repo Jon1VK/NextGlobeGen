@@ -24,6 +24,7 @@ export default defineConfig([
     ...sharedConfig,
     entry: {
       cli: "src/cli/index.ts",
+      config: "src/config/index.ts",
       plugin: "src/plugin/index.ts",
       middleware: "src/middleware/index.ts",
       proxy: "src/proxy/index.ts",
@@ -32,6 +33,7 @@ export default defineConfig([
     dts: {
       entry: {
         "index.client": "src/router/client/index.ts",
+        config: "src/config/index.ts",
         plugin: "src/plugin/index.ts",
         middleware: "src/middleware/index.ts",
         proxy: "src/proxy/index.ts",

@@ -45,6 +45,10 @@
       "require": "./dist/index.client.cjs",
       "import": "./dist/index.client.js"
     },
+    "./config": {
+      "require": "./dist/config.cjs",
+      "import": "./dist/config.js"
+    },
     "./middleware": {
       "require": "./dist/middleware.cjs",
       "import": "./dist/middleware.js"

@@ -4,6 +4,9 @@ import { writeMessageEntries } from "./writeMessageEntries";
 
 export const FILE_EXTENSIONS = [".json", ".yml", ".yaml"];
 
+/**
+ * The default configuration for NextGlobeGen.
+ */
 export const DEFAULT_CONFIG: Config = {
   locales: [],
   defaultLocale: "",

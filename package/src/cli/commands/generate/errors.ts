@@ -1,4 +1,4 @@
-import type { Config } from "~/config";
+import type { Config } from "~/config/types";
 
 export const configNotFoundError = (configPath: string) => {
   return new Error(

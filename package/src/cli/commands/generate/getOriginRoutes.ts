@@ -1,6 +1,7 @@
 import { readdirSync } from "fs";
 import path from "path";
-import { getLocales, type Config } from "~/config";
+import type { Config } from "~/config/types";
+import { getLocales } from "~/config/utils";
 import type { Locale } from "~/types/schema";
 import { isDirectory, isFile } from "~/utils/fs-utils";
 import { compile } from "~/utils/ts-utils";

@@ -2,7 +2,8 @@ import { readdir } from "fs/promises";
 import path from "path";
 import { afterEach, describe, expect, test } from "vitest";
 import { getExpectedOriginRoutes } from "~/__mocks__/getExpectedOriginRoutes";
-import { DEFAULT_CONFIG, mergeConfigs } from "~/config";
+import { DEFAULT_CONFIG } from "~/config";
+import { mergeConfigs } from "~/config/utils";
 import { rmDirectory } from "~/utils/fs-utils";
 import { generateLocalizedRoutes } from "./generateLocalizedRoutes";
 

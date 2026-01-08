@@ -11,7 +11,7 @@ import type { NextJsWebpackConfig } from "next/dist/server/config-shared";
 import { spawn, spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
-import type { Config, UserConfig } from "~/config";
+import type { DomainConfig, UserConfig } from "~/config/types";
 import { compile } from "~/utils/ts-utils";
 
 type Phase =
@@ -135,7 +135,7 @@ function addAliases(nextConfig: NextConfig, aliases: Record<string, string>) {
  * @param domains An array of domain based routes
  * @return The modified Next.js config object with the domain rewrites added
  */
-function addDomainRewrites(nextConfig: NextConfig, domains: Config["domains"]) {
+function addDomainRewrites(nextConfig: NextConfig, domains?: DomainConfig[]) {
   if (!domains) return nextConfig;
   const domainRewrites: Rewrite[] = domains
     .filter(({ prefixDefaultLocale }) => !prefixDefaultLocale)

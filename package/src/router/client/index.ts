@@ -1,3 +1,4 @@
+import type { UserConfig } from "~/config/types";
 import type {
   createHref as $createHref,
   createTranslator as $createTranslator,
@@ -25,10 +26,13 @@ import { useRouteFactory } from "./useRoute";
 
 export type * from "next-globe-gen/messages";
 export type * from "next-globe-gen/schema";
-export type * from "~/config/types";
-export type { UserConfig as Config } from "~/config/types";
 export { IntlProvider, useLocale, useSchema } from "./IntlProvider";
 export * from "./useRouter";
+
+/**
+ * @deprecated Import from "next-globe-gen/config" instead.
+ */
+export type Config = UserConfig;
 
 /**
  * Hook that generates localized URLs for routes.
