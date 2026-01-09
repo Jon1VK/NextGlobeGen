@@ -20,11 +20,13 @@ import type { OriginRoute } from "./getOriginRoutes";
 
 export const OUT_DIR = "./next-globe-gen";
 
-const schemaTemplate = "".concat(
-  "export const schema = {schema} as const;\n\n",
+const schemaTemplate = "export const schema = {schema} as const;\n";
+
+const schemaAugmentationTemplate = "".concat(
+  'import type { schema } from "./schema";\n\n',
   'declare module "next-globe-gen" {\n',
   "\tinterface SchemaRegister {\n",
-  "\t\tschema: typeof schema\n\t}\n}\n",
+  "\t\tschema: typeof schema;\n\t}\n}\n",
 );
 
 export function generateOutDir() {
@@ -37,21 +39,24 @@ export function generateLocalizedDir(localizedDir: string) {
   writeFileSync(path.join(localizedDir, ".gitignore"), "*");
 }
 
-export function generateSchemaFile(
+export function generateSchemaFiles(
   config: Config,
-  originRoutes: OriginRoute[],
+  originRoutes?: OriginRoute[],
 ) {
   const schema = generateSchema(config, originRoutes);
   const JSONSchema = JSON.stringify(schema, null, "\t");
   const schemaFile = schemaTemplate.replace("{schema}", JSONSchema);
-  const schemaFilePath = path.join(OUT_DIR, "schema.ts");
-  writeFileSync(schemaFilePath, schemaFile);
+  const schemaAugmentationFile = schemaAugmentationTemplate;
+  const filePath = path.join(OUT_DIR, "schema.ts");
+  const augmentationFilePath = path.join(OUT_DIR, "schema.augmentation.ts");
+  writeFileSync(augmentationFilePath, schemaAugmentationFile);
+  writeFileSync(filePath, schemaFile);
 }
 
-function generateSchema(config: Config, originRoutes: OriginRoute[]) {
+function generateSchema(config: Config, originRoutes?: OriginRoute[]) {
   const routes: Schema["routes"] = {};
   const unPrefixedLocales = getUnPrefixedLocales(config);
-  originRoutes.forEach((originRoute) => {
+  originRoutes?.forEach((originRoute) => {
     if (!isPageOriginRoute(originRoute)) return;
     const routeName = getRouteName(originRoute.path);
     routes[routeName] ||= {};
@@ -100,15 +105,19 @@ function sortedRoutes(routes: Schema["routes"]) {
 
 const messagesTemplate = "".concat(
   "export const messages = {messages} as const;\n\n",
-  "export const clientMessages = {clientMessages} as const;\n\n",
+  "export const clientMessages = {clientMessages} as const;\n",
+);
+
+const messagesAugmentationTemplate = "".concat(
+  'import type { messages } from "./messages";\n\n',
   "type MessagesParams = {messagesParams};\n\n",
   'declare module "next-globe-gen" {\n',
   "\tinterface MessagesRegister {\n",
-  "\t\tmessages: typeof messages\n",
-  "\t\tmessagesParams: MessagesParams\n\t}\n}\n",
+  "\t\tmessages: typeof messages;\n",
+  "\t\tmessagesParams: MessagesParams;\n\t}\n}\n",
 );
 
-export async function generateMessagesFile(config: Config) {
+export async function generateMessagesFiles(config: Config) {
   const { allMessageEntries, clientMessageEntries } =
     await getFilteredMessages(config);
   const jsonMessages = generateMessagesJson(allMessageEntries);
@@ -116,10 +125,15 @@ export async function generateMessagesFile(config: Config) {
   const messagesParamsJson = generateMessagesParamsJson(allMessageEntries);
   const messagesFile = messagesTemplate
     .replace("{messages}", jsonMessages)
-    .replace("{clientMessages}", jsonClientMessages)
-    .replace("{messagesParams}", messagesParamsJson);
-  const messagesFilePath = path.join(OUT_DIR, "messages.ts");
-  writeFileSync(messagesFilePath, messagesFile);
+    .replace("{clientMessages}", jsonClientMessages);
+  const messagesAugmentationFile = messagesAugmentationTemplate.replace(
+    "{messagesParams}",
+    messagesParamsJson,
+  );
+  const filePath = path.join(OUT_DIR, "messages.ts");
+  const augmentationFilePath = path.join(OUT_DIR, "messages.augmentation.ts");
+  writeFileSync(filePath, messagesFile);
+  writeFileSync(augmentationFilePath, messagesAugmentationFile);
 }
 
 async function getFilteredMessages(config: Config) {
