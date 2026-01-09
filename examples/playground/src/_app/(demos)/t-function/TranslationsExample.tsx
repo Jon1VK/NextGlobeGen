@@ -130,6 +130,19 @@ export default function TranslationsExample() {
           _description: "Full time format with full timezone name",
         })}
       </li>
+      <li>
+        {t("withOrdinal", {
+          count: 21 as unknown as string,
+          _description: "Ordinalization example (1st, 2nd, 3rd)",
+        })}
+      </li>
+      <li>
+        {t("withExtractedMessage", {
+          _defaultMessage: "This message was extracted using _defaultMessage",
+          _description:
+            "Demonstrates providing a default message for extraction",
+        })}
+      </li>
     </ul>
   );
 }

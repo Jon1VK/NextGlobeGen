@@ -1,4 +1,4 @@
-import type { NamespaceKey, Route } from "next-globe-gen";
+import { type NamespaceKey, type Route } from "next-globe-gen";
 
 export type Item = {
   route: Route;
@@ -96,7 +96,18 @@ export const demos: {
     ],
   },
   {
-    titleKey: "misc",
-    items: [],
+    titleKey: "functions",
+    items: [
+      {
+        route: "/create-translator",
+        titleKey: "create-translator",
+        descriptionKey: "create-translator",
+      },
+      {
+        route: "/revalidate-path",
+        titleKey: "revalidate-path",
+        descriptionKey: "revalidate-path",
+      },
+    ],
   },
 ];

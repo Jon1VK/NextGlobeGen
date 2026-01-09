@@ -8,13 +8,35 @@ common:
   docs: Dokumentaatio
 demos:
   client:
+    create-translator:
+      # Description for createTranslator example
+      description: Käytä createTranslatoria palvelintoiminnoissa saadaksesi käännetyt viestit. Kieli on välitettävä eksplisiittisesti, koska sitä ei voida päätellä.
+      # Greet button label
+      greet: Tervehdi
+      # Placeholder for name input
+      namePlaceholder: Syötä nimesi
+      # Submitting button label
+      submitting: Lähetetään...
+    revalidate-path:
+      # Description for revalidatePath example
+      description: Käytä revalidatePathia tyhjentääksesi välimuistin tietylle lokalisoidulle reitille datamutaatioiden jälkeen.
+      # Submitting button label
+      submitting: Lähetetään...
+      # Update and revalidate button label
+      updateAndRevalidate: Päivitä ja revalidoi
+      # Placeholder for value input
+      valuePlaceholder: Syötä arvo
     titles:
       # Section title for components demos
       components: Komponentit
+      # Page title for createTranslator demo
+      create-translator: createTranslator
       # Page title for dynamic segments demo
       dynamic: Dynaaminen segmentti
       # Page title for Form component demo
       form-component: Form komponentti
+      # Section title for functions demos
+      functions: Funktiot
       # Section title for hooks demos
       hooks: Hooksit
       # Page title for Link component demo
@@ -27,10 +49,10 @@ demos:
       markdown: Markdown-sivut
       # Section title for messages demos
       messages: Viestit
-      # Section title for miscellaneous demos
-      misc: Sekalaista
       # Page title for 404 not found page
       not-found: Lokalisoitu 404 sivu
+      # Page title for revalidatePath demo
+      revalidate-path: revalidatePath
       # Section title for routing demos
       routing: Reititys
       # Page title for translator function demo
@@ -57,7 +79,12 @@ demos:
   content:
     # Explanatory content about localized URL pathnames
     localized-pathnames: <p>URL-osoitteiden polut täytyy usein kääntää hakukoneoptimoinnin (SEO) parantamiseksi. NextGlobeGenissä tämä tehdään jokaiselle polun segmentille (hakemistolle) erikseen erityisillä i18n.ts-tiedostoilla. Tämän lähestymistavan avulla polun segmenttihakemisto ja sen paikalliset käännökset voivat sijaita samassa paikassa.</p> <p>Kokeile vaihtaa kielten välillä ja tarkista osoiterivi.</p>
+  create-translator:
+    # Greeting message with name interpolation
+    greeting: Hei, {name}! Tämä viesti käännettiin palvelimella.
   descriptions:
+    # Page description for createTranslator demo
+    create-translator: Käytä createTranslatoria palvelintoiminnoissa saadaksesi käännetyt viestit.
     # Page description for dynamic segments demo
     dynamic: Esimerkki dynaamisten segmenttien kääntämisestä.
     # Page description for Form component demo
@@ -72,6 +99,8 @@ demos:
     markdown: Kirjoita sivujen lokalisoitu sisältö MDX-muodossa.
     # Page description for 404 not found page
     not-found: Tutustu dokumentaatioon ja koodiesimerkkiin lokalisoidun 404-sivun toteuttamiseksi.
+    # Page description for revalidatePath demo
+    revalidate-path: Käytä revalidatePathia lokalisoitujen reittien välimuistin on-demand-päivitykseen.
     # Page description for translator function demo
     t-function: Renderöi viestit nykyisellä kielellä.
     # Page description for useHref hook demo
@@ -84,6 +113,9 @@ demos:
     use-router: Navigoi paikallistettuihin polkunimiin ohjelmallisesti.
     # Page description for useTranslations hook demo
     use-translations: Käytä annetun nimiavaruuden kääntäjäfunktiota.
+  revalidate-path:
+    # Success message after revalidation
+    revalidated: Päivitetty onnistuneesti arvolla "{value}" ja sivu revalidoitu.
   t-function:
     # Complex example with rich text, plurals, and multiple variables
     complex: |-
@@ -111,10 +143,14 @@ demos:
     withDateMedium: "Keskipitkä päivämäärä: {value, date, medium}."
     # Short date format (e.g., 1/5/26)
     withDateShort: "Lyhyt päivämäärä: {value, date, short}."
+    # Demonstrates providing a default message for extraction
+    withExtractedMessage: Tämä viesti on haettu käyttäen _defaultMessage
     # Number formatting truncated to integer
     withInteger: "Kokonaisluku: {value, number, integer}."
     # Number formatting with locale-specific decimal separator
     withNumber: "Numero: {value, number}."
+    # Ordinalization example (1st, 2nd, 3rd)
+    withOrdinal: "Järjestysluku: Tämä on {count}. vierailusi."
     # Percentage formatting
     withPercent: "Prosentti: {value, number, percent}."
     # Demonstrates embedding HTML tags in messages

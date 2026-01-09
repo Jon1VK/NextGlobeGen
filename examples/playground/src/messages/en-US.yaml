@@ -8,13 +8,35 @@ common:
   docs: Docs
 demos:
   client:
+    create-translator:
+      # Description for createTranslator example
+      description: Use createTranslator in server actions to get translated messages. The locale must be passed explicitly since it cannot be inferred.
+      # Greet button label
+      greet: Greet
+      # Placeholder for name input
+      namePlaceholder: Enter your name
+      # Submitting button label
+      submitting: Submitting...
+    revalidate-path:
+      # Description for revalidatePath example
+      description: Use revalidatePath to purge the cache for a specific localized route after data mutations.
+      # Submitting button label
+      submitting: Submitting...
+      # Update and revalidate button label
+      updateAndRevalidate: Update & Revalidate
+      # Placeholder for value input
+      valuePlaceholder: Enter a value
     titles:
       # Section title for components demos
       components: Components
+      # Page title for createTranslator demo
+      create-translator: createTranslator
       # Page title for dynamic segments demo
       dynamic: Dynamic route
       # Page title for Form component demo
       form-component: Form Component
+      # Section title for functions demos
+      functions: Functions
       # Section title for hooks demos
       hooks: Hooks
       # Page title for Link component demo
@@ -27,10 +49,10 @@ demos:
       markdown: Markdown Pages
       # Section title for messages demos
       messages: Messages
-      # Section title for miscellaneous demos
-      misc: Misc
       # Page title for 404 not found page
       not-found: Localized 404 page
+      # Page title for revalidatePath demo
+      revalidate-path: revalidatePath
       # Section title for routing demos
       routing: Routing
       # Page title for translator function demo
@@ -57,7 +79,12 @@ demos:
   content:
     # Explanatory content about localized URL pathnames
     localized-pathnames: <p>The pathnames in the url often need to be translated to improve SEO. In NextGlobeGen this is done for each route segment (directory) separately with special i18n.ts files. With this approach the route segment and it's localizations can be colocated.</p> <p>Try changing between languages and check the address bar.</p>
+  create-translator:
+    # Greeting message with name interpolation
+    greeting: Hello, {name}! This message was translated on the server.
   descriptions:
+    # Page description for createTranslator demo
+    create-translator: Use createTranslator in server actions to get translated messages.
     # Page description for dynamic segments demo
     dynamic: Example of how to translate dynamic segments.
     # Page description for Form component demo
@@ -72,6 +99,8 @@ demos:
     markdown: Write the localized content of the pages as MDX.
     # Page description for 404 not found page
     not-found: Check out the docs and code example for how to implement a localized 404 page.
+    # Page description for revalidatePath demo
+    revalidate-path: Use revalidatePath for on-demand cache revalidation of localized routes.
     # Page description for translator function demo
     t-function: Render messages in the current locale.
     # Page description for useHref hook demo
@@ -84,6 +113,9 @@ demos:
     use-router: Navigate to localized pathnames programmatically.
     # Page description for useTranslations hook demo
     use-translations: Get the translator function for the given namespace.
+  revalidate-path:
+    # Success message after revalidation
+    revalidated: Successfully updated with value "{value}" and revalidated the page.
   t-function:
     # Complex example with rich text, plurals, and multiple variables
     complex: |-
@@ -131,10 +163,20 @@ demos:
     withDateMedium: "Medium date: {value, date, medium}."
     # Short date format (e.g., 1/5/26)
     withDateShort: "Short date: {value, date, short}."
+    # Demonstrates providing a default message for extraction
+    withExtractedMessage: This message was extracted using _defaultMessage
     # Number formatting truncated to integer
     withInteger: "Integer: {value, number, integer}."
     # Number formatting with locale-specific decimal separator
     withNumber: "Number: {value, number}."
+    # Ordinalization example (1st, 2nd, 3rd)
+    withOrdinal: |-
+      Ordinal: It is your {count, selectordinal,
+        one {#st}
+        two {#nd}
+        few {#rd}
+        other {#th}
+      } visit.
     # Percentage formatting
     withPercent: "Percent: {value, number, percent}."
     # Demonstrates embedding HTML tags in messages

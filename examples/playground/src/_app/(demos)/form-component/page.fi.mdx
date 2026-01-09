@@ -4,6 +4,8 @@ import { Form } from "next-globe-gen";
 
 `<Form>` on React-komponentti, joka laajentaa Next.js:n [`<Form>`](https://nextjs.org/docs/app/api-reference/components/form)-komponenttia siten, että Next.js:n lomakekomponentin parannukset toimivat myös paikallistettujen polkunimien kanssa.
 
+## Peruskäyttö
+
 Kokeile seuraavaa esimerkkiä:
 
 {/* prettier-ignore */}
@@ -24,6 +26,52 @@ Kokeile seuraavaa esimerkkiä:
         type="reset"
         className="rounded-lg bg-gray-700 px-3 py-1 text-sm font-medium text-gray-100 no-underline hover:bg-gray-500 hover:text-white"
       >Tyhjennä</button>
+    </div>
+  </div>
+</Form>
+{/* prettier-ignore-end */}
+
+## Locale-propilla
+
+Voit käyttää `locale`-proppia lähettääksesi eri kielelle:
+
+{/* prettier-ignore */}
+<Form action="/form-component" locale="en">
+  <div className="flex flex-col gap-4">
+    <input
+      type="text"
+      name="q"
+      placeholder="Hakukysely"
+      className="bg-gray-200 text-gray-900 rounded-lg"
+    />
+    <div className="flex gap-2">
+      <button
+        type="submit"
+        className="rounded-lg bg-gray-700 px-3 py-1 text-sm font-medium text-gray-100 no-underline hover:bg-gray-500 hover:text-white"
+      >Lähetä englanniksi</button>
+    </div>
+  </div>
+</Form>
+{/* prettier-ignore-end */}
+
+## Dynaamisilla parametreilla
+
+Voit myös käyttää `params`-proppia dynaamisille reiteille:
+
+{/* prettier-ignore */}
+<Form action="/[...catchAll]" params={{ catchAll: ["a", "b", "c"] }}>
+  <div className="flex flex-col gap-4">
+    <input
+      type="text"
+      name="q"
+      placeholder="Hakukysely"
+      className="bg-gray-200 text-gray-900 rounded-lg"
+    />
+    <div className="flex gap-2">
+      <button
+        type="submit"
+        className="rounded-lg bg-gray-700 px-3 py-1 text-sm font-medium text-gray-100 no-underline hover:bg-gray-500 hover:text-white"
+      >Lähetä dynaamiselle reitille</button>
     </div>
   </div>
 </Form>

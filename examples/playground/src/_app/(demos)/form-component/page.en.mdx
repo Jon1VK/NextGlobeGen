@@ -4,6 +4,8 @@ import { Form } from "next-globe-gen";
 
 `<Form>` is a React component that extends the Next.js [`<Form>`](https://nextjs.org/docs/app/api-reference/components/form) component so that the Next.js Form component enhancements work also with localized pathnames.
 
+## Basic usage
+
 Try the following example:
 
 {/* prettier-ignore */}
@@ -24,6 +26,52 @@ Try the following example:
         type="reset"
         className="rounded-lg bg-gray-700 px-3 py-1 text-sm font-medium text-gray-100 no-underline hover:bg-gray-500 hover:text-white"
       >Reset</button>
+    </div>
+  </div>
+</Form>
+{/* prettier-ignore-end */}
+
+## With locale prop
+
+You can use the `locale` prop to submit to a different locale:
+
+{/* prettier-ignore */}
+<Form action="/form-component" locale="fi">
+  <div className="flex flex-col gap-4">
+    <input
+      type="text"
+      name="q"
+      placeholder="Search query"
+      className="bg-gray-200 text-gray-900 rounded-lg"
+    />
+    <div className="flex gap-2">
+      <button
+        type="submit"
+        className="rounded-lg bg-gray-700 px-3 py-1 text-sm font-medium text-gray-100 no-underline hover:bg-gray-500 hover:text-white"
+      >Submit in Finnish</button>
+    </div>
+  </div>
+</Form>
+{/* prettier-ignore-end */}
+
+## With dynamic params
+
+You can also use the `params` prop for dynamic routes:
+
+{/* prettier-ignore */}
+<Form action="/[...catchAll]" params={{ catchAll: ["a", "b", "c"] }}>
+  <div className="flex flex-col gap-4">
+    <input
+      type="text"
+      name="q"
+      placeholder="Search query"
+      className="bg-gray-200 text-gray-900 rounded-lg"
+    />
+    <div className="flex gap-2">
+      <button
+        type="submit"
+        className="rounded-lg bg-gray-700 px-3 py-1 text-sm font-medium text-gray-100 no-underline hover:bg-gray-500 hover:text-white"
+      >Submit to dynamic route</button>
     </div>
   </div>
 </Form>
