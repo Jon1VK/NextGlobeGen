@@ -52,7 +52,7 @@ async function generateAction(opts: Options) {
   if (!isFile(opts.config)) throw configNotFoundError(opts.config);
   const userConfig = await compile<{ default: UserConfig }>(opts.config);
   const config = mergeConfigs(DEFAULT_CONFIG, userConfig.default);
-  generateOutDir();
+  generateOutDir(config);
   if (!opts.routes) generateSchemaFiles(config);
   if (opts.routes) await generateRoutesSubAction(config, opts);
   if (opts.messages) await generateMessagesSubAction(config, opts);

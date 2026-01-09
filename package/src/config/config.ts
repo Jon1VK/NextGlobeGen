@@ -11,6 +11,7 @@ export const DEFAULT_CONFIG: Config = {
   locales: [],
   defaultLocale: "",
   prefixDefaultLocale: true,
+  outDir: "./next-globe-gen",
   routes: {
     originDir: "./src/_app",
     localizedDir: "./src/app/(i18n)",
