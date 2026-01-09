@@ -40,11 +40,11 @@ function collectSourceFiles(directory: string) {
   return files;
 }
 
+const TRANSLATOR_PATTERN = /useTranslations|getTranslations|createTranslator/;
+
 async function extractKeysFromSourceFile(filePath: string) {
   const source = readFileSync(filePath, "utf-8");
-  const hasHooks =
-    source.includes("useTranslations") || source.includes("getTranslations");
-  if (!hasHooks) return [];
+  if (!TRANSLATOR_PATTERN.test(source)) return [];
   const result: Output & { output?: string } = await transform(source, {
     jsc: {
       target: "esnext",
