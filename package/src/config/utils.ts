@@ -6,6 +6,13 @@ import type {
   MessagesConfig,
 } from "./types";
 
+/**
+ * Deep merges two configuration objects, combining default config with user-provided config.
+ * Handles special merging logic for domains, messages, and routes.
+ * @param a - The base configuration (typically DEFAULT_CONFIG)
+ * @param b - The partial user configuration to merge
+ * @returns The merged configuration object
+ */
 export function mergeConfigs(a: Config, b: DeepPartial<Config>) {
   return {
     ...a,
@@ -39,6 +46,14 @@ function mergeFormatsConfigs(a?: Partial<Formats>, b?: Partial<Formats>) {
   return { ...a, ...b };
 }
 
+/**
+ * Extracts all supported locales from the configuration.
+ * For prefix-based routing, returns the locales array directly.
+ * For domain-based routing, extracts and deduplicates locales from all domains,
+ * sorted by length (longest first) for proper matching.
+ * @param config - The configuration object
+ * @returns Array of locale codes
+ */
 export function getLocales(config: Config) {
   if (!config.domains) return config.locales;
   return config.domains
@@ -46,6 +61,15 @@ export function getLocales(config: Config) {
     .sort((a, b) => b.length - a.length);
 }
 
+/**
+ * Determines which locales should not have a prefix in their URLs.
+ * For prefix-based routing: returns empty set if prefixDefaultLocale is true,
+ * otherwise returns a set containing only the default locale.
+ * For domain-based routing: returns the default locales of domains
+ * where prefixDefaultLocale is false.
+ * @param config - The configuration object
+ * @returns A Set of locale codes that should not be prefixed
+ */
 export function getUnPrefixedLocales(config: Config) {
   const prefixDefaultLocale =
     typeof config.routes.prefixDefaultLocale === "boolean"

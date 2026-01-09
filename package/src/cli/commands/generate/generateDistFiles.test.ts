@@ -10,9 +10,9 @@ import {
   generateMessagesFiles,
   generateOutDir,
   generateSchemaFiles,
-  OUT_DIR,
 } from "./generateDistFiles";
 
+const OUT_DIR = DEFAULT_CONFIG.outDir;
 const LOCALIZED_DIR = `.generate-dist-files-test`;
 
 function cleanOutDirs() {
@@ -26,7 +26,7 @@ describe("generateOutDir()", () => {
   });
 
   test("works correctly", () => {
-    generateOutDir();
+    generateOutDir(DEFAULT_CONFIG);
     expect(isDirectory(OUT_DIR)).toBe(true);
     expect(isFile(path.join(OUT_DIR, ".gitignore"))).toBe(true);
     expect(readFileSync(path.join(OUT_DIR, ".gitignore")).toString()).toBe("*");
@@ -190,7 +190,7 @@ declare module "next-globe-gen" {
 
 describe("generateSchemaFile()", () => {
   beforeEach(() => {
-    generateOutDir();
+    generateOutDir(DEFAULT_CONFIG);
   });
 
   afterEach(() => {
@@ -435,7 +435,7 @@ export const clientMessages = {
 
 describe("generateMessagesFile()", () => {
   beforeEach(() => {
-    generateOutDir();
+    generateOutDir(DEFAULT_CONFIG);
   });
 
   afterEach(() => {

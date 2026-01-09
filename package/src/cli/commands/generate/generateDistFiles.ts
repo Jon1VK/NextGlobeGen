@@ -18,8 +18,6 @@ import { unflatten } from "~/utils/obj-utils";
 import { getMessageEntries } from "./getMessageEntries";
 import type { OriginRoute } from "./getOriginRoutes";
 
-export const OUT_DIR = "./next-globe-gen";
-
 const schemaTemplate = "export const schema = {schema} as const;\n";
 
 const schemaAugmentationTemplate = "".concat(
@@ -29,9 +27,9 @@ const schemaAugmentationTemplate = "".concat(
   "\t\tschema: typeof schema;\n\t}\n}\n",
 );
 
-export function generateOutDir() {
-  makeDirectory(OUT_DIR);
-  writeFileSync(path.join(OUT_DIR, ".gitignore"), "*");
+export function generateOutDir(config: Config) {
+  makeDirectory(config.outDir);
+  writeFileSync(path.join(config.outDir, ".gitignore"), "*");
 }
 
 export function generateLocalizedDir(localizedDir: string) {
@@ -47,8 +45,11 @@ export function generateSchemaFiles(
   const JSONSchema = JSON.stringify(schema, null, "\t");
   const schemaFile = schemaTemplate.replace("{schema}", JSONSchema);
   const schemaAugmentationFile = schemaAugmentationTemplate;
-  const filePath = path.join(OUT_DIR, "schema.ts");
-  const augmentationFilePath = path.join(OUT_DIR, "schema.augmentation.ts");
+  const filePath = path.join(config.outDir, "schema.ts");
+  const augmentationFilePath = path.join(
+    config.outDir,
+    "schema.augmentation.ts",
+  );
   writeFileSync(augmentationFilePath, schemaAugmentationFile);
   writeFileSync(filePath, schemaFile);
 }
@@ -130,8 +131,11 @@ export async function generateMessagesFiles(config: Config) {
     "{messagesParams}",
     messagesParamsJson,
   );
-  const filePath = path.join(OUT_DIR, "messages.ts");
-  const augmentationFilePath = path.join(OUT_DIR, "messages.augmentation.ts");
+  const filePath = path.join(config.outDir, "messages.ts");
+  const augmentationFilePath = path.join(
+    config.outDir,
+    "messages.augmentation.ts",
+  );
   writeFileSync(filePath, messagesFile);
   writeFileSync(augmentationFilePath, messagesAugmentationFile);
 }

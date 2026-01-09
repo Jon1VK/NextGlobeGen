@@ -92,6 +92,7 @@ export type MessagesConfig = {
 
 /** Complete configuration for next-globe-gen */
 export type Config = {
+  outDir: string;
   routes: RoutesConfig;
   messages: MessagesConfig;
 } & (PrefixConfig | DomainsConfig);
@@ -122,6 +123,8 @@ export type DeepPartial<T> =
  * };
  */
 export type UserConfig = DeepPartial<{
+  /** Output directory for generated files (default: "./next-globe-gen") */
+  outDir: string;
   /** Configuration for route generation and localization */
   routes: RoutesConfig;
   /** Configuration for message loading and formatting */
