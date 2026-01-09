@@ -48,7 +48,7 @@ export function useTranslationsFactory(
         namespace,
         key,
         args,
-      }) as R;
+      }) as NoInfer<R>;
     }
 
     if (typeof window === "undefined") return t;

@@ -35,6 +35,6 @@ export function createTranslator<N extends Namespace = undefined>(
       namespace,
       key,
       args,
-    }) as R;
+    }) as NoInfer<R>;
   };
 }
