@@ -1,5 +1,6 @@
 {
   "name": "key-extractor",
+  "packageManager": "pnpm@10.27.0",
   "scripts": {
     "build": "cargo build --release --target wasm32-wasip1",
     "check": "pnpm run /^check:/",
