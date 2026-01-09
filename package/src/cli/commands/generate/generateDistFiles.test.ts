@@ -7,9 +7,9 @@ import { mergeConfigs } from "~/config/utils";
 import { isDirectory, isFile, rmDirectory } from "~/utils/fs-utils";
 import {
   generateLocalizedDir,
-  generateMessagesFile,
+  generateMessagesFiles,
   generateOutDir,
-  generateSchemaFile,
+  generateSchemaFiles,
   OUT_DIR,
 } from "./generateDistFiles";
 
@@ -175,14 +175,18 @@ export const schema = {
 		}
 	}
 } as const;
+`.trimStart();
+};
+
+const expectedSchemaAugmentationFileContents = `
+import type { schema } from "./schema";
 
 declare module "next-globe-gen" {
 	interface SchemaRegister {
-		schema: typeof schema
+		schema: typeof schema;
 	}
 }
 `.trimStart();
-};
 
 describe("generateSchemaFile()", () => {
   beforeEach(() => {
@@ -195,7 +199,7 @@ describe("generateSchemaFile()", () => {
 
   test("works correctly with prefixDefaultLocale: true", () => {
     const prefixDefaultLocale = true;
-    generateSchemaFile(
+    generateSchemaFiles(
       mergeConfigs(DEFAULT_CONFIG, {
         locales: ["fi", "en"],
         defaultLocale: "fi",
@@ -207,11 +211,15 @@ describe("generateSchemaFile()", () => {
     expect(readFileSync(path.join(OUT_DIR, "schema.ts")).toString()).toBe(
       expectedSchemaFileContents({ prefixDefaultLocale }),
     );
+    expect(isFile(path.join(OUT_DIR, "schema.augmentation.ts"))).toBe(true);
+    expect(
+      readFileSync(path.join(OUT_DIR, "schema.augmentation.ts")).toString(),
+    ).toBe(expectedSchemaAugmentationFileContents);
   });
 
   test("works correctly with prefixDefaultLocale: false", () => {
     const prefixDefaultLocale = false;
-    generateSchemaFile(
+    generateSchemaFiles(
       mergeConfigs(DEFAULT_CONFIG, {
         locales: ["fi", "en"],
         defaultLocale: "fi",
@@ -228,7 +236,7 @@ describe("generateSchemaFile()", () => {
   test("works correctly with domains config", () => {
     const prefixDefaultLocale = false;
     const includeEnUS = true;
-    generateSchemaFile(
+    generateSchemaFiles(
       mergeConfigs(DEFAULT_CONFIG, {
         domains: [
           {
@@ -254,7 +262,7 @@ describe("generateSchemaFile()", () => {
 
   test("includes custom format options correctly", () => {
     const prefixDefaultLocale = true;
-    generateSchemaFile(
+    generateSchemaFiles(
       mergeConfigs(DEFAULT_CONFIG, {
         locales: ["fi", "en"],
         defaultLocale: "fi",
@@ -329,6 +337,10 @@ export const clientMessages = {
 		}
 	}
 } as const;
+`.trimStart();
+
+const expectedMessagesAugmentationFileContents = `
+import type { messages } from "./messages";
 
 type MessagesParams = {
 	"hello": {
@@ -343,8 +355,8 @@ type MessagesParams = {
 
 declare module "next-globe-gen" {
 	interface MessagesRegister {
-		messages: typeof messages
-		messagesParams: MessagesParams
+		messages: typeof messages;
+		messagesParams: MessagesParams;
 	}
 }
 `.trimStart();
@@ -387,24 +399,6 @@ export const clientMessages = {
 		}
 	}
 } as const;
-
-type MessagesParams = {
-	"hello": {
-		"name": {
-			"name": string
-		}
-	},
-	"projects": {
-		"count": number
-	}
-};
-
-declare module "next-globe-gen" {
-	interface MessagesRegister {
-		messages: typeof messages
-		messagesParams: MessagesParams
-	}
-}
 `.trimStart();
 
 const expectedEmptyClientKeysFilteredMessagesFileContents = `
@@ -437,24 +431,6 @@ export const clientMessages = {
 	"fi": {},
 	"en": {}
 } as const;
-
-type MessagesParams = {
-	"hello": {
-		"name": {
-			"name": string
-		}
-	},
-	"projects": {
-		"count": number
-	}
-};
-
-declare module "next-globe-gen" {
-	interface MessagesRegister {
-		messages: typeof messages
-		messagesParams: MessagesParams
-	}
-}
 `.trimStart();
 
 describe("generateMessagesFile()", () => {
@@ -467,7 +443,7 @@ describe("generateMessagesFile()", () => {
   });
 
   test("works correctly", async () => {
-    await generateMessagesFile(
+    await generateMessagesFiles(
       mergeConfigs(DEFAULT_CONFIG, {
         locales: ["fi", "en"],
         defaultLocale: "fi",
@@ -480,10 +456,14 @@ describe("generateMessagesFile()", () => {
     expect(readFileSync(path.join(OUT_DIR, "messages.ts")).toString()).toBe(
       expectedMessagesFileContents,
     );
+    expect(isFile(path.join(OUT_DIR, "messages.augmentation.ts"))).toBe(true);
+    expect(
+      readFileSync(path.join(OUT_DIR, "messages.augmentation.ts")).toString(),
+    ).toBe(expectedMessagesAugmentationFileContents);
   });
 
   test("filters client messages correctly", async () => {
-    await generateMessagesFile(
+    await generateMessagesFiles(
       mergeConfigs(DEFAULT_CONFIG, {
         locales: ["fi", "en"],
         defaultLocale: "fi",
@@ -500,7 +480,7 @@ describe("generateMessagesFile()", () => {
   });
 
   test("empty clientKeys array works correctly", async () => {
-    await generateMessagesFile(
+    await generateMessagesFiles(
       mergeConfigs(DEFAULT_CONFIG, {
         locales: ["fi", "en"],
         defaultLocale: "fi",

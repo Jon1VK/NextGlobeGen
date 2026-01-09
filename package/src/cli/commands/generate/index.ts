@@ -16,9 +16,9 @@ import {
 import { extractKeysFromSourceFiles } from "./extractKeysFromSourceFiles";
 import {
   generateLocalizedDir,
-  generateMessagesFile,
+  generateMessagesFiles,
   generateOutDir,
-  generateSchemaFile,
+  generateSchemaFiles,
 } from "./generateDistFiles";
 import { generateLocalizedRoutes } from "./generateLocalizedRoutes";
 import { getOriginRoutes } from "./getOriginRoutes";
@@ -52,6 +52,8 @@ async function generateAction(opts: Options) {
   if (!isFile(opts.config)) throw configNotFoundError(opts.config);
   const userConfig = await compile<{ default: UserConfig }>(opts.config);
   const config = mergeConfigs(DEFAULT_CONFIG, userConfig.default);
+  generateOutDir();
+  if (!opts.routes) generateSchemaFiles(config);
   if (opts.routes) await generateRoutesSubAction(config, opts);
   if (opts.messages) await generateMessagesSubAction(config, opts);
 }
@@ -61,7 +63,6 @@ async function generateRoutesSubAction(config: Config, opts: Options) {
     throw routesOriginDirNotFoundError(config);
   }
   if (!(opts.plugin && opts.watch)) {
-    generateOutDir();
     rmDirectory(config.routes.localizedDir);
     generateLocalizedDir(config.routes.localizedDir);
     await generateRoutes(config);
@@ -79,7 +80,7 @@ async function generateRoutes(config: Config, updatedOriginPath?: string) {
     const startTime = process.hrtime();
     const originRoutes = await getOriginRoutes({ config });
     generateLocalizedRoutes(config, originRoutes, updatedOriginPath);
-    generateSchemaFile(config, originRoutes);
+    generateSchemaFiles(config, originRoutes);
     const endTime = process.hrtime(startTime);
     const timeDiffInMs = (endTime[0] * 1000 + endTime[1] / 1000000).toFixed(2);
     console.info(
@@ -102,7 +103,6 @@ async function generateMessagesSubAction(config: Config, opts: Options) {
     throw keyExtractionDirsNotFoundError(config);
   }
   if (!(opts.plugin && opts.watch)) {
-    generateOutDir();
     await extractKeys(config);
     await generateMessages(config);
   }
@@ -126,7 +126,7 @@ async function generateMessagesSubAction(config: Config, opts: Options) {
 async function generateMessages(config: Config) {
   try {
     const startTime = process.hrtime();
-    await generateMessagesFile(config);
+    await generateMessagesFiles(config);
     const endTime = process.hrtime(startTime);
     const timeDiffInMs = (endTime[0] * 1000 + endTime[1] / 1000000).toFixed(2);
     console.info(
