@@ -1,0 +1,16 @@
+home:
+  actions:
+    getStartedClicked: Aloita tästä
+    learnMoreI18n: Lue lisää i18n:stä
+    learnMoreMonorepo: Lue lisää monoreposta
+    learnMoreTypeSafety: Lue lisää tyyppiturvallisuudesta
+  features:
+    i18n:
+      description: Saumaton i18n-tuki tyyppiturvallisin käännöksiin koko monorepossasi.
+      title: Kansainvälistäminen
+    monorepo:
+      description: Jaa komponentteja ja käännöksiä useiden Next.js-sovellusten välillä.
+      title: Monorepo-valmis
+    typeSafety:
+      description: Täysi TypeScript-tuki automaattitäydennyksellä käännösavaimille.
+      title: Tyyppiturvallisuus

@@ -1,0 +1,20 @@
+{
+  "name": "monorepo",
+  "version": "1.0.0",
+  "description": "NextGlobeGen monorepo example",
+  "private": true,
+  "packageManager": "pnpm@10.27.0",
+  "scripts": {
+    "typecheck": "pnpm -r --parallel typecheck",
+    "lint:check": "pnpm -r --parallel lint:check",
+    "lint:fix": "pnpm -r --parallel lint:fix",
+    "format:check": "pnpm prettier --check .",
+    "format:fix": "pnpm prettier --write .",
+    "clean": "pnpm -r clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "catalog:",
+    "prettier": "catalog:",
+    "prettier-plugin-tailwindcss": "catalog:"
+  }
+}

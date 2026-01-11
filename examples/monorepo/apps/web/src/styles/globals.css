@@ -1,0 +1,12 @@
+@import "@repo/frontend/globals.css";
+
+@source "../";
+
+/* Theme and component variable overrides */
+:root {
+  --primary: oklch(0.6 0.13 163);
+}
+
+.dark {
+  --primary: oklch(0.7 0.15 162);
+}

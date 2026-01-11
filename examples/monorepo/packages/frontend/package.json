@@ -1,0 +1,45 @@
+{
+  "name": "@repo/frontend",
+  "description": "Shared frontend utilities and components",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "pnpm build",
+    "build": "next-globe-gen generate --no-routes",
+    "typecheck": "tsc --noEmit",
+    "lint:check": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix",
+    "clean": "rm -rf node_modules"
+  },
+  "exports": {
+    "./globals.css": "./src/styles/globals.css",
+    "./postcss.config": "./src/styles/postcss.config.mjs",
+    "./lib/*": "./src/lib/*.ts",
+    "./components/*": "./src/components/*.tsx",
+    "./hooks/*": "./src/hooks/*.ts",
+    "./i18n.config": "./i18n.config.ts"
+  },
+  "dependencies": {
+    "@base-ui/react": "catalog:",
+    "class-variance-authority": "catalog:",
+    "lucide-react": "catalog:",
+    "next-globe-gen": "catalog:",
+    "tailwind-merge": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@tailwindcss/postcss": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "eslint": "catalog:",
+    "react": "catalog:",
+    "tailwindcss": "catalog:",
+    "tw-animate-css": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "catalog:"
+  }
+}

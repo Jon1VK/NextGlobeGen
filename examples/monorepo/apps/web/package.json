@@ -1,0 +1,31 @@
+{
+  "name": "web",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "start:dev": "next dev",
+    "start:prod": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint:check": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix",
+    "clean": "rm -rf node_modules .next"
+  },
+  "dependencies": {
+    "@repo/frontend": "workspace:*",
+    "lucide-react": "catalog:",
+    "next": "catalog:",
+    "next-globe-gen": "catalog:",
+    "next-themes": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:^",
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  }
+}

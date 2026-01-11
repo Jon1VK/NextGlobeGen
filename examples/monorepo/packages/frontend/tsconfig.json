@@ -1,0 +1,9 @@
+{
+  "extends": "@repo/typescript-config/react.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@repo/frontend/*": ["./src/*"]
+    }
+  }
+}

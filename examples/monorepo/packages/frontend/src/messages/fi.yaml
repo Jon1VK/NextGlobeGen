@@ -1,0 +1,14 @@
+shared:
+  featureCard:
+    description: Tämä on jaettu ominaisuuskortti-komponentti monoreposta.
+    learnMore: Lue lisää
+    status:
+      comingSoon: Tulossa pian
+      new: Uusi
+      popular: Suosittu
+    title: Ominaisuuskortti
+  welcome:
+    description: Koe saumaton kansainvälistäminen Next.js-monorepossasi.
+    documentation: Katso dokumentaatio
+    getStarted: Aloita
+    title: Tervetuloa NextGlobeGeniin

@@ -1,0 +1,16 @@
+home:
+  actions:
+    getStartedClicked: Get started clicked
+    learnMoreI18n: Learn more about i18n
+    learnMoreMonorepo: Learn more about monorepo
+    learnMoreTypeSafety: Learn more about type safety
+  features:
+    i18n:
+      description: Seamless i18n support with type-safe translations across your monorepo.
+      title: Internationalization
+    monorepo:
+      description: Share components and translations between multiple Next.js apps.
+      title: Monorepo Ready
+    typeSafety:
+      description: Full TypeScript support with autocomplete for translation keys.
+      title: Type Safety
