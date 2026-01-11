@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NextGlobeGen Playground
+
+A comprehensive example application showcasing the various **NextGlobeGen** APIs and features. This playground serves as both a learning resource and a testing ground for different i18n patterns in Next.js.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to explore the demos.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Demos
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The playground includes interactive examples for various NextGlobeGen APIs:
 
-## Learn More
+| Demo                   | Description                                                    |
+| ---------------------- | -------------------------------------------------------------- |
+| `/t-function`          | Using the `t()` function for translations in Server Components |
+| `/use-translations`    | Using the `useTranslations()` hook in Client Components        |
+| `/create-translator`   | Creating scoped translators with `createTranslator()`          |
+| `/link-component`      | Navigation with the localized `<Link>` component               |
+| `/form-component`      | Form submissions with the localized `<Form>` component         |
+| `/use-router`          | Programmatic navigation with `useRouter()`                     |
+| `/use-href`            | Generating localized URLs with `useHref()`                     |
+| `/use-locale`          | Accessing current locale with `useLocale()`                    |
+| `/use-route`           | Getting current route info with `useRoute()`                   |
+| `/locale-param`        | Working with locale parameters                                 |
+| `/localized-pathnames` | Configuring different URL paths per locale                     |
+| `/dynamic`             | Dynamic routes with localized segments                         |
+| `/revalidate-path`     | Revalidating localized paths                                   |
+| `/markdown`            | MDX content with translations                                  |
 
-To learn more about Next.js, take a look at the following resources:
+## Configuration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The `i18n.config.ts` showcases various configuration options:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```ts
+const config: Config = {
+  locales: ["en", "fi"],
+  defaultLocale: "en",
+  messages: {
+    clientKeys: /client\./,        // Keys matching this pattern are available in Client Components
+    pruneUnusedKeys: true,          // Remove unused translation keys
+    whitelistedKeys: [...],         // Preserve dynamically-used keys from pruning
+  },
+};
+```
 
-## Deploy on Vercel
+## Testing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The playground includes both unit and e2e tests demonstrating how to test NextGlobeGen applications:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# Unit tests with Vitest
+pnpm test:unit
+
+# E2E tests with Playwright
+pnpm test:e2e
+```
+
+## Project Structure
+
+```
+src/
+├── _app/              # Source app directory (before route generation)
+├── app/               # Generated localized routes
+├── components/        # Shared components
+├── messages/          # Translation files (en.yaml, fi.yaml, etc.)
+└── proxy.ts           # NextGlobeGen proxy exports
+```
