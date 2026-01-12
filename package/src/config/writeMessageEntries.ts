@@ -75,7 +75,11 @@ function writeMessageEntriesToFile(
         .toArray()
     : messages.values().toArray();
   if (namespaceMessages.length === 0) {
-    rmSync(filePath);
+    try {
+      rmSync(filePath);
+    } catch (_) {
+      /* empty */
+    }
     return;
   }
   namespaceMessages.forEach((msg) => {
