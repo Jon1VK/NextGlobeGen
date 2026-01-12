@@ -153,6 +153,7 @@ function withLanguageAlternatesMetadata(
   const metadataImport = generateMetadataImport || staticMetadataImport;
   const metadata = generatedMetadata || staticMetadata || "{}";
   const routeName = getRouteName(originRoute.path);
+  const isDynamicRoute = /\[.*\]/.test(routeName);
   return template.concat(
     '\n\nimport { withLanguageAlternates } from "next-globe-gen";',
     metadataImport
@@ -161,7 +162,7 @@ function withLanguageAlternatesMetadata(
     "\n\nexport async function generateMetadata(props, parent) {",
     `\n\tsetLocale("${PATTERNS.locale}");`,
     `\n\tconst metadata = ${metadata};`,
-    `\n\treturn withLanguageAlternates("${routeName}", await props.params)(metadata);\n}`,
+    `\n\treturn withLanguageAlternates("${routeName}"${isDynamicRoute ? ", await props.params" : ""})(metadata);\n}`,
   );
 }
 

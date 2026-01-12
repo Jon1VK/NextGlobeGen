@@ -71,16 +71,29 @@ export default function Layout(props) {
 }`.trim();
 
 /**
- * GENERATE METADATA COMPILE RESULT
+ * GENERATE METADATA STATIC PAGE COMPILE RESULT
  */
-const generateMetadataCompileResult = `
+const generateMetadataStaticPageCompileResult = `
 import { withLanguageAlternates } from "next-globe-gen";
 import { generateMetadata as generateMetadataOrigin } from "../_app/page";
 
 export async function generateMetadata(props, parent) {
 \tsetLocale("en");
 \tconst metadata = await generateMetadataOrigin({ ...props, locale: "en" }, parent);
-\treturn withLanguageAlternates("/", await props.params)(metadata);
+\treturn withLanguageAlternates("/")(metadata);
+}`.trim();
+
+/**
+ * GENERATE METADATA DYNAMIC PAGE COMPILE RESULT
+ */
+const generateMetadataDynamicPageCompileResult = `
+import { withLanguageAlternates } from "next-globe-gen";
+import { generateMetadata as generateMetadataOrigin } from "../_app/images/[id]/page";
+
+export async function generateMetadata(props, parent) {
+\tsetLocale("en");
+\tconst metadata = await generateMetadataOrigin({ ...props, locale: "en" }, parent);
+\treturn withLanguageAlternates("/images/[id]", await props.params)(metadata);
 }`.trim();
 
 /**
@@ -178,14 +191,25 @@ describe("getTemplateCompiler()", () => {
     expect(compiled).toMatch('export { metadata } from "../_app/layout";');
   });
 
-  test("includes generate metadata correctly", () => {
+  test("includes generate metadata correctly for static page", () => {
     const compiler = getTemplateCompiler(mocks.config, mocks.originRoute);
     const compiled = compiler({
       locale: "en",
       relativePath: "../_app/page",
       routeType: "Page",
     });
-    expect(compiled).toMatch(generateMetadataCompileResult);
+    expect(compiled).toMatch(generateMetadataStaticPageCompileResult);
+  });
+
+  test("includes generate metadata correctly for dynamic page", () => {
+    mocks.originRoute.path = "/images/[id]/page.tsx";
+    const compiler = getTemplateCompiler(mocks.config, mocks.originRoute);
+    const compiled = compiler({
+      locale: "en",
+      relativePath: "../_app/images/[id]/page",
+      routeType: "Page",
+    });
+    expect(compiled).toMatch(generateMetadataDynamicPageCompileResult);
   });
 
   test("skips language alternated metadata correctly", () => {
