@@ -4,6 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "postinstall": "next-globe-gen generate",
     "build": "next build",
     "start:dev": "next dev",
     "start:prod": "next start",
