@@ -68,12 +68,16 @@ function writeMessageEntriesToFile(
   messages: Map<string, MessageEntry>,
   namespace?: string,
 ) {
-  const namespaceMessages = namespace
-    ? messages
-        .values()
-        .filter((msg) => msg.key.startsWith(`${namespace}.`))
-        .toArray()
-    : messages.values().toArray();
+  const namespaceMessages = messages
+    .values()
+    .filter((msg) => (namespace ? msg.key.startsWith(`${namespace}.`) : true))
+    .map((msg) => {
+      messages.delete(msg.key);
+      return namespace
+        ? { ...msg, key: msg.key.replace(`${namespace}.`, "") }
+        : msg;
+    })
+    .toArray();
   if (namespaceMessages.length === 0) {
     try {
       rmSync(filePath);
@@ -82,9 +86,6 @@ function writeMessageEntriesToFile(
     }
     return;
   }
-  namespaceMessages.forEach((msg) => {
-    messages.delete(msg.key);
-  });
   const extension = path.extname(filePath);
   const content =
     extension === ".json"
