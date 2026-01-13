@@ -29,31 +29,54 @@ The shared package only generates message types (no routes) since it's not a Nex
 ```ts
 // packages/frontend/i18n.config.ts
 import path from "path";
-import { DEFAULT_CONFIG, type Config } from "next-globe-gen/config";
+import { fileURLToPath } from "url";
+import { DEFAULT_CONFIG, mergeConfigs } from "next-globe-gen/config";
 
-export const sharedI18nconfig: Config = {
+// __dirname replacement for ES modules
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// We need an absolute path for originDir in shared package so that
+// message loading of shared messages works correctly in applications
+const sharedThis = { originDir: path.resolve(__dirname, "./src/messages") };
+
+const defaultLoader = DEFAULT_CONFIG.messages.loadMessageEntries;
+
+/**
+ * Shared i18n configuration used in multiple applications.
+ */
+export const sharedI18nconfig = mergeConfigs(DEFAULT_CONFIG, {
   locales: ["en", "fi"],
   defaultLocale: "en",
   messages: {
-    // Use absolute path for originDir in shared packages
-    originDir: path.resolve(import.meta.dirname, "./src/messages"),
-    loadMessageEntries: DEFAULT_CONFIG.messages.loadMessageEntries,
+    // Enable pruning of unused keys so that the shared messages will not be
+    // written to the application message files if they are not used there.
     pruneUnusedKeys: true,
+    async loadMessageEntries(locale) {
+      // This binding is necessary to preserve correct `this` context
+      const loadAppMessageEntries = defaultLoader.bind(this);
+      // This binding is necessary so that shared loader uses its own originDir
+      const loadSharedMessageEntries = defaultLoader.bind(sharedThis);
+      const appMessageEntries = await loadAppMessageEntries(locale);
+      const sharedMessageEntries = await loadSharedMessageEntries(locale);
+      return [...appMessageEntries, ...sharedMessageEntries];
+    },
   },
-};
+});
 
-export default sharedI18nconfig;
-```
+/**
+ * Configuration for i18n in the frontend package.
+ *
+ * This configuration extends the shared i18n config to
+ * use default message loading instead of the custom loader
+ * defined in the shared config.
+ */
+const config = mergeConfigs(sharedI18nconfig, {
+  messages: {
+    loadMessageEntries: defaultLoader,
+  },
+});
 
-Generate messages on build with `--no-routes` flag:
-
-```json
-{
-  "scripts": {
-    "postinstall": "pnpm build",
-    "build": "next-globe-gen generate --no-routes"
-  }
-}
+export default config;
 ```
 
 Export the config so apps can import it:
@@ -73,29 +96,14 @@ The app extends the shared config to include both app-specific and shared transl
 ```ts
 // apps/web/i18n.config.ts
 import { sharedI18nconfig } from "@repo/frontend/i18n.config";
-import { DEFAULT_CONFIG, type Config } from "next-globe-gen/config";
+import { mergeConfigs } from "next-globe-gen/config";
 
-const config: Config = {
-  locales: ["en", "fi"],
-  defaultLocale: "en",
-  messages: {
-    originDir: "./src/messages",
-    pruneUnusedKeys: true,
-    async loadMessageEntries(locale) {
-      // Load app-specific messages
-      const loadAppMessageEntries =
-        DEFAULT_CONFIG.messages.loadMessageEntries.bind(this);
-      const appMessageEntries = await loadAppMessageEntries(locale);
-
-      // Load shared messages from the frontend package
-      const sharedMessageEntries =
-        (await sharedI18nconfig.messages?.loadMessageEntries?.(locale)) ?? [];
-
-      // Merge both message sources
-      return [...appMessageEntries, ...sharedMessageEntries];
-    },
-  },
-};
+/**
+ * Configuration for i18n in the web app.
+ */
+const config = mergeConfigs(sharedI18nconfig, {
+  // You can add or override any specific settings for the web app here
+});
 
 export default config;
 ```
@@ -122,13 +130,19 @@ export default withNextGlobeGen(nextConfig);
 
 1. **Shared Package Build**: When `@repo/frontend` is installed, it runs `next-globe-gen generate --no-routes` to generate message types from `src/messages/`. This creates type definitions in `next-globe-gen/` folder.
 
-2. **App Build**: When the web app starts (dev or build), the NextGlobeGen plugin:
-   - Reads the app's `i18n.config.ts`
-   - Loads app messages from `apps/web/src/messages/`
-   - Loads shared messages via the custom `loadMessageEntries` function
+2. **Message Loading Architecture**: The shared config exports a custom `loadMessageEntries` function that:
+   - Binds the default loader to `this` for app messages (preserves app's `originDir`)
+   - Binds the default loader to `sharedThis` for shared messages (uses shared package's absolute path)
+   - Merges both message sources into a single array
+
+3. **App Configuration**: The web app imports and extends `sharedI18nconfig` using `mergeConfigs()`, automatically inheriting the custom message loader that combines app-specific and shared translations.
+
+4. **App Build**: When the web app starts (dev or build), the NextGlobeGen plugin:
+   - Reads the merged configuration
+   - Executes the custom `loadMessageEntries` to load messages from both sources
    - Generates combined message types and route handlers
 
-3. **Merged Messages**: The final generated messages include both app-specific and shared translations, giving you full type-safety across the entire monorepo.
+5. **Merged Messages**: The final generated messages include both app-specific and shared translations, giving you full type-safety across the entire monorepo.
 
 ## Message Organization
 
@@ -151,7 +165,11 @@ apps/web/src/messages/
 
 ## Important Notes
 
-- **Absolute paths in shared packages**: Use `path.resolve(import.meta.dirname, "./src/messages")` for `originDir` in shared packages to ensure correct path resolution when imported by apps.
+- **Absolute paths in shared packages**: Use `path.resolve(__dirname, "./src/messages")` for `originDir` in shared packages to ensure correct path resolution when imported by apps. Note: `__dirname` needs to be defined in ES modules using `path.dirname(fileURLToPath(import.meta.url))`.
+
+- **Custom message loader**: The shared config exports a custom `loadMessageEntries` that merges app and shared messages. The app config inherits this by extending `sharedI18nconfig` with `mergeConfigs()`.
+
+- **Context binding**: When using the default loader for different origins, use `.bind()` to set the correct `this` context (for app messages) or bind to a custom object with the shared `originDir` (for shared messages).
 
 - **`--no-routes` flag**: Shared packages should use this flag since they don't have Next.js routing.
 

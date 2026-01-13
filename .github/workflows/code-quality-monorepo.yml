@@ -1,0 +1,25 @@
+name: Monorepo Code Quality
+
+on:
+  pull_request:
+    paths:
+      - examples/monorepo/**
+
+defaults:
+  run:
+    working-directory: ./examples/monorepo
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: "**/pnpm-lock.yaml"
+      - run: pnpm install
+      - run: "pnpm check:types"
+      - run: "pnpm check:lint"
+      - run: "pnpm check:format"

@@ -8,9 +8,8 @@
     "build": "next build",
     "start:dev": "next dev",
     "start:prod": "next start",
-    "typecheck": "tsc --noEmit",
-    "lint:check": "eslint . --max-warnings=0",
-    "lint:fix": "eslint . --fix",
+    "check:types": "tsc --noEmit",
+    "check:lint": "eslint . --max-warnings=0",
     "clean": "rm -rf node_modules .next"
   },
   "dependencies": {
@@ -26,6 +25,7 @@
     "@repo/eslint-config": "workspace:^",
     "@repo/typescript-config": "workspace:*",
     "@types/node": "catalog:",
+    "@types/react": "catalog:",
     "eslint": "catalog:",
     "typescript": "catalog:"
   }

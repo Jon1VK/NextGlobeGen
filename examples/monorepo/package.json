@@ -5,11 +5,9 @@
   "private": true,
   "packageManager": "pnpm@10.27.0",
   "scripts": {
-    "typecheck": "pnpm -r --parallel typecheck",
-    "lint:check": "pnpm -r --parallel lint:check",
-    "lint:fix": "pnpm -r --parallel lint:fix",
-    "format:check": "pnpm prettier --check .",
-    "format:fix": "pnpm prettier --write .",
+    "check:types": "pnpm -r --parallel check:types",
+    "check:lint": "pnpm -r --parallel check:lint",
+    "check:format": "pnpm prettier --check .",
     "clean": "pnpm -r clean && rm -rf node_modules"
   },
   "devDependencies": {

@@ -52,8 +52,8 @@ catalogs:
       specifier: ^16.1.1
       version: 16.1.1
     next-globe-gen:
-      specifier: ^1.9.2
-      version: 1.9.2
+      specifier: ^1.9.3
+      version: 1.9.3
     next-themes:
       specifier: ^0.4.6
       version: 0.4.6
@@ -112,7 +112,7 @@ importers:
         version: 16.1.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       next-globe-gen:
         specifier: 'catalog:'
-        version: 1.9.2(jiti@2.6.1)(next@16.1.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(postcss@8.5.6)(react@19.2.3)(typescript@5.9.3)
+        version: 1.9.3(jiti@2.6.1)(next@16.1.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(postcss@8.5.6)(react@19.2.3)(typescript@5.9.3)
       next-themes:
         specifier: 'catalog:'
         version: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -132,6 +132,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 25.0.5
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.7
       eslint:
         specifier: 'catalog:'
         version: 9.39.2(jiti@2.6.1)
@@ -182,7 +185,7 @@ importers:
         version: 0.562.0(react@19.2.3)
       next-globe-gen:
         specifier: 'catalog:'
-        version: 1.9.2(jiti@2.6.1)(next@16.1.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(postcss@8.5.6)(react@19.2.3)(typescript@5.9.3)
+        version: 1.9.3(jiti@2.6.1)(next@16.1.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(postcss@8.5.6)(react@19.2.3)(typescript@5.9.3)
       tailwind-merge:
         specifier: 'catalog:'
         version: 3.4.0
@@ -2193,8 +2196,8 @@ packages:
     resolution: {integrity: sha512-8Ofs/AUQh8MaEcrlq5xOX0CQ9ypTF5dl78mjlMNfOK08fzpgTHQRQPBxcPlEtIw0yRpws+Zo/3r+5WRby7u3Gg==}
     engines: {node: '>= 0.6'}
 
-  next-globe-gen@1.9.2:
-    resolution: {integrity: sha512-c0H4l03NQRW9H4r6UpOPtToz0DK+37Jg5pWUbduDXfStsRK12Ms+Tt2KvXI0LeQc53/fQYmHGb3UcSnBUKkujg==}
+  next-globe-gen@1.9.3:
+    resolution: {integrity: sha512-5t5gsH1fkHI2Uk4bOQyNZS+F8QvnDT7lQ6bt/VLXjfqqhT95j7DHv3uBwK+GGg+btS2usKb0N/YDiOXPE2c6RQ==}
     hasBin: true
     peerDependencies:
       next: ^15.3.0 || ^16.0.0
@@ -4739,7 +4742,7 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  next-globe-gen@1.9.2(jiti@2.6.1)(next@16.1.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(postcss@8.5.6)(react@19.2.3)(typescript@5.9.3):
+  next-globe-gen@1.9.3(jiti@2.6.1)(next@16.1.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(postcss@8.5.6)(react@19.2.3)(typescript@5.9.3):
     dependencies:
       '@formatjs/icu-messageformat-parser': 3.3.0
       '@swc/core': 1.15.8
