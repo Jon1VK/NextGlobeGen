@@ -1,16 +1,31 @@
+application:
+  # Description of the web application
+  description: NextGlobeGenillä rakennettu verkkosovellus monorepo-ympäristössä.
+  # Title of the web application
+  title: NextGlobeGen Monorepo -verkkosovellus
 home:
   actions:
-    getStartedClicked: Aloita tästä
-    learnMoreI18n: Lue lisää i18n:stä
-    learnMoreMonorepo: Lue lisää monoreposta
-    learnMoreTypeSafety: Lue lisää tyyppiturvallisuudesta
+    # Alert message when get started is clicked
+    getStartedClicked: Aloita tästä -painiketta painettu!
+    # Alert message when learn more is clicked for i18n feature
+    learnMoreI18n: Lue lisää -painiketta painettu i18n-ominaisuudelle!
+    # Alert message when learn more is clicked for monorepo feature
+    learnMoreMonorepo: Lue lisää -painiketta painettu monorepo-ominaisuudelle!
+    # Alert message when learn more is clicked for type safety feature
+    learnMoreTypeSafety: Lue lisää -painiketta painettu tyyppiturvallisuus-ominaisuudelle!
   features:
     i18n:
-      description: Saumaton i18n-tuki tyyppiturvallisin käännöksiin koko monorepossasi.
-      title: Kansainvälistäminen
+      # Description of the i18n feature card
+      description: Sisäänrakennettu tuki useille kielille ja alueille NextGlobeGenin avulla.
+      # Title of the i18n feature card
+      title: Kansainvälistäminen (i18n)
     monorepo:
-      description: Jaa komponentteja ja käännöksiä useiden Next.js-sovellusten välillä.
-      title: Monorepo-valmis
+      # Description of the monorepo feature card
+      description: Saumaton integraatio ja jaetut komponentit useiden sovellusten välillä monorepo-ympäristössä.
+      # Title of the monorepo feature card
+      title: Monorepo-tuki
     typeSafety:
-      description: Täysi TypeScript-tuki automaattitäydennyksellä käännösavaimille.
+      # Description of the type safety feature card
+      description: Parannettu kehittäjäkokemus tyyppiturvallisin rajapinnoin ja komponentein.
+      # Title of the type safety feature card
       title: Tyyppiturvallisuus

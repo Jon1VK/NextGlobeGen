@@ -45,19 +45,33 @@ export function WelcomeHero({
   return (
     <Card className={className}>
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">{t("title")}</CardTitle>
+        <CardTitle className="text-2xl font-bold">
+          {t("title", {
+            _description: "Title of the welcome hero",
+            _defaultMessage: "Welcome to NextGlobeGen!",
+          })}
+        </CardTitle>
         <CardDescription className="text-base">
-          {t("description")}
+          {t("description", {
+            _description: "Description of the welcome hero",
+            _defaultMessage: "Start building your monorepo with NextGlobeGen.",
+          })}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-wrap justify-center gap-3">
         <Button onClick={onGetStarted}>
-          {t("getStarted")}
+          {t("getStarted", {
+            _description: "Label for the get started button",
+            _defaultMessage: "Get Started",
+          })}
           <ArrowRight className="size-4" data-icon="inline-end" />
         </Button>
         <Button variant="outline" onClick={onViewDocs}>
           <BookOpen className="size-4" data-icon="inline-start" />
-          {t("documentation")}
+          {t("documentation", {
+            _description: "Label for the documentation button",
+            _defaultMessage: "Documentation",
+          })}
         </Button>
       </CardContent>
     </Card>

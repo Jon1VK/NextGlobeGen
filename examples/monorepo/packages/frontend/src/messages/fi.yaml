@@ -1,14 +1,24 @@
 shared:
   featureCard:
-    description: Tämä on jaettu ominaisuuskortti-komponentti monoreposta.
+    # Description of the feature card
+    description: Tämä on jaettu ominaisuuskortti-komponentti monorepo frontend-paketista.
+    # Label for the learn more button
     learnMore: Lue lisää
     status:
+      # Label for features that are coming soon
       comingSoon: Tulossa pian
+      # Label for new features
       new: Uusi
+      # Label for popular features
       popular: Suosittu
+    # Title of the feature card
     title: Ominaisuuskortti
   welcome:
-    description: Koe saumaton kansainvälistäminen Next.js-monorepossasi.
-    documentation: Katso dokumentaatio
-    getStarted: Aloita
-    title: Tervetuloa NextGlobeGeniin
+    # Description of the welcome hero
+    description: Aloita monoreposi rakentaminen NextGlobeGenillä.
+    # Label for the documentation button
+    documentation: Dokumentaatio
+    # Label for the get started button
+    getStarted: Aloita tästä
+    # Title of the welcome hero
+    title: Tervetuloa NextGlobeGeniin!

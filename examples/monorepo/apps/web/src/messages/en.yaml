@@ -1,16 +1,31 @@
+application:
+  # Description of the web application
+  description: A web application built with NextGlobeGen in a monorepo setup.
+  # Title of the web application
+  title: NextGlobeGen Monorepo Web App
 home:
   actions:
-    getStartedClicked: Get started clicked
-    learnMoreI18n: Learn more about i18n
-    learnMoreMonorepo: Learn more about monorepo
-    learnMoreTypeSafety: Learn more about type safety
+    # Alert message when get started is clicked
+    getStartedClicked: Get Started button clicked!
+    # Alert message when learn more is clicked for i18n feature
+    learnMoreI18n: Learn More button clicked for i18n feature!
+    # Alert message when learn more is clicked for monorepo feature
+    learnMoreMonorepo: Learn More button clicked for monorepo feature!
+    # Alert message when learn more is clicked for type safety feature
+    learnMoreTypeSafety: Learn More button clicked for type safety feature!
   features:
     i18n:
-      description: Seamless i18n support with type-safe translations across your monorepo.
-      title: Internationalization
+      # Description of the i18n feature card
+      description: Built-in support for multiple languages and locales using NextGlobeGen.
+      # Title of the i18n feature card
+      title: Internationalization (i18n)
     monorepo:
-      description: Share components and translations between multiple Next.js apps.
-      title: Monorepo Ready
+      # Description of the monorepo feature card
+      description: Seamless integration and shared components across multiple apps in a monorepo setup.
+      # Title of the monorepo feature card
+      title: Monorepo Support
     typeSafety:
-      description: Full TypeScript support with autocomplete for translation keys.
+      # Description of the type safety feature card
+      description: Enhanced developer experience with type-safe APIs and components.
+      # Title of the type safety feature card
       title: Type Safety

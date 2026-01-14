@@ -69,9 +69,18 @@ export function FeatureCard({
   };
 
   const statusLabels: Record<FeatureStatus, string> = {
-    new: t("status.new"),
-    popular: t("status.popular"),
-    comingSoon: t("status.comingSoon"),
+    new: t("status.new", {
+      _description: "Label for new features",
+      _defaultMessage: "New",
+    }),
+    popular: t("status.popular", {
+      _description: "Label for popular features",
+      _defaultMessage: "Popular",
+    }),
+    comingSoon: t("status.comingSoon", {
+      _description: "Label for features that are coming soon",
+      _defaultMessage: "Coming Soon",
+    }),
   };
 
   return (
@@ -84,7 +93,13 @@ export function FeatureCard({
             </div>
           )}
           <div className="flex-1">
-            <CardTitle>{title ?? t("title")}</CardTitle>
+            <CardTitle>
+              {title ??
+                t("title", {
+                  _description: "Title of the feature card",
+                  _defaultMessage: "Feature Card",
+                })}
+            </CardTitle>
             {status && (
               <Badge variant={statusVariants[status]} className="mt-1">
                 {statusLabels[status]}
@@ -93,13 +108,21 @@ export function FeatureCard({
           </div>
         </div>
         <CardDescription className="mt-2">
-          {description ?? t("description")}
+          {description ??
+            t("description", {
+              _description: "Description of the feature card",
+              _defaultMessage:
+                "This is a shared feature card component from the monorepo frontend package.",
+            })}
         </CardDescription>
       </CardHeader>
       <CardContent>{/* Additional content can be added here */}</CardContent>
       <CardFooter>
         <Button variant="ghost" size="sm" onClick={onLearnMore}>
-          {t("learnMore")}
+          {t("learnMore", {
+            _description: "Label for the learn more button",
+            _defaultMessage: "Learn More",
+          })}
           <ArrowRight className="size-4" data-icon="inline-end" />
         </Button>
       </CardFooter>

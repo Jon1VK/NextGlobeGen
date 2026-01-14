@@ -1,14 +1,24 @@
 shared:
   featureCard:
+    # Description of the feature card
     description: This is a shared feature card component from the monorepo frontend package.
+    # Label for the learn more button
     learnMore: Learn More
     status:
+      # Label for features that are coming soon
       comingSoon: Coming Soon
+      # Label for new features
       new: New
+      # Label for popular features
       popular: Popular
+    # Title of the feature card
     title: Feature Card
   welcome:
-    description: Experience seamless internationalization in your Next.js monorepo.
-    documentation: View Documentation
+    # Description of the welcome hero
+    description: Start building your monorepo with NextGlobeGen.
+    # Label for the documentation button
+    documentation: Documentation
+    # Label for the get started button
     getStarted: Get Started
-    title: Welcome to NextGlobeGen
+    # Title of the welcome hero
+    title: Welcome to NextGlobeGen!
