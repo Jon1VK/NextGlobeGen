@@ -1,6 +1,6 @@
 import { readdirSync } from "fs";
 import path from "path";
-import type { Config } from "~/config/types";
+import type { ResolvedConfig } from "~/config/types";
 import { getLocales } from "~/config/utils";
 import type { Locale } from "~/types/schema";
 import { isDirectory, isFile } from "~/utils/fs-utils";
@@ -13,7 +13,7 @@ export type OriginRoute = {
 };
 
 type GetOriginRoutesParams = {
-  config: Config;
+  config: ResolvedConfig;
   directory?: string;
   parentRoute?: OriginRoute;
   locales_?: Locale[];

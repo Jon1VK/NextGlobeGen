@@ -11,7 +11,7 @@ import type { NextJsWebpackConfig } from "next/dist/server/config-shared";
 import { spawn, spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
-import type { DomainConfig, UserConfig } from "~/config/types";
+import type { Config, DomainConfig } from "~/config/types";
 import { compile } from "~/utils/ts-utils";
 
 type Phase =
@@ -36,7 +36,7 @@ export default function createNextGlobeGenPlugin(
 ) {
   return function withNextGlobeGen(config: NextConfig) {
     return async (phase: Phase) => {
-      const userConfig = await compile<{ default: UserConfig }>(configPath);
+      const userConfig = await compile<{ default: Config }>(configPath);
       const outDir = userConfig.default.outDir ?? "./next-globe-gen";
       await useGenerator(configPath, phase);
       return addDomainRewrites(

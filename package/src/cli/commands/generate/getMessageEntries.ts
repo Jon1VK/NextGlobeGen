@@ -1,8 +1,8 @@
-import type { Config, MessageEntry } from "~/config/types";
+import type { MessageEntry, ResolvedConfig } from "~/config/types";
 import { getLocales } from "~/config/utils";
 import { flatten } from "~/utils/obj-utils";
 
-export async function getMessageEntries(config: Config) {
+export async function getMessageEntries(config: ResolvedConfig) {
   const messagesMaps: Record<string, MessageEntry[]> = {};
   const locales = getLocales(config);
   for await (const locale of locales) {

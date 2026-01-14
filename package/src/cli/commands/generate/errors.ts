@@ -1,4 +1,4 @@
-import type { Config } from "~/config/types";
+import type { ResolvedConfig } from "~/config/types";
 
 export const configNotFoundError = (configPath: string) => {
   return new Error(
@@ -6,13 +6,13 @@ export const configNotFoundError = (configPath: string) => {
   );
 };
 
-export const routesOriginDirNotFoundError = (config: Config) => {
+export const routesOriginDirNotFoundError = (config: ResolvedConfig) => {
   return new Error(
     `Cannot find directory: ${config.routes.originDir}\nAre your App Router routes defined in the specified directory?`,
   );
 };
 
-export const keyExtractionDirsNotFoundError = (config: Config) => {
+export const keyExtractionDirsNotFoundError = (config: ResolvedConfig) => {
   return new Error(
     `Cannot find one or more key extraction directories: ${config.messages.keyExtractionDirs.join(
       ", ",
@@ -20,7 +20,7 @@ export const keyExtractionDirsNotFoundError = (config: Config) => {
   );
 };
 
-export const messagesOriginDirNotFoundError = (config: Config) => {
+export const messagesOriginDirNotFoundError = (config: ResolvedConfig) => {
   return new Error(
     `Cannot find directory: ${config.messages.originDir}\nIs your messages origin directory correctly configured?`,
   );

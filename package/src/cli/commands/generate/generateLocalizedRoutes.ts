@@ -7,7 +7,7 @@ import {
 } from "fs";
 import path from "path";
 import { toPascalCase } from "~/cli/utils/string-utils";
-import type { Config } from "~/config/types";
+import type { ResolvedConfig } from "~/config/types";
 import { makeDirectory, toPosixPath } from "~/utils/fs-utils";
 import type { OriginRoute } from "./getOriginRoutes";
 import { getTemplateCompiler } from "./getTemplateCompiler";
@@ -15,7 +15,7 @@ import { getTemplateCompiler } from "./getTemplateCompiler";
 let prevRoutes: OriginRoute[] = [];
 
 export function generateLocalizedRoutes(
-  config: Config,
+  config: ResolvedConfig,
   originRoutes: OriginRoute[],
   updatedOriginPath?: string,
 ) {
@@ -81,7 +81,7 @@ function needsUpdate(
   return isUpdatedOriginRoute || hasNewLocalizedPaths;
 }
 
-function deleteRemovedPaths(config: Config, removedPaths: Set<string>) {
+function deleteRemovedPaths(config: ResolvedConfig, removedPaths: Set<string>) {
   removedPaths.forEach((localizedPath) => {
     try {
       const fullPath = path.join(config.routes.localizedDir, localizedPath);

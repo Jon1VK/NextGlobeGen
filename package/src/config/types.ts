@@ -90,8 +90,8 @@ export type MessagesConfig = {
   whitelistedKeys?: RegExp[] | RegExp;
 };
 
-/** Complete configuration for next-globe-gen */
-export type Config = {
+/** Resolved configuration for next-globe-gen */
+export type ResolvedConfig = {
   outDir: string;
   routes: RoutesConfig;
   messages: MessagesConfig;
@@ -122,7 +122,7 @@ export type DeepPartial<T> =
  *   ],
  * };
  */
-export type UserConfig = DeepPartial<{
+export type Config = DeepPartial<{
   /** Output directory for generated files (default: "./next-globe-gen") */
   outDir: string;
   /** Configuration for route generation and localization */

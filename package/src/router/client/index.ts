@@ -1,4 +1,4 @@
-import type { UserConfig } from "~/config/types";
+import type { Config as UserConfig } from "~/config/types";
 import type {
   createHref as $createHref,
   createTranslator as $createTranslator,
