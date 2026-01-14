@@ -1,9 +1,9 @@
 import type { Formats } from "intl-messageformat";
 import type {
-  Config,
   DeepPartial,
   DomainConfig,
   MessagesConfig,
+  ResolvedConfig,
 } from "./types";
 
 /**
@@ -13,7 +13,10 @@ import type {
  * @param b - The partial user configuration to merge
  * @returns The merged configuration object
  */
-export function mergeConfigs(a: Config, b: DeepPartial<Config>) {
+export function mergeConfigs(
+  a: ResolvedConfig,
+  b: DeepPartial<ResolvedConfig>,
+): ResolvedConfig {
   return {
     ...a,
     ...b,
@@ -23,7 +26,7 @@ export function mergeConfigs(a: Config, b: DeepPartial<Config>) {
       b.messages as Partial<MessagesConfig> | undefined,
     ),
     routes: { ...a.routes, ...b.routes },
-  } as Config;
+  } as ResolvedConfig;
 }
 
 function mergeDomainConfigs(a?: DomainConfig[], b?: DomainConfig[]) {
@@ -54,7 +57,7 @@ function mergeFormatsConfigs(a?: Partial<Formats>, b?: Partial<Formats>) {
  * @param config - The configuration object
  * @returns Array of locale codes
  */
-export function getLocales(config: Config) {
+export function getLocales(config: ResolvedConfig) {
   if (!config.domains) return config.locales;
   return config.domains
     .flatMap(({ locales }) => locales)
@@ -70,7 +73,7 @@ export function getLocales(config: Config) {
  * @param config - The configuration object
  * @returns A Set of locale codes that should not be prefixed
  */
-export function getUnPrefixedLocales(config: Config) {
+export function getUnPrefixedLocales(config: ResolvedConfig) {
   const prefixDefaultLocale =
     typeof config.routes.prefixDefaultLocale === "boolean"
       ? config.routes.prefixDefaultLocale

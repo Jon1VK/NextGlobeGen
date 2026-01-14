@@ -3,7 +3,7 @@ import { watch } from "fs";
 import path from "path";
 import { debounce } from "~/cli/utils/debounce";
 import { DEFAULT_CONFIG } from "~/config";
-import type { Config, UserConfig } from "~/config/types";
+import type { Config, ResolvedConfig } from "~/config/types";
 import { mergeConfigs } from "~/config/utils";
 import { isDirectory, isFile, rmDirectory } from "~/utils/fs-utils";
 import { compile } from "~/utils/ts-utils";
@@ -50,7 +50,7 @@ type Options = {
 
 async function generateAction(opts: Options) {
   if (!isFile(opts.config)) throw configNotFoundError(opts.config);
-  const userConfig = await compile<{ default: UserConfig }>(opts.config);
+  const userConfig = await compile<{ default: Config }>(opts.config);
   const config = mergeConfigs(DEFAULT_CONFIG, userConfig.default);
   generateOutDir(config);
   if (!opts.routes) generateSchemaFiles(config);
@@ -58,7 +58,7 @@ async function generateAction(opts: Options) {
   if (opts.messages) await generateMessagesSubAction(config, opts);
 }
 
-async function generateRoutesSubAction(config: Config, opts: Options) {
+async function generateRoutesSubAction(config: ResolvedConfig, opts: Options) {
   if (!isDirectory(config.routes.originDir)) {
     throw routesOriginDirNotFoundError(config);
   }
@@ -75,7 +75,10 @@ async function generateRoutesSubAction(config: Config, opts: Options) {
   }
 }
 
-async function generateRoutes(config: Config, updatedOriginPath?: string) {
+async function generateRoutes(
+  config: ResolvedConfig,
+  updatedOriginPath?: string,
+) {
   try {
     const startTime = process.hrtime();
     const originRoutes = await getOriginRoutes({ config });
@@ -93,7 +96,10 @@ async function generateRoutes(config: Config, updatedOriginPath?: string) {
 
 const debouncedGenerateRoutes = debounce(generateRoutes, DEBOUNCE_DELAY);
 
-async function generateMessagesSubAction(config: Config, opts: Options) {
+async function generateMessagesSubAction(
+  config: ResolvedConfig,
+  opts: Options,
+) {
   const messagesOriginDir = config.messages.originDir;
   const keyExtractionDirs = config.messages.keyExtractionDirs;
   if (!isDirectory(messagesOriginDir)) {
@@ -123,7 +129,7 @@ async function generateMessagesSubAction(config: Config, opts: Options) {
   }
 }
 
-async function generateMessages(config: Config) {
+async function generateMessages(config: ResolvedConfig) {
   try {
     const startTime = process.hrtime();
     await generateMessagesFiles(config);
@@ -139,7 +145,7 @@ async function generateMessages(config: Config) {
 
 const debouncedGenerateMessages = debounce(generateMessages, DEBOUNCE_DELAY);
 
-async function extractKeys(config: Config) {
+async function extractKeys(config: ResolvedConfig) {
   if (config.messages.keyExtractionDirs.length === 0) return;
   try {
     const startTime = process.hrtime();

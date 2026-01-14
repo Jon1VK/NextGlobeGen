@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import path from "path";
 import { getRouteName, isPageOriginRoute } from "~/cli/utils/route-utils";
-import type { Config } from "~/config/types";
+import type { ResolvedConfig } from "~/config/types";
 import type { OriginRoute, RouteType } from "./getOriginRoutes";
 
 type PatternKey = (typeof PATTERN_KEYS)[number];
@@ -72,7 +72,10 @@ const routeTypeTemplates: Record<Exclude<RouteType, "copy">, string> = {
   "twitter-image": functionTemplate,
 };
 
-export function getTemplateCompiler(config: Config, originRoute: OriginRoute) {
+export function getTemplateCompiler(
+  config: ResolvedConfig,
+  originRoute: OriginRoute,
+) {
   if (originRoute.type === "copy") return () => "";
   const originPath = path.join(config.routes.originDir, originRoute.path);
   const contents = readFileSync(originPath).toString();
@@ -107,7 +110,7 @@ function withMetadata(
   template: string,
   originRoute: OriginRoute,
   originContents: string,
-  config: Config,
+  config: ResolvedConfig,
 ) {
   const staticMetadataRegExp = new RegExp(`export const metadata`);
   const generateMetadataRegExp = new RegExp(

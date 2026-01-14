@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, test } from "vitest";
 import { DEFAULT_CONFIG } from "~/config";
-import type { Config } from "~/config/types";
+import type { ResolvedConfig } from "~/config/types";
 import { mergeConfigs } from "~/config/utils";
 import type { OriginRoute } from "./getOriginRoutes";
 import { getTemplateCompiler } from "./getTemplateCompiler";
 
-const mocks: { config: Config; originRoute: OriginRoute } = {
+const mocks: { config: ResolvedConfig; originRoute: OriginRoute } = {
   config: mergeConfigs(DEFAULT_CONFIG, {
     routes: {
       originDir: "./src/__mocks__/_app",

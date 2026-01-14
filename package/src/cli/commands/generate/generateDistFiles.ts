@@ -10,7 +10,7 @@ import {
   getRoutePath,
   isPageOriginRoute,
 } from "~/cli/utils/route-utils";
-import type { Config, MessageEntry } from "~/config/types";
+import type { MessageEntry, ResolvedConfig } from "~/config/types";
 import { getLocales, getUnPrefixedLocales } from "~/config/utils";
 import type { Schema } from "~/types/schema";
 import { makeDirectory } from "~/utils/fs-utils";
@@ -27,7 +27,7 @@ const schemaAugmentationTemplate = "".concat(
   "\t\tschema: typeof schema;\n\t}\n}\n",
 );
 
-export function generateOutDir(config: Config) {
+export function generateOutDir(config: ResolvedConfig) {
   makeDirectory(config.outDir);
   writeFileSync(path.join(config.outDir, ".gitignore"), "*");
 }
@@ -38,7 +38,7 @@ export function generateLocalizedDir(localizedDir: string) {
 }
 
 export function generateSchemaFiles(
-  config: Config,
+  config: ResolvedConfig,
   originRoutes?: OriginRoute[],
 ) {
   const schema = generateSchema(config, originRoutes);
@@ -54,7 +54,7 @@ export function generateSchemaFiles(
   writeFileSync(filePath, schemaFile);
 }
 
-function generateSchema(config: Config, originRoutes?: OriginRoute[]) {
+function generateSchema(config: ResolvedConfig, originRoutes?: OriginRoute[]) {
   const routes: Schema["routes"] = {};
   const unPrefixedLocales = getUnPrefixedLocales(config);
   originRoutes?.forEach((originRoute) => {
@@ -118,7 +118,7 @@ const messagesAugmentationTemplate = "".concat(
   "\t\tmessagesParams: MessagesParams;\n\t}\n}\n",
 );
 
-export async function generateMessagesFiles(config: Config) {
+export async function generateMessagesFiles(config: ResolvedConfig) {
   const { allMessageEntries, clientMessageEntries } =
     await getFilteredMessages(config);
   const jsonMessages = generateMessagesJson(allMessageEntries);
@@ -140,7 +140,7 @@ export async function generateMessagesFiles(config: Config) {
   writeFileSync(augmentationFilePath, messagesAugmentationFile);
 }
 
-async function getFilteredMessages(config: Config) {
+async function getFilteredMessages(config: ResolvedConfig) {
   const allMessageEntries = await getMessageEntries(config);
   const clientKeys =
     config.messages.clientKeys instanceof RegExp

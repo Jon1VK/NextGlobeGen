@@ -3,12 +3,12 @@ import { readFileSync } from "fs";
 import { readdirSync } from "node:fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import type { Config, MessageEntry } from "~/config/types";
+import type { MessageEntry, ResolvedConfig } from "~/config/types";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PLUGIN_PATH = path.resolve(__dirname, "key_extractor.wasm");
 
-export async function extractKeysFromSourceFiles(config: Config) {
+export async function extractKeysFromSourceFiles(config: ResolvedConfig) {
   const srcFiles = config.messages.keyExtractionDirs.flatMap((srcDir) =>
     collectSourceFiles(srcDir),
   );

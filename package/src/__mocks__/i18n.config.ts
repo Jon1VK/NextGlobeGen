@@ -1,6 +1,6 @@
-import type { UserConfig } from "~/config/types";
+import type { Config } from "~/config/types";
 
-const config: UserConfig = {
+const config: Config = {
   domains: [
     {
       domain: "en.example.com:3000",

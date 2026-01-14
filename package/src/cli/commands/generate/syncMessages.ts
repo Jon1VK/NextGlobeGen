@@ -1,4 +1,4 @@
-import type { Config, MessageEntry } from "~/config/types";
+import type { MessageEntry, ResolvedConfig } from "~/config/types";
 import { getLocales } from "~/config/utils";
 import type { Locale } from "~/types/schema";
 import { getMessageEntries } from "./getMessageEntries";
@@ -7,7 +7,7 @@ const prevStringifiedMessages: Record<Locale, string> = {};
 
 export async function syncMessages(
   extractedMessages: Map<string, MessageEntry>,
-  config: Config,
+  config: ResolvedConfig,
 ) {
   const locales = getLocales(config);
   const messageEntries = await getMessageEntries(config);

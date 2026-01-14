@@ -1,5 +1,5 @@
 import { loadMessageEntries } from "./loadMessageEntries";
-import type { Config } from "./types";
+import type { ResolvedConfig } from "./types";
 import { writeMessageEntries } from "./writeMessageEntries";
 
 export const FILE_EXTENSIONS = [".json", ".yml", ".yaml"];
@@ -7,7 +7,7 @@ export const FILE_EXTENSIONS = [".json", ".yml", ".yaml"];
 /**
  * The default configuration for NextGlobeGen.
  */
-export const DEFAULT_CONFIG: Config = {
+export const DEFAULT_CONFIG: ResolvedConfig = {
   locales: [],
   defaultLocale: "",
   prefixDefaultLocale: true,
