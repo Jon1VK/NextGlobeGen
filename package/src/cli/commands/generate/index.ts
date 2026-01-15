@@ -123,7 +123,7 @@ async function generateMessagesSubAction(
         const routesLocalizedDir = path.resolve(config.routes.localizedDir);
         if (filePath?.startsWith(messagesOriginDir)) return;
         if (filePath?.startsWith(routesLocalizedDir)) return;
-        debouncedExtractKeys(config);
+        debouncedExtractKeys(config, filePath);
       });
     });
   }
@@ -145,11 +145,11 @@ async function generateMessages(config: ResolvedConfig) {
 
 const debouncedGenerateMessages = debounce(generateMessages, DEBOUNCE_DELAY);
 
-async function extractKeys(config: ResolvedConfig) {
+async function extractKeys(config: ResolvedConfig, filePath?: string) {
   if (config.messages.keyExtractionDirs.length === 0) return;
   try {
     const startTime = process.hrtime();
-    const extractedKeys = await extractKeysFromSourceFiles(config);
+    const extractedKeys = await extractKeysFromSourceFiles(config, filePath);
     await syncMessages(extractedKeys, config);
     const endTime = process.hrtime(startTime);
     const timeDiffInMs = (endTime[0] * 1000 + endTime[1] / 1000000).toFixed(2);
