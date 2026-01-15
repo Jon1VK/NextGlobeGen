@@ -8,13 +8,26 @@ import type { MessageEntry, ResolvedConfig } from "~/config/types";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PLUGIN_PATH = path.resolve(__dirname, "key_extractor.wasm");
 
-export async function extractKeysFromSourceFiles(config: ResolvedConfig) {
+const sourceFileKeysCache = new Map<string, MessageEntry[]>();
+
+export async function extractKeysFromSourceFiles(
+  config: ResolvedConfig,
+  updatedFilePath?: string,
+) {
+  const messagesOriginDir = path.resolve(config.messages.originDir);
+  const routesLocalizedDir = path.resolve(config.routes.localizedDir);
   const srcFiles = config.messages.keyExtractionDirs.flatMap((srcDir) =>
-    collectSourceFiles(srcDir),
+    collectSourceFilesFromDir(srcDir, [messagesOriginDir, routesLocalizedDir]),
   );
   const keysMap = new Map<string, MessageEntry>();
   for (const filePath of srcFiles) {
-    const keys = await extractKeysFromSourceFile(filePath);
+    const cachedKeys = sourceFileKeysCache.get(filePath);
+    const useCachedKeys =
+      updatedFilePath && filePath !== updatedFilePath && cachedKeys;
+    const keys = useCachedKeys
+      ? cachedKeys
+      : await extractKeysFromSourceFile(filePath);
+    sourceFileKeysCache.set(filePath, keys);
     keys.forEach((k) => {
       const description = k.description ?? keysMap.get(k.key)?.description;
       keysMap.set(k.key, { ...k, description });
@@ -25,13 +38,14 @@ export async function extractKeysFromSourceFiles(config: ResolvedConfig) {
 
 const SOURCE_EXTENSIONS = [".ts", ".tsx", ".js", ".jsx"];
 
-function collectSourceFiles(directory: string) {
+function collectSourceFilesFromDir(dir: string, excludedDirs: string[]) {
   const files: string[] = [];
-  const entries = readdirSync(directory, { withFileTypes: true });
+  const entries = readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
-    const fullPath = `${directory}/${entry.name}`;
+    const fullPath = path.resolve(dir, entry.name);
     if (entry.isDirectory()) {
-      files.push(...collectSourceFiles(fullPath));
+      if (excludedDirs.includes(fullPath)) continue;
+      files.push(...collectSourceFilesFromDir(fullPath, excludedDirs));
     } else if (entry.isFile()) {
       const ext = path.extname(entry.name).toLowerCase();
       if (SOURCE_EXTENSIONS.includes(ext)) files.push(fullPath);
