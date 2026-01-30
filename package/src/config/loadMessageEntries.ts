@@ -1,4 +1,5 @@
 import { readdirSync, readFileSync } from "fs";
+import { po, type GetTextTranslation } from "gettext-parser";
 import path from "path";
 import { isMap, isScalar, parseDocument, YAMLMap, type ParsedNode } from "yaml";
 import { isDirectory, isFile } from "~/utils/fs-utils";
@@ -67,10 +68,17 @@ function loadFileMessageEntries(
 ) {
   const content = readFileSync(filePath).toString();
   const extension = path.extname(filePath);
-  if (extension === ".json") {
-    loadJsonMessageEntries(content, messagesMap, namespace);
-  } else {
-    loadYamlMessageEntries(content, messagesMap, namespace);
+  switch (extension) {
+    case ".json":
+      loadJsonMessageEntries(content, messagesMap, namespace);
+      break;
+    case ".yml":
+    case ".yaml":
+      loadYamlMessageEntries(content, messagesMap, namespace);
+      break;
+    case ".po":
+      loadPoMessageEntries(content, messagesMap, namespace);
+      break;
   }
 }
 
@@ -115,6 +123,23 @@ function getYamlMessageEntriesFromMap(
     const message = item.value.value;
     const description =
       i === 0 ? map.commentBefore?.trim() : item.key.commentBefore?.trim();
+    messagesMap.set(key, { key, message, description });
+  });
+}
+
+function loadPoMessageEntries(
+  content: string,
+  messagesMap: Map<string, MessageEntry>,
+  namespace?: string,
+) {
+  const parsed = po.parse(content);
+  const translations = Object.values(
+    parsed.translations || {},
+  ).flatMap<GetTextTranslation>(Object.values);
+  translations.forEach((t) => {
+    const key = namespace ? `${namespace}.${t.msgid}` : t.msgid;
+    const message = t.msgstr.at(0) || "";
+    const description = t.comments?.extracted?.trim();
     messagesMap.set(key, { key, message, description });
   });
 }

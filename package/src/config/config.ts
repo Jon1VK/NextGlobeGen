@@ -2,7 +2,7 @@ import { loadMessageEntries } from "./loadMessageEntries";
 import type { ResolvedConfig } from "./types";
 import { writeMessageEntries } from "./writeMessageEntries";
 
-export const FILE_EXTENSIONS = [".json", ".yml", ".yaml"];
+export const FILE_EXTENSIONS = [".json", ".yml", ".yaml", ".po"];
 
 /**
  * The default configuration for NextGlobeGen.

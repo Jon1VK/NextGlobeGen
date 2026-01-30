@@ -1,4 +1,9 @@
 import { readdirSync, rmSync, writeFileSync } from "fs";
+import {
+  po,
+  type GetTextTranslationRecord,
+  type GetTextTranslations,
+} from "gettext-parser";
 import path from "path";
 import { Document, isMap, isScalar } from "yaml";
 import { isDirectory, isFile } from "~/utils/fs-utils";
@@ -13,7 +18,7 @@ export function writeMessageEntries(
 ) {
   const messagesMap = new Map(messages.map((msg) => [msg.key, msg]));
   const dirPath = path.join(this.originDir, locale);
-  writeMessageEntriesToDir(dirPath, messagesMap);
+  writeMessageEntriesToDir(dirPath, locale, messagesMap);
   writeMessageEntriesToRoot.bind(this)(locale, messagesMap);
 }
 
@@ -25,15 +30,16 @@ function writeMessageEntriesToRoot(
   for (const extension of FILE_EXTENSIONS) {
     const filePath = path.join(this.originDir, `${locale}${extension}`);
     if (!isFile(filePath)) continue;
-    writeMessageEntriesToFile(filePath, messagesMap);
+    writeMessageEntriesToFile(filePath, locale, messagesMap);
     return;
   }
   const defaultFilePath = path.join(this.originDir, `${locale}.json`);
-  writeMessageEntriesToFile(defaultFilePath, messagesMap);
+  writeMessageEntriesToFile(defaultFilePath, locale, messagesMap);
 }
 
 function writeMessageEntriesToDir(
   dirPath: string,
+  locale: string,
   messages: Map<string, MessageEntry>,
   ns?: string,
 ) {
@@ -49,7 +55,7 @@ function writeMessageEntriesToDir(
   subDirs?.forEach((subDir) => {
     const nestedDirPath = path.join(dirPath, subDir.name);
     const namespace = ns ? `${ns}.${subDir.name}` : subDir.name;
-    writeMessageEntriesToDir(nestedDirPath, messages, namespace);
+    writeMessageEntriesToDir(nestedDirPath, locale, messages, namespace);
   });
   messageFiles?.forEach((file) => {
     const filePath = path.join(dirPath, file.name);
@@ -59,12 +65,13 @@ function writeMessageEntriesToDir(
       if (fileName === "index") return ns;
       return ns ? `${ns}.${fileName}` : fileName;
     })();
-    writeMessageEntriesToFile(filePath, messages, namespace);
+    writeMessageEntriesToFile(filePath, locale, messages, namespace);
   });
 }
 
 function writeMessageEntriesToFile(
   filePath: string,
+  locale: string,
   messages: Map<string, MessageEntry>,
   namespace?: string,
 ) {
@@ -87,10 +94,19 @@ function writeMessageEntriesToFile(
     return;
   }
   const extension = path.extname(filePath);
-  const content =
-    extension === ".json"
-      ? getJsonContent(namespaceMessages)
-      : getYamlContent(namespaceMessages);
+  const content = (() => {
+    switch (extension) {
+      case ".json":
+        return getJsonContent(namespaceMessages);
+      case ".yml":
+      case ".yaml":
+        return getYamlContent(namespaceMessages);
+      case ".po":
+        return getPoContent(namespaceMessages, locale);
+      default:
+        throw new Error(`Unsupported file extension: ${extension}`);
+    }
+  })();
   writeFileSync(filePath, content);
 }
 
@@ -121,4 +137,35 @@ function getYamlContent(messages: MessageEntry[]) {
     if (isScalar(pair?.key)) pair.key.commentBefore = ` ${msg.description}`;
   });
   return doc.toString({ lineWidth: 0 });
+}
+
+function getPoContent(messages: MessageEntry[], locale: string) {
+  const headersMessage = messages.find((msg) => msg.key === "")?.message;
+  const existingHeaders = headersMessage
+    ? po.parse(`msgid ""\nmsgstr "${headersMessage}"`).headers
+    : {};
+  const headers: GetTextTranslations["headers"] = {
+    Language: locale,
+    "POT-Creation-Date": new Date().toISOString(),
+    "X-Generator": "NextGlobeGen (https://next-globe-gen.dev)",
+    "MIME-Version": "1.0",
+    "Content-Type": "text/plain; charset=UTF-8",
+    "Content-Transfer-Encoding": "8bit",
+    ...existingHeaders,
+  };
+  const translations: GetTextTranslationRecord = {
+    "": Object.fromEntries(
+      messages.map((msg) => [
+        msg.key,
+        {
+          msgid: msg.key,
+          msgstr: [msg.message],
+          comments: { extracted: msg.description },
+        },
+      ]),
+    ),
+  };
+  return po
+    .compile({ charset: "UTF-8", headers, translations }, { foldLength: 0 })
+    .toString();
 }

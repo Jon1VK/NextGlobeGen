@@ -1,3 +1,4 @@
 /docs/*
 /examples/playground/*
+/examples/monorepo/*
 !.gitkeep
