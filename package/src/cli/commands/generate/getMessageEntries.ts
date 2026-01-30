@@ -5,7 +5,7 @@ import { flatten } from "~/utils/obj-utils";
 export async function getMessageEntries(config: ResolvedConfig) {
   const messagesMaps: Record<string, MessageEntry[]> = {};
   const locales = getLocales(config);
-  for await (const locale of locales) {
+  for (const locale of locales) {
     if (config.messages.getMessages) {
       const messages = await config.messages.getMessages(locale);
       const messageEntries = Object.entries(flatten(messages)).map(

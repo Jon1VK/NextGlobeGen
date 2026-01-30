@@ -11,7 +11,7 @@ export async function syncMessages(
 ) {
   const locales = getLocales(config);
   const messageEntries = await getMessageEntries(config);
-  locales.forEach((locale) => {
+  for (const locale of locales) {
     const localeMessages = new Map(extractedMessages);
     const entries = messageEntries[locale] || [];
     const existingEntries = new Map(entries.map((entry) => [entry.key, entry]));
@@ -39,6 +39,6 @@ export async function syncMessages(
     const stringifiedMessages = JSON.stringify(sortedMessages);
     if (stringifiedMessages === prevStringifiedMessages[locale]) return;
     prevStringifiedMessages[locale] = stringifiedMessages;
-    config.messages.writeMessageEntries(locale, sortedMessages);
-  });
+    await config.messages.writeMessageEntries(locale, sortedMessages);
+  }
 }
