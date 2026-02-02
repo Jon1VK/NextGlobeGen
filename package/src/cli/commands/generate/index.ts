@@ -79,19 +79,15 @@ async function generateRoutes(
   config: ResolvedConfig,
   updatedOriginPath?: string,
 ) {
-  try {
-    const startTime = process.hrtime();
-    const originRoutes = await getOriginRoutes({ config });
-    generateLocalizedRoutes(config, originRoutes, updatedOriginPath);
-    generateSchemaFiles(config, originRoutes);
-    const endTime = process.hrtime(startTime);
-    const timeDiffInMs = (endTime[0] * 1000 + endTime[1] / 1000000).toFixed(2);
-    console.info(
-      `\x1b[32mNextGlobeGen\x1b[37m - Localized routes (${timeDiffInMs}ms)`,
-    );
-  } catch (error: unknown) {
-    if (error instanceof Error) console.error(error.message);
-  }
+  const startTime = process.hrtime();
+  const originRoutes = await getOriginRoutes({ config });
+  generateLocalizedRoutes(config, originRoutes, updatedOriginPath);
+  generateSchemaFiles(config, originRoutes);
+  const endTime = process.hrtime(startTime);
+  const timeDiffInMs = (endTime[0] * 1000 + endTime[1] / 1000000).toFixed(2);
+  console.info(
+    `\x1b[32mNextGlobeGen\x1b[37m - Localized routes (${timeDiffInMs}ms)`,
+  );
 }
 
 const debouncedGenerateRoutes = debounce(generateRoutes, DEBOUNCE_DELAY);
@@ -130,35 +126,27 @@ async function generateMessagesSubAction(
 }
 
 async function generateMessages(config: ResolvedConfig) {
-  try {
-    const startTime = process.hrtime();
-    await generateMessagesFiles(config);
-    const endTime = process.hrtime(startTime);
-    const timeDiffInMs = (endTime[0] * 1000 + endTime[1] / 1000000).toFixed(2);
-    console.info(
-      `\x1b[32mNextGlobeGen\x1b[37m - Compiled messages (${timeDiffInMs}ms)`,
-    );
-  } catch (error: unknown) {
-    if (error instanceof Error) console.error(error.message);
-  }
+  const startTime = process.hrtime();
+  await generateMessagesFiles(config);
+  const endTime = process.hrtime(startTime);
+  const timeDiffInMs = (endTime[0] * 1000 + endTime[1] / 1000000).toFixed(2);
+  console.info(
+    `\x1b[32mNextGlobeGen\x1b[37m - Compiled messages (${timeDiffInMs}ms)`,
+  );
 }
 
 const debouncedGenerateMessages = debounce(generateMessages, DEBOUNCE_DELAY);
 
 async function extractKeys(config: ResolvedConfig, filePath?: string) {
   if (config.messages.keyExtractionDirs.length === 0) return;
-  try {
-    const startTime = process.hrtime();
-    const extractedKeys = await extractKeysFromSourceFiles(config, filePath);
-    await syncMessages(extractedKeys, config);
-    const endTime = process.hrtime(startTime);
-    const timeDiffInMs = (endTime[0] * 1000 + endTime[1] / 1000000).toFixed(2);
-    console.info(
-      `\x1b[32mNextGlobeGen\x1b[37m - Extracted keys (${timeDiffInMs}ms)`,
-    );
-  } catch (error: unknown) {
-    if (error instanceof Error) console.error(error.message);
-  }
+  const startTime = process.hrtime();
+  const extractedKeys = await extractKeysFromSourceFiles(config, filePath);
+  await syncMessages(extractedKeys, config);
+  const endTime = process.hrtime(startTime);
+  const timeDiffInMs = (endTime[0] * 1000 + endTime[1] / 1000000).toFixed(2);
+  console.info(
+    `\x1b[32mNextGlobeGen\x1b[37m - Extracted keys (${timeDiffInMs}ms)`,
+  );
 }
 
 const debouncedExtractKeys = debounce(extractKeys, DEBOUNCE_DELAY);
