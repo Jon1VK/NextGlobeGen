@@ -11,34 +11,38 @@ export async function syncMessages(
 ) {
   const locales = getLocales(config);
   const messageEntries = await getMessageEntries(config);
-  for (const locale of locales) {
-    const localeMessages = new Map(extractedMessages);
-    const entries = messageEntries[locale] || [];
-    const existingEntries = new Map(entries.map((entry) => [entry.key, entry]));
-    existingEntries.forEach((existingEntry, key) => {
-      if (localeMessages.has(key)) {
-        const extractedEntry = { ...localeMessages.get(key)! };
-        extractedEntry.message = existingEntry.message;
-        extractedEntry.description ??= existingEntry.description;
-        localeMessages.set(key, extractedEntry);
-        return;
-      }
-      const whitelistedKeys =
-        config.messages.whitelistedKeys instanceof RegExp
-          ? [config.messages.whitelistedKeys]
-          : config.messages.whitelistedKeys;
-      const shouldBePruned =
-        config.messages.pruneUnusedKeys &&
-        !whitelistedKeys?.some((regExp) => regExp.test(key));
-      if (!shouldBePruned) localeMessages.set(key, existingEntry);
-    });
-    const sortedMessages = localeMessages
-      .values()
-      .toArray()
-      .sort((a, b) => a.key.localeCompare(b.key));
-    const stringifiedMessages = JSON.stringify(sortedMessages);
-    if (stringifiedMessages === prevStringifiedMessages[locale]) return;
-    prevStringifiedMessages[locale] = stringifiedMessages;
-    await config.messages.writeMessageEntries(locale, sortedMessages);
-  }
+  await Promise.all(
+    locales.map((locale) => {
+      const localeMessages = new Map(extractedMessages);
+      const entries = messageEntries[locale] || [];
+      const existingEntries = new Map(
+        entries.map((entry) => [entry.key, entry]),
+      );
+      existingEntries.forEach((existingEntry, key) => {
+        if (localeMessages.has(key)) {
+          const extractedEntry = { ...localeMessages.get(key)! };
+          extractedEntry.message = existingEntry.message;
+          extractedEntry.description ??= existingEntry.description;
+          localeMessages.set(key, extractedEntry);
+          return;
+        }
+        const whitelistedKeys =
+          config.messages.whitelistedKeys instanceof RegExp
+            ? [config.messages.whitelistedKeys]
+            : config.messages.whitelistedKeys;
+        const shouldBePruned =
+          config.messages.pruneUnusedKeys &&
+          !whitelistedKeys?.some((regExp) => regExp.test(key));
+        if (!shouldBePruned) localeMessages.set(key, existingEntry);
+      });
+      const sortedMessages = localeMessages
+        .values()
+        .toArray()
+        .sort((a, b) => a.key.localeCompare(b.key));
+      const stringifiedMessages = JSON.stringify(sortedMessages);
+      if (stringifiedMessages === prevStringifiedMessages[locale]) return;
+      prevStringifiedMessages[locale] = stringifiedMessages;
+      return config.messages.writeMessageEntries(locale, sortedMessages);
+    }),
+  );
 }
