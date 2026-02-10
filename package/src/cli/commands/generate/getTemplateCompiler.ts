@@ -112,9 +112,11 @@ function withMetadata(
   originContents: string,
   config: ResolvedConfig,
 ) {
-  const staticMetadataRegExp = new RegExp(`export const metadata`);
+  const staticMetadataRegExp = new RegExp(
+    `export const metadata|export {[^}]*\\bmetadata\\b[^}]*}`,
+  );
   const generateMetadataRegExp = new RegExp(
-    `export ((async )?function|const) generateMetadata`,
+    `export ((async )?function|const) generateMetadata|export {[^}]*\\bgenerateMetadata\\b[^}]*}`,
   );
   const hasStaticMetadata = staticMetadataRegExp.test(originContents);
   const hasGenerateMetadata = generateMetadataRegExp.test(originContents);
@@ -170,7 +172,9 @@ function withLanguageAlternatesMetadata(
 }
 
 function withReExport(template: string, originContents: string, name: string) {
-  const regExp = new RegExp(`export const ${name}`);
+  const regExp = new RegExp(
+    `export const ${name}|export {[^}]*\\b${name}\\b[^}]*}`,
+  );
   if (!regExp.test(originContents)) return template;
   return template.concat(
     `\n\nexport { ${name} } from "${PATTERNS.relativePath}";`,
@@ -182,7 +186,9 @@ function withGenerateFn(
   originContents: string,
   fnName: string,
 ) {
-  const regExp = new RegExp(`export ((async )?function|const) ${fnName}`);
+  const regExp = new RegExp(
+    `export ((async )?function|const) ${fnName}|export {[^}]*\\b${fnName}\\b[^}]*}`,
+  );
   if (!regExp.test(originContents)) return template;
   const additionalParams = fnName === "generateMetadata" ? ", parent" : "";
   const shouldSetLocale =
