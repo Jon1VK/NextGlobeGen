@@ -71,12 +71,12 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@formatjs/icu-messageformat-parser": "^3.3.0",
-    "@swc/core": "^1.15.8",
+    "@formatjs/icu-messageformat-parser": "^3.5.1",
+    "@swc/core": "^1.15.11",
     "commander": "^13.1.0",
     "fast-memoize": "^2.5.2",
     "gettext-parser": "^9.0.1",
-    "intl-messageformat": "^11.0.9",
+    "intl-messageformat": "^11.1.2",
     "negotiator": "^1.0.0",
     "path-to-regexp": "^8.3.0",
     "tsup": "^8.5.1",
@@ -86,17 +86,17 @@
     "@eslint/js": "^9.39.2",
     "@types/gettext-parser": "^8.0.0",
     "@types/negotiator": "^0.6.4",
-    "@types/node": "^22.19.3",
+    "@types/node": "^22.19.11",
     "@types/react": "18.2.0",
-    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^9.39.2",
     "next": "^14.2.35",
-    "prettier": "^3.7.4",
+    "prettier": "^3.8.1",
     "react": "^18.3.1",
     "react-dom": "18.2.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.52.0",
-    "vitest": "^4.0.16"
+    "typescript-eslint": "^8.55.0",
+    "vitest": "^4.0.18"
   },
   "peerDependencies": {
     "next": "^14.0.0",
