@@ -13,6 +13,7 @@ import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import type { Config, DomainConfig } from "~/config/types";
 import { compile } from "~/utils/ts-utils";
+import { detectPackageManagerRunner } from "./detectPackageManagerRunner";
 
 type Phase =
   | typeof PHASE_EXPORT
@@ -56,9 +57,10 @@ async function useGenerator(configPath: string, phase: Phase) {
   if (nextjsVersion.major >= 16 && phase === "phase-development-server" && !process.env.NEXT_PRIVATE_WORKER) return;
   if (nextjsVersion.major < 16 && process.env.NEXT_PRIVATE_WORKER) return;
   if (process.env.NEXT_DEPLOYMENT_ID !== undefined) return;
+  const runner = detectPackageManagerRunner();
   try {
     if (phase !== "phase-production-server") {
-      spawnSync(`npx next-globe-gen --plugin --config ${configPath}`, {
+      spawnSync(`${runner} next-globe-gen --plugin --config ${configPath}`, {
         cwd: process.cwd(),
         stdio: "inherit",
         shell: true,
@@ -77,16 +79,20 @@ async function useGenerator(configPath: string, phase: Phase) {
         abortController.abort();
         process.exit();
       });
-      spawn(`npx next-globe-gen --plugin --watch --config ${configPath}`, {
-        cwd: process.cwd(),
-        stdio: "inherit",
-        shell: true,
-        detached: false,
-        signal: abortController.signal,
-      });
+      spawn(
+        `${runner} next-globe-gen --plugin --watch --config ${configPath}`,
+        {
+          cwd: process.cwd(),
+          stdio: "inherit",
+          shell: true,
+          detached: false,
+          signal: abortController.signal,
+        },
+      );
     }
-  } catch (_e) {
+  } catch (error) {
     console.error("Failed to spawn the NextGlobeGen compiler process");
+    throw error;
   }
 }
 
