@@ -96,7 +96,7 @@ describe("plugin", () => {
     await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-production-build");
     expect(spawn).not.toBeCalled();
     expect(spawnSync).toHaveBeenCalledWith(
-      "npx next-globe-gen --plugin --config ./src/__mocks__/i18n.config.ts",
+      "pnpm exec next-globe-gen --plugin --config ./src/__mocks__/i18n.config.ts",
       expect.objectContaining({
         stdio: "inherit",
         shell: true,
