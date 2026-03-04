@@ -9,7 +9,7 @@ import {
 
 type NextFormProps = ComponentProps<typeof NextForm>;
 
-type FormProps<R extends Route> = Omit<NextFormProps, "action"> &
+export type FormProps<R extends Route> = Omit<NextFormProps, "action"> &
   ({
     action: R | Exclude<NextFormProps["action"], string> | (string & {});
     locale?: Locale;
