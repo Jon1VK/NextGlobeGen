@@ -11,7 +11,7 @@ import {
 
 type NextLinkProps = ComponentProps<typeof NextLink>;
 
-type LinkProps<R extends Route> = Omit<NextLinkProps, "href"> &
+export type LinkProps<R extends Route> = Omit<NextLinkProps, "href"> &
   (
     | { href: HrefOptions<R>; locale?: undefined; params?: undefined }
     | ({ href: R | (string & {}); locale?: Locale } & ParamsOption<R>)

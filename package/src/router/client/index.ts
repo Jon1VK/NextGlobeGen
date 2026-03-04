@@ -45,6 +45,8 @@ export type Config = UserConfig;
  */
 export const useHref = useHrefFactory(useLocale, useSchema);
 
+export type { HrefOptions } from "../shared/useHrefFactory";
+
 /**
  * Hook that returns the current route pathname.
  *
@@ -63,6 +65,8 @@ export const useRoute = useRouteFactory(useSchema);
  */
 export const Link = LinkFactory(useHref);
 
+export type { LinkProps } from "../shared/LinkFactory";
+
 /**
  * Form component with localized routing support.
  *
@@ -71,6 +75,8 @@ export const Link = LinkFactory(useHref);
  * <Form action="/users/[id]" params={{ id: "123" }}>...</Form>
  */
 export const Form = FormFactory(useHref);
+
+export type { FormProps } from "../shared/FormFactory";
 
 /**
  * Hook for accessing and formatting localized messages.

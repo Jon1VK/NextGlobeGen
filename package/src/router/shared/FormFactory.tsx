@@ -8,7 +8,7 @@ import {
 
 type NextFormProps = ComponentProps<"form">;
 
-type FormProps<R extends Route> = Omit<NextFormProps, "action"> &
+export type FormProps<R extends Route> = Omit<NextFormProps, "action"> &
   ({
     action:
       | R
