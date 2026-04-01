@@ -10,15 +10,14 @@
     "noEmit": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
-    "module": "ESNext",
-    "moduleResolution": "node",
+    "module": "ESnext",
+    "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
     "paths": {
-      "~/*": ["src/*"],
-      "next-globe-gen/schema": ["src/types/schema"],
-      "next-globe-gen/messages": ["src/types/messages"]
+      "~/*": ["./src/*"],
+      "next-globe-gen/schema": ["./src/types/schema"],
+      "next-globe-gen/messages": ["./src/types/messages"]
     }
   },
   "include": ["src"],
