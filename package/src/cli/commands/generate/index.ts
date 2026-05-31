@@ -50,8 +50,8 @@ type Options = {
 
 async function generateAction(opts: Options) {
   if (!isFile(opts.config)) throw configNotFoundError(opts.config);
-  const userConfig = await compile<{ default: Config }>(opts.config);
-  const config = mergeConfigs(DEFAULT_CONFIG, userConfig.default);
+  const userConfig = await compile<Config>(opts.config);
+  const config = mergeConfigs(DEFAULT_CONFIG, userConfig);
   generateOutDir(config);
   if (!opts.routes) generateSchemaFiles(config);
   if (opts.routes) await generateRoutesSubAction(config, opts);

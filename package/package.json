@@ -27,44 +27,39 @@
   ],
   "sideEffects": false,
   "bin": {
-    "next-globe-gen": "./dist/cli.js"
+    "next-globe-gen": "./dist/cli.mjs"
   },
-  "types": "./dist/index.client.d.ts",
+  "types": "./dist/client.d.ts",
   "exports": {
     ".": {
-      "react-server": {
-        "require": "./dist/index.server.cjs",
-        "import": "./dist/index.server.js"
-      },
-      "default": {
-        "require": "./dist/index.client.cjs",
-        "import": "./dist/index.client.js"
-      }
+      "types": "./dist/client.d.mts",
+      "react-server": "./dist/server.mjs",
+      "default": "./dist/client.mjs"
     },
     "./client": {
-      "require": "./dist/index.client.cjs",
-      "import": "./dist/index.client.js"
+      "types": "./dist/client.d.mts",
+      "default": "./dist/client.mjs"
     },
     "./config": {
-      "require": "./dist/config.cjs",
-      "import": "./dist/config.js"
+      "types": "./dist/config.d.mts",
+      "default": "./dist/config.mjs"
     },
     "./middleware": {
-      "require": "./dist/middleware.cjs",
-      "import": "./dist/middleware.js"
+      "types": "./dist/middleware.d.mts",
+      "default": "./dist/middleware.mjs"
     },
     "./proxy": {
-      "require": "./dist/proxy.cjs",
-      "import": "./dist/proxy.js"
+      "types": "./dist/proxy.d.mts",
+      "default": "./dist/proxy.mjs"
     },
     "./plugin": {
-      "require": "./dist/plugin.cjs",
-      "import": "./dist/plugin.js"
+      "types": "./dist/plugin.d.mts",
+      "default": "./dist/plugin.mjs"
     }
   },
   "scripts": {
     "build": "pnpm run --sequential /^build:/",
-    "build:package": "tsup",
+    "build:package": "tsdown",
     "build:key-extractor": "cd ../key-extractor && pnpm run build && cp ./target/wasm32-wasip1/release/key_extractor.wasm ../package/dist/key_extractor.wasm",
     "check": "pnpm run /^check:/",
     "check:types": "tsc",
@@ -76,31 +71,32 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@formatjs/icu-messageformat-parser": "^3.5.1",
-    "@swc/core": "^1.15.11",
-    "commander": "^13.1.0",
+    "@formatjs/icu-messageformat-parser": "^3.5.10",
+    "@swc/core": "^1.15.40",
+    "commander": "^15.0.0",
     "fast-memoize": "^2.5.2",
-    "gettext-parser": "^9.0.1",
-    "intl-messageformat": "^11.1.2",
+    "gettext-parser": "^9.0.2",
+    "intl-messageformat": "^11.2.7",
     "negotiator": "^1.0.0",
-    "path-to-regexp": "^8.3.0",
+    "path-to-regexp": "^8.4.2",
+    "tsdown": "^0.22.1",
     "tsup": "^8.5.1",
-    "yaml": "^2.8.2"
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^10.0.1",
     "@types/gettext-parser": "^9.0.0",
     "@types/negotiator": "^0.6.4",
-    "@types/node": "^22.19.7",
-    "@types/react": "^19.2.10",
-    "@vitest/coverage-v8": "^4.0.18",
-    "eslint": "^9.39.2",
-    "next": "^16.1.6",
-    "prettier": "^3.8.1",
-    "react": "^19.2.4",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.54.0",
-    "vitest": "^4.0.18"
+    "@types/node": "^20.19.41",
+    "@types/react": "^19.2.15",
+    "@vitest/coverage-v8": "^4.1.7",
+    "eslint": "^10.4.1",
+    "next": "^16.2.6",
+    "prettier": "^3.8.3",
+    "react": "^19.2.6",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.60.0",
+    "vitest": "^4.1.7"
   },
   "peerDependencies": {
     "next": "^15.3.0 || ^16.0.0",

@@ -1,25 +1,27 @@
 import { createHash } from "crypto";
 import { mkdtempSync, rmSync } from "fs";
+import { createRequire } from "module";
 import path from "path";
-import { build } from "tsup";
-import { pathToFileURL } from "url";
 import { isFile } from "~/utils/fs-utils";
 
-export async function compile<T>(filePath: string) {
+const requireFrom = createRequire(import.meta.url);
+
+export async function compile<T>(filePath: string): Promise<T> {
+  const { build } = await import("tsdown");
   const tmpDir = mkdtempSync("next-globe-gen");
   const version = Math.random();
   const outputFileName = createHash("md5")
     .update(`${filePath}-${version}`)
     .digest("hex");
   await build({
+    clean: false,
     config: false,
     outDir: tmpDir,
     format: "cjs",
-    bundle: true,
-    splitting: false,
-    target: "node18",
-    entryPoints: { [`${outputFileName}`]: filePath },
-    silent: true,
+    target: "node20",
+    outputOptions: { codeSplitting: false },
+    entry: { [`${outputFileName}`]: filePath },
+    logLevel: "error",
     shims: true,
   });
   const compiledPath = path.resolve(tmpDir, outputFileName);
@@ -31,9 +33,9 @@ export async function compile<T>(filePath: string) {
 
 async function importContents<T>(filePath: string): Promise<T> {
   try {
-    const fileURL = pathToFileURL(filePath);
-    const contents = await import(fileURL.href);
-    return contents.default as T;
+    const absolutePath = path.resolve(filePath);
+    const contents = requireFrom(absolutePath);
+    return contents.default ?? (contents as T);
   } finally {
     rmSync(path.dirname(filePath), { recursive: true, force: true });
   }

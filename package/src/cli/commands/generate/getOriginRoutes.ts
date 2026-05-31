@@ -118,15 +118,13 @@ function getAppRouterFiles(directory: string) {
 }
 
 const I18N_FILE_NAMES = ["i18n.js", "i18n.ts"];
-type I18N = {
-  default: Record<string, string> | (() => Promise<Record<string, string>>);
-};
+type I18N = Record<string, string> | (() => Promise<Record<string, string>>);
 
 async function getRouteTranslations(directory: string) {
   for (const file of I18N_FILE_NAMES) {
     const filePath = path.join(directory, file);
     if (!isFile(filePath)) continue;
-    const i18n = (await compile<I18N>(filePath)).default;
+    const i18n = await compile<I18N>(filePath);
     if (typeof i18n === "function") return await i18n();
     return i18n;
   }

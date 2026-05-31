@@ -37,15 +37,15 @@ export default function createNextGlobeGenPlugin(
 ) {
   return function withNextGlobeGen(config: NextConfig) {
     return async (phase: Phase) => {
-      const userConfig = await compile<{ default: Config }>(configPath);
-      const outDir = userConfig.default.outDir ?? "./next-globe-gen";
+      const userConfig = await compile<Config>(configPath);
+      const outDir = userConfig.outDir ?? "./next-globe-gen";
       await useGenerator(configPath, phase);
       return addDomainRewrites(
         addAliases(config, {
           "next-globe-gen/schema": `${outDir}/schema.ts`,
           "next-globe-gen/messages": `${outDir}/messages.ts`,
         }),
-        userConfig.default.domains,
+        userConfig.domains,
       );
     };
   };

@@ -1,6 +1,5 @@
 import type { Locale, Route, StaticRoute } from "next-globe-gen/schema";
 import {
-  type RedirectType,
   permanentRedirect as nextPermanentRedirect,
   redirect as nextRedirect,
 } from "next/navigation";
@@ -11,6 +10,8 @@ import {
   type UseHrefArgs,
   extractHrefOptions,
 } from "../shared/useHrefFactory";
+
+type RedirectType = "push" | "replace";
 
 type RedirectArgs<
   R extends Route,

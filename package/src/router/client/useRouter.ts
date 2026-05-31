@@ -72,11 +72,11 @@ export function useRouter() {
     back: router.back.bind(router),
     forward: router.forward.bind(router),
     refresh: router.refresh.bind(router),
+    experimental_gesturePush: router.experimental_gesturePush?.bind(router),
     push,
     replace,
     prefetch,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } satisfies Record<keyof AppRouterInstance, (...args: any) => void>;
+  } satisfies AppRouterInstance;
 }
 
 function extractRouterOptions<R extends Route>(...args: RouterArgs<R>) {
