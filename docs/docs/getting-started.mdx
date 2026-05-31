@@ -13,29 +13,19 @@ If you haven't done so already, [create a new Next.js app](https://nextjs.org/do
 
 ## Installation
 
-<details>
-<summary>
-Next.js 15+
-</summary>
-A version of the package which is compatible with Next.js 15+ is released under the `latest` distribution tag. To install this version of the package, run the following command.
+To install the latest version of the package, run the following command.
 
 ```bash npm2yarn
 npm install next-globe-gen@latest
 ```
 
-</details>
+:::info Required Versions
 
-<details>
-<summary>
-Next.js 14
-</summary>
-A version of the package which is compatible with Next.js 14 is released under `next-14` distribution tag. To install this version of the package, run the following command.
+- Node.js: ^22.12.0
+- Next.js: ^15.3.0 || ^16.0.0
+- React: ^19.0.0
 
-```bash npm2yarn
-npm install next-globe-gen@next-14
-```
-
-</details>
+:::
 
 ## Setup
 
@@ -113,23 +103,6 @@ const nextConfig: NextConfig = {
 };
 
 export default withNextGlobeGen(nextConfig);
-```
-
-</TabItem>
-<TabItem value="next.config.js">
-
-```ts
-// @ts-check
-const createNextGlobeGenPlugin = require("next-globe-gen/plugin");
-
-const withNextGlobeGen = createNextGlobeGenPlugin();
-
-/** @type {import('next').NextConfig} */
-const nextConfig: NextConfig = {
-  /* Next.js config options here */
-};
-
-module.exports = withNextGlobeGen(nextConfig);
 ```
 
 </TabItem>
