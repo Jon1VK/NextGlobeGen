@@ -74,14 +74,10 @@ export function getLocales(config: ResolvedConfig) {
  * @returns A Set of locale codes that should not be prefixed
  */
 export function getUnPrefixedLocales(config: ResolvedConfig) {
-  const prefixDefaultLocale =
-    typeof config.routes.prefixDefaultLocale === "boolean"
-      ? config.routes.prefixDefaultLocale
-      : config.prefixDefaultLocale;
-  if (!config.domains && prefixDefaultLocale) {
+  if (!config.domains && config.prefixDefaultLocale) {
     return new Set<string>();
   }
-  if (!config.domains && !prefixDefaultLocale) {
+  if (!config.domains && !config.prefixDefaultLocale) {
     return new Set([config.defaultLocale]);
   }
   return new Set(

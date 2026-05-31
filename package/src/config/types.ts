@@ -34,10 +34,6 @@ export type DomainConfig = {
 
 /** Configuration for route generation and localization */
 export type RoutesConfig = {
-  /**
-   * @deprecated Will be removed on next major release. Use prefixDefaultLocale option at the root level instead.
-   */
-  prefixDefaultLocale?: boolean;
   /** Directory containing the original route files (default: "./src/_app") */
   originDir: string;
   /** Directory where localized routes will be generated (default: "./src/app/(i18n)") */
@@ -67,12 +63,6 @@ export type MessagesConfig = {
   clientKeys?: RegExp[] | RegExp;
   /** Custom format configurations for date, time, number, and plural formatting */
   formats?: Partial<Formats>;
-  /**
-   * Function to load messages for a given locale
-   * @deprecated Use `loadMessageEntries` instead. Will be removed in next major release.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getMessages?: (locale: string) => Promise<any> | any;
   /** Function to load message entries for a given locale */
   loadMessageEntries: (
     locale: string,

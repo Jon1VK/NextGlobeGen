@@ -40,13 +40,9 @@ export async function getOriginRoutes({
     const localizedPathEntries = locales
       .map((locale) => {
         if (isDifferentLocaleMarkdownPageFile(file, locale)) return;
-        const prefixDefaultLocale =
-          typeof config.routes.prefixDefaultLocale === "boolean"
-            ? config.routes.prefixDefaultLocale
-            : config.prefixDefaultLocale;
         const skipPrefixLocale =
           !config.domains &&
-          !prefixDefaultLocale &&
+          !config.prefixDefaultLocale &&
           locale === config.defaultLocale;
         const localePrefix = skipPrefixLocale ? `(${locale})` : locale;
         const localizedDir =

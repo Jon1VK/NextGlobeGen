@@ -177,8 +177,3 @@ function addDomainRewrites(nextConfig: NextConfig, domains?: DomainConfig[]) {
   };
   return Object.assign({}, nextConfig, { rewrites });
 }
-
-/**
- * @deprecated Will be removed in the next major release. Use default export instead.
- */
-export const withNextGlobeGenPlugin = createNextGlobeGenPlugin;
