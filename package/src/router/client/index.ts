@@ -1,3 +1,5 @@
+import type { MessagesParams } from "next-globe-gen/messages";
+import type { Schema } from "next-globe-gen/schema";
 import type {
   createHref as $createHref,
   createTranslator as $createTranslator,
@@ -27,6 +29,16 @@ export type * from "next-globe-gen/messages";
 export type * from "next-globe-gen/schema";
 export { IntlProvider, useLocale, useSchema } from "./IntlProvider";
 export * from "./useRouter";
+
+/**
+ * The routing schema containing all routes, locales, and domain configurations.
+ */
+export declare const schema: Schema;
+
+/**
+ * All messages for all locales in your application.
+ */
+export declare const messages: MessagesParams;
 
 /**
  * Hook that generates localized URLs for routes.
