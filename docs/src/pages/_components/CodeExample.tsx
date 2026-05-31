@@ -11,8 +11,18 @@ function Layout(props: { children: React.ReactNode }) {
   return (
     <html lang={locale}>
       <body>
-        <h1>{t("home.title")}</h1>
-        <Link href="/dashboard">{t("dashboard.title")}</Link>
+        <h1>
+          {t("home.title", {
+            _description: "Title for the home page",
+            _defaultMessage: "Welcome to Next Globe Gen!",
+          })}
+        </h1>
+        <Link href="/dashboard">
+          {t("dashboard.title", {
+            _description: "Title for the dashboard page",
+            _defaultMessage: "Go to Dashboard",
+          })}
+        </Link>
         {props.children}
       </body>
     </html>
@@ -27,6 +37,7 @@ export default function CodeExample() {
         className="inset-0 left-1/2 -z-10 ml-10 w-[200%] skew-x-[-30deg] bg-linear-to-t from-sky-500/90 to-white md:ml-20 lg:ml-36 dark:to-sky-950"
         aria-hidden="true"
       />
+
       <div className="flex overflow-hidden rounded-tl-xl bg-gray-900/50 text-sm/6 font-medium">
         <div className="border-0 border-r border-solid border-gray-800 bg-sky-800 px-4 py-2 text-white">
           layout.tsx

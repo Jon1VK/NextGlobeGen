@@ -20,7 +20,6 @@ export default defineConfig(
   { languageOptions: { globals: { ...globals.node } } },
   eslint.configs.recommended,
   tseslint.configs.recommended,
-  // @ts-expect-error Wrong types
   compat.extends("plugin:@docusaurus/recommended"),
   { linterOptions: { reportUnusedDisableDirectives: true } },
 );

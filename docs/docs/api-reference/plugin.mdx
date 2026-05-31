@@ -23,9 +23,7 @@ import createNextGlobeGenPlugin from "next-globe-gen/plugin";
 
 const withNextGlobeGen = createNextGlobeGenPlugin();
 
-const nextConfig: NextConfig = {
-  /* Next.js config options here */
-};
+const nextConfig: NextConfig = {/* Next.js config options here */};
 
 export default withNextGlobeGen(nextConfig);
 ```
@@ -40,28 +38,9 @@ import createNextGlobeGenPlugin from "next-globe-gen/plugin";
 const withNextGlobeGen = createNextGlobeGenPlugin();
 
 /** @type {import('next').NextConfig} */
-const nextConfig: NextConfig = {
-  /* Next.js config options here */
-};
+const nextConfig: NextConfig = {/* Next.js config options here */};
 
 export default withNextGlobeGen(nextConfig);
-```
-
-</TabItem>
-<TabItem value="next.config.js">
-
-```ts
-// @ts-check
-const createNextGlobeGenPlugin = require("next-globe-gen/plugin");
-
-const withNextGlobeGen = createNextGlobeGenPlugin();
-
-/** @type {import('next').NextConfig} */
-const nextConfig: NextConfig = {
-  /* Next.js config options here */
-};
-
-module.exports = withNextGlobeGen(nextConfig);
 ```
 
 </TabItem>
@@ -70,12 +49,18 @@ module.exports = withNextGlobeGen(nextConfig);
 ### Parameters
 
 ```tsx
-createNextGlobeGenPlugin(configPath?: string);
+createNextGlobeGenPlugin(options?: {
+  configPath?: string;
+  format?: "esm" | "cjs";
+});
 ```
 
-| Param        | Type     | Required | Description                        | Default            |
-| ------------ | -------- | -------- | ---------------------------------- | ------------------ |
-| `configPath` | `string` | -        | Path to a NextGlobeGen config file | `./i18n.config.ts` |
+| Param        | Type             | Required | Description                        | Default            |
+| ------------ | ---------------- | -------- | ---------------------------------- | ------------------ |
+| `configPath` | `string`         | -        | Path to a NextGlobeGen config file | `./i18n.config.ts` |
+| `format`     | `"esm" \| "cjs"` | -        | Format used to compile user files  | `"esm"`            |
+
+The package uses ESM by default. Set `format: "cjs"` when your configuration or imported files require CommonJS.
 
 ### Returns
 
@@ -93,9 +78,7 @@ import createNextGlobeGenPlugin from "next-globe-gen/plugin";
 const withMDX = createMDX();
 const withNextGlobeGen = createNextGlobeGenPlugin();
 
-const nextConfig: NextConfig = {
-  /* Next.js config options here */
-};
+const nextConfig: NextConfig = {/* Next.js config options here */};
 
 export default withNextGlobeGen(withMDX(nextConfig));
 ```
@@ -110,9 +93,7 @@ import withExportOptimizeImages from "next-export-optimize-images";
 const withNextGlobeGen = createNextGlobeGenPlugin();
 
 export default async function (phase: any) {
-  const nextConfig: NextConfig = {
-    /* Next.js config options here */
-  };
+  const nextConfig: NextConfig = {/* Next.js config options here */};
   const config = await withExportImages(nextConfig);
   return withNextGlobeGen(config)(phase);
 }

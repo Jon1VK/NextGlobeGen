@@ -28,13 +28,23 @@ export { middleware } from "next-globe-gen/middleware";
 ## Parameters
 
 ```tsx
-proxy(request: NextRequest, opts?: { skipAlternateLinkHeader?: boolean });
+proxy(
+  request: NextRequest,
+  opts?: {
+    skipAlternateLinkHeader?: boolean;
+    baseURL?: string | URL;
+    localeNegotiation?: "default" | "skip" | "force";
+    localeCookieName?: string;
+    localeCookieOpts?: Partial<ResponseCookie>;
+  },
+);
 ```
 
 | Param                          | Type                             | Required | Description                                                            |
 | ------------------------------ | -------------------------------- | -------- | ---------------------------------------------------------------------- |
 | `request`                      | `NextRequest`                    | Yes      | The request that is passed to Next.js middleware function              |
 | `opts.skipAlternateLinkHeader` | `boolean`                        | -        | If the alternate link header should be skipped or not (default: false) |
+| `opts.baseURL`                 | `string \| URL`                  | -        | Base URL used for alternate link headers (default: request URL)        |
 | `opts.localeNegotiation`       | `"force" \| "skip" \| "default"` | -        | Modify if the locale negotiation should be skipped or ran forcefully   |
 | `opts.localeCookieName`        | `string`                         | -        | Custom locale cookie name (default: "NEXTGLOBEGEN_LOCALE")             |
 | `opts.localeCookieOpts`        | `Partial<ResponseCookie>`        | -        | Custom locale cookie options                                           |

@@ -7,11 +7,9 @@ sidebar_position: 6
 NextGlobeGen can be configured through an `i18n.config.ts` file in the root of your project directory with a default export.
 
 ```tsx title="i18n.config.ts"
-import { Config } from "next-globe-gen";
+import type { Config } from "next-globe-gen/config";
 
-const config: Config = {
-  /* config options here */
-};
+const config: Config = {/* config options here */};
 
 export default config;
 ```
@@ -20,14 +18,14 @@ The location of the configuration file can be altered by giving the path to the 
 
 ```tsx title="next.config.ts"
 import type { NextConfig } from "next";
-import { withNextGlobeGenPlugin } from "next-globe-gen/plugin";
+import createNextGlobeGenPlugin from "next-globe-gen/plugin";
 
 // highlight-next-line
-const withNextGlobeGen = withNextGlobeGenPlugin("./configs/next-globe-gen.ts");
+const withNextGlobeGen = createNextGlobeGenPlugin({
+  configPath: "./configs/next-globe-gen.ts",
+});
 
-const nextConfig: NextConfig = {
-  /* Next.js config options here */
-};
+const nextConfig: NextConfig = {/* Next.js config options here */};
 
 export default withNextGlobeGen(nextConfig);
 ```

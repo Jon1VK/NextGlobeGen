@@ -259,7 +259,7 @@ export default function NotFoundPage() {
 
 ## Language alternates
 
-NextGlobeGen package injects [language alternates](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#alternates) to the metadata objects for all page routing files. Alternate language links are required to be defined as absolute URLs. As so the [`metadataBase`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase) property needs to be set in the `src/_app/layout.tsx` file.
+NextGlobeGen package injects [language alternates](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#alternates) and a canonical URL for the current locale to the metadata objects for all page routing files. Alternate language links are required to be defined as absolute URLs. Set the [`metadataBase`](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase) property in the `src/_app/layout.tsx` file, unless the application is deployed to Vercel, where `VERCEL_URL` is used automatically when available.
 
 ```tsx title="src/_app/layout.tsx"
 import type { Metadata } from "next";
