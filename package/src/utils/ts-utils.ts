@@ -1,19 +1,19 @@
 import { createHash } from "crypto";
-import { rmSync } from "fs";
+import { mkdtempSync, rmSync } from "fs";
 import path from "path";
 import { build } from "tsup";
 import { pathToFileURL } from "url";
 import { isFile } from "~/utils/fs-utils";
 
 export async function compile<T>(filePath: string) {
-  const outDir = path.dirname(filePath);
+  const tmpDir = mkdtempSync("next-globe-gen");
   const version = Math.random();
   const outputFileName = createHash("md5")
     .update(`${filePath}-${version}`)
     .digest("hex");
   await build({
     config: false,
-    outDir,
+    outDir: tmpDir,
     format: "cjs",
     bundle: true,
     splitting: false,
@@ -22,7 +22,7 @@ export async function compile<T>(filePath: string) {
     silent: true,
     shims: true,
   });
-  const compiledPath = path.resolve(outDir, outputFileName);
+  const compiledPath = path.resolve(tmpDir, outputFileName);
   if (isFile(`${compiledPath}.cjs`)) {
     return importContents<T>(`${compiledPath}.cjs`);
   }
@@ -35,6 +35,6 @@ async function importContents<T>(filePath: string): Promise<T> {
     const contents = await import(fileURL.href);
     return contents.default as T;
   } finally {
-    rmSync(filePath);
+    rmSync(path.dirname(filePath), { recursive: true, force: true });
   }
 }
