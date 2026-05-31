@@ -1,7 +1,7 @@
 {
   "extends": "@repo/typescript-config/react.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "types": ["node"],
     "paths": {
       "@repo/frontend/*": ["./src/*"]
     }
