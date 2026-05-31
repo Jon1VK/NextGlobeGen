@@ -15,6 +15,16 @@ NextGlobeGen makes it effortless to deliver your content in multiple languages w
 
 NextGlobeGen is a powerful TypeScript-first internationalization (i18n) library for Next.js App Router applications. Unlike traditional i18n solutions, NextGlobeGen uses **generative programming** to automatically create localized routes and type-safe APIs, giving you a seamless development experience with full TypeScript support.
 
+## Getting Started
+
+Ready to internationalize your Next.js app? Follow our [Getting Started Guide](https://next-globe-gen.dev/docs/getting-started) to set up NextGlobeGen in minutes.
+
+## Required Versions
+
+- Node.js: ^22.12.0
+- Next.js: ^15.3.0 || ^16.0.0
+- React: ^19.0.0
+
 ## Why NextGlobeGen?
 
 ### 🎯 Developer Experience First
@@ -206,10 +216,6 @@ export async function generateMetadata() {
 }
 ```
 
-## Getting Started
-
-Ready to internationalize your Next.js app? Follow our [Getting Started Guide](https://next-globe-gen.dev/docs/getting-started) to set up NextGlobeGen in minutes.
-
-### Coming from next-intl?
+## Coming from next-intl?
 
 If you're familiar with next-intl or considering alternatives, check out our [detailed comparison](https://next-globe-gen.dev/docs/comparison-with-next-intl) to understand the differences and see which approach fits your project best.
