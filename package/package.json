@@ -20,6 +20,9 @@
     "next",
     "next.js"
   ],
+  "engines": {
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
+  },
   "files": [
     "dist",
     "README.md",
@@ -71,32 +74,31 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@formatjs/icu-messageformat-parser": "^3.5.10",
-    "@swc/core": "^1.15.40",
+    "@formatjs/icu-messageformat-parser": "^3.5.17",
+    "@swc/core": "^1.16.1",
     "commander": "^15.0.0",
     "fast-memoize": "^2.5.2",
-    "gettext-parser": "^9.0.2",
-    "intl-messageformat": "^11.2.7",
-    "negotiator": "^1.0.0",
+    "gettext-parser": "^9.1.1",
+    "intl-messageformat": "^11.2.14",
+    "negotiator": "^1.1.0",
     "path-to-regexp": "^8.4.2",
-    "tsdown": "^0.22.1",
-    "tsup": "^8.5.1",
+    "tsdown": "^0.22.14",
     "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/gettext-parser": "^9.0.0",
-    "@types/negotiator": "^0.6.4",
-    "@types/node": "^20.19.41",
-    "@types/react": "^19.2.15",
-    "@vitest/coverage-v8": "^4.1.7",
-    "eslint": "^10.4.1",
-    "next": "^16.2.6",
-    "prettier": "^3.8.3",
-    "react": "^19.2.6",
+    "@types/negotiator": "^0.6.5",
+    "@types/node": "^22.20.1",
+    "@types/react": "^19.2.18",
+    "@vitest/coverage-v8": "^4.1.11",
+    "eslint": "^10.9.0",
+    "next": "^16.3.2",
+    "prettier": "^3.9.6",
+    "react": "^19.2.8",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.60.0",
-    "vitest": "^4.1.7"
+    "typescript-eslint": "^8.67.0",
+    "vitest": "^4.1.11"
   },
   "peerDependencies": {
     "next": "^15.3.0 || ^16.0.0",

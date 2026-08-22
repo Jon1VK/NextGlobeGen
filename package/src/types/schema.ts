@@ -70,7 +70,7 @@ type ExtractRouteParams<T extends Route> = T extends `${infer R}[[${infer P}]]`
  * Get the params object type for a given route
  */
 export type RouteParams<T extends Route> = {
-  [K in ExtractRouteParams<T> as K extends `...${infer R}`
-    ? R
-    : K]: K extends `...${string}` ? string[] : string;
+  [
+    K in ExtractRouteParams<T> as K extends `...${infer R}` ? R : K
+  ]: K extends `...${string}` ? string[] : string;
 };

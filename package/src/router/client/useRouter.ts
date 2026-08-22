@@ -72,6 +72,7 @@ export function useRouter() {
     back: router.back.bind(router),
     forward: router.forward.bind(router),
     refresh: router.refresh.bind(router),
+    bfcacheId: router.bfcacheId,
     experimental_gesturePush: router.experimental_gesturePush?.bind(router),
     push,
     replace,

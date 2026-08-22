@@ -21,7 +21,7 @@ export async function compile<T>(
     config: false,
     outDir: tmpDir,
     format,
-    target: "node20",
+    target: "node22.18.0",
     outputOptions: { codeSplitting: false },
     entry: { [`${outputFileName}`]: filePath },
     logLevel: "error",

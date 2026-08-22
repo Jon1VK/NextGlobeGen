@@ -12,14 +12,14 @@ rustc-hash = "2.0.0"
 serde = "1.0.0"
 serde_json = "1.0.0"
 serde_with = "3.0.0"
-swc_common = "23.0.0"
-swc_core = { version = "68.0.0", features = ["ecma_plugin_transform"] }
-swc_ecma_ast = "25.0.0"
-swc_ecma_visit = "25.0.0"
-swc_plugin_macro = "1.0.0"
+swc_common = "26.0.0"
+swc_core = { version = "77.0.0", features = ["ecma_plugin_transform"] }
+swc_ecma_ast = "29.0.0"
+swc_ecma_visit = "29.0.0"
+swc_plugin_macro = "2.0.0"
 
 [dev-dependencies]
-swc_core = { version = "68.0.0", features = ["ecma_parser"] }
+swc_core = { version = "77.0.0", features = ["ecma_parser"] }
 
 [profile.release]
 codegen-units = 1

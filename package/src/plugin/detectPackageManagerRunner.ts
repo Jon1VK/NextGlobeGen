@@ -26,8 +26,7 @@ function detectPackageManagerRunnerFromEnv(): PackageManagerRunner | undefined {
 }
 
 function detectPackageManagerRunnerFromLockFiles():
-  | PackageManagerRunner
-  | undefined {
+  PackageManagerRunner | undefined {
   const cwd = process.cwd();
   if (existsSync(path.join(cwd, "pnpm-lock.yaml"))) return "pnpm exec";
   if (existsSync(path.join(cwd, "yarn.lock"))) return "yarn";
