@@ -34,6 +34,7 @@ export const generateCommand = new Command("generate")
     "custom path to a configuration file",
     "i18n.config.ts",
   )
+  .option("--cjs", "enables cjs output format (default: esm)")
   .option("-w, --watch", "enables watch mode")
   .option("--no-routes", "skip routes generation")
   .option("--no-messages", "skip messages compilation")
@@ -42,6 +43,7 @@ export const generateCommand = new Command("generate")
 
 type Options = {
   config: string;
+  cjs: boolean;
   watch: boolean;
   routes: boolean;
   messages: boolean;
@@ -50,7 +52,8 @@ type Options = {
 
 async function generateAction(opts: Options) {
   if (!isFile(opts.config)) throw configNotFoundError(opts.config);
-  const userConfig = await compile<Config>(opts.config);
+  const format = opts.cjs ? "cjs" : "esm";
+  const userConfig = await compile<Config>(opts.config, format);
   const config = mergeConfigs(DEFAULT_CONFIG, userConfig);
   generateOutDir(config);
   if (!opts.routes) generateSchemaFiles(config);
@@ -62,25 +65,27 @@ async function generateRoutesSubAction(config: ResolvedConfig, opts: Options) {
   if (!isDirectory(config.routes.originDir)) {
     throw routesOriginDirNotFoundError(config);
   }
+  const format = opts.cjs ? "cjs" : "esm";
   if (!(opts.plugin && opts.watch)) {
     rmDirectory(config.routes.localizedDir);
     generateLocalizedDir(config.routes.localizedDir);
-    await generateRoutes(config);
+    await generateRoutes(config, format);
   }
   if (opts.watch) {
     watch(config.routes.originDir, { recursive: true }, (_, fileName) => {
       if (!fileName) return;
-      debouncedGenerateRoutes(config, `/${fileName}`);
+      debouncedGenerateRoutes(config, format, `/${fileName}`);
     });
   }
 }
 
 async function generateRoutes(
   config: ResolvedConfig,
+  format: "esm" | "cjs",
   updatedOriginPath?: string,
 ) {
   const startTime = process.hrtime();
-  const originRoutes = await getOriginRoutes({ config });
+  const originRoutes = await getOriginRoutes({ config, format });
   generateLocalizedRoutes(config, originRoutes, updatedOriginPath);
   generateSchemaFiles(config, originRoutes);
   const endTime = process.hrtime(startTime);

@@ -34,9 +34,9 @@ describe("plugin", () => {
   });
 
   test("adds aliases correctly to webpack config", async () => {
-    const config = await withNextGlobeGenPlugin(CONFIG_PATH)({})(
-      "phase-production-server",
-    );
+    const config = await withNextGlobeGenPlugin({ configPath: CONFIG_PATH })(
+      {},
+    )("phase-production-server");
     const webpackConfig = config.webpack?.(
       { context: "/" },
       {} as WebpackConfigContext,
@@ -48,7 +48,7 @@ describe("plugin", () => {
   });
 
   test("includes user defined custom webpack config", async () => {
-    const config = await withNextGlobeGenPlugin(CONFIG_PATH)({
+    const config = await withNextGlobeGenPlugin({ configPath: CONFIG_PATH })({
       webpack: (config) => {
         config.resolve = {};
         config.resolve.alias = { abc: "/abc.js" };
@@ -70,9 +70,9 @@ describe("plugin", () => {
 
   test("adds aliases correctly to turbopack config", async () => {
     vi.stubEnv("TURBOPACK", "1");
-    const config = await withNextGlobeGenPlugin(CONFIG_PATH)({})(
-      "phase-production-server",
-    );
+    const config = await withNextGlobeGenPlugin({ configPath: CONFIG_PATH })(
+      {},
+    )("phase-production-server");
     expect(config.turbopack?.resolveAlias).toStrictEqual({
       "next-globe-gen/schema": "./next-globe-gen/schema.ts",
       "next-globe-gen/messages": "./next-globe-gen/messages.ts",
@@ -80,20 +80,26 @@ describe("plugin", () => {
   });
 
   test("does not spawn child processes when in production", async () => {
-    await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-production-server");
+    await withNextGlobeGenPlugin({ configPath: CONFIG_PATH })({})(
+      "phase-production-server",
+    );
     expect(spawn).not.toBeCalled();
     expect(spawnSync).not.toBeCalled();
   });
 
   test("skip another spawn in build phase", async () => {
     vi.stubEnv("NEXT_DEPLOYMENT_ID", "1");
-    await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-production-build");
+    await withNextGlobeGenPlugin({ configPath: CONFIG_PATH })({})(
+      "phase-production-build",
+    );
     expect(spawn).not.toBeCalled();
     expect(spawnSync).not.toBeCalled();
   });
 
   test("spawns generator in sync mode when building", async () => {
-    await withNextGlobeGenPlugin(CONFIG_PATH)({})("phase-production-build");
+    await withNextGlobeGenPlugin({ configPath: CONFIG_PATH })({})(
+      "phase-production-build",
+    );
     expect(spawn).not.toBeCalled();
     expect(spawnSync).toHaveBeenCalledWith(
       "pnpm exec next-globe-gen --plugin --config ./src/__mocks__/i18n.config.ts",
@@ -106,15 +112,15 @@ describe("plugin", () => {
 
   test("adds domain rewrites correctly", async () => {
     vi.stubEnv("TURBOPACK", "1");
-    const config = await withNextGlobeGenPlugin(CONFIG_PATH)({})(
-      "phase-production-server",
-    );
+    const config = await withNextGlobeGenPlugin({ configPath: CONFIG_PATH })(
+      {},
+    )("phase-production-server");
     const rewrites = await config.rewrites?.();
     expect(rewrites).toStrictEqual(expectedRewrites);
   });
 
   test("includes user defined rewrites array correctly", async () => {
-    const config = await withNextGlobeGenPlugin(CONFIG_PATH)({
+    const config = await withNextGlobeGenPlugin({ configPath: CONFIG_PATH })({
       async rewrites() {
         return [{ source: "/abc", destination: "/def" }];
       },
@@ -127,7 +133,7 @@ describe("plugin", () => {
   });
 
   test("includes user defined rewrites object correctly", async () => {
-    const config = await withNextGlobeGenPlugin(CONFIG_PATH)({
+    const config = await withNextGlobeGenPlugin({ configPath: CONFIG_PATH })({
       async rewrites() {
         return {
           beforeFiles: [{ source: "/a", destination: "/b" }],

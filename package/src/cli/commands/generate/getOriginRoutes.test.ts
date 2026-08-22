@@ -5,6 +5,7 @@ import { mergeConfigs } from "~/config/utils";
 import { getOriginRoutes } from "./getOriginRoutes";
 
 const exampleDir = "./src/__mocks__/_app";
+const format = "esm";
 
 describe("getOriginRoutes()", () => {
   test("works correctly with prefixDefaultLocale: true", async () => {
@@ -13,6 +14,7 @@ describe("getOriginRoutes()", () => {
         locales: ["fi", "en"],
         defaultLocale: "fi",
       }),
+      format,
       directory: exampleDir,
     });
     const sortedFiles = files.sort((a, b) =>
@@ -28,6 +30,7 @@ describe("getOriginRoutes()", () => {
         defaultLocale: "fi",
         prefixDefaultLocale: false,
       }),
+      format,
       directory: exampleDir,
     });
     const sortedFiles = files.sort((a, b) =>
@@ -53,6 +56,7 @@ describe("getOriginRoutes()", () => {
           },
         ],
       }),
+      format,
       directory: exampleDir,
     });
     const sortedFiles = files.sort((a, b) =>

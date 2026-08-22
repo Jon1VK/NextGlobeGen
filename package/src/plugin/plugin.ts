@@ -22,6 +22,13 @@ type Phase =
   | typeof PHASE_DEVELOPMENT_SERVER
   | typeof PHASE_TEST;
 
+export type PluginOptions = {
+  /** Path to the i18n config file (default: "./i18n.config.ts") */
+  configPath?: string;
+  /** Output format for the compiled config file (default: "esm") */
+  format?: "esm" | "cjs";
+};
+
 /**
  * This function creates the wrapper function for your Next.js config object.
  *
@@ -32,14 +39,15 @@ type Phase =
  *   // Next.js config options here
  * });
  */
-export default function createNextGlobeGenPlugin(
+export default function createNextGlobeGenPlugin({
   configPath = "./i18n.config.ts",
-) {
+  format = "esm",
+}: PluginOptions = {}) {
   return function withNextGlobeGen(config: NextConfig) {
     return async (phase: Phase) => {
-      const userConfig = await compile<Config>(configPath);
+      const userConfig = await compile<Config>(configPath, format);
       const outDir = userConfig.outDir ?? "./next-globe-gen";
-      await useGenerator(configPath, phase);
+      await useGenerator(configPath, format, phase);
       return addDomainRewrites(
         addAliases(config, {
           "next-globe-gen/schema": `${outDir}/schema.ts`,
@@ -51,7 +59,11 @@ export default function createNextGlobeGenPlugin(
   };
 }
 
-async function useGenerator(configPath: string, phase: Phase) {
+async function useGenerator(
+  configPath: string,
+  format: "esm" | "cjs",
+  phase: Phase,
+) {
   const nextjsVersion = getNextJSVersion();
   // prettier-ignore
   if (nextjsVersion.major >= 16 && phase === "phase-development-server" && !process.env.NEXT_PRIVATE_WORKER) return;
@@ -60,11 +72,14 @@ async function useGenerator(configPath: string, phase: Phase) {
   const runner = detectPackageManagerRunner();
   try {
     if (phase !== "phase-production-server") {
-      spawnSync(`${runner} next-globe-gen --plugin --config ${configPath}`, {
-        cwd: process.cwd(),
-        stdio: "inherit",
-        shell: true,
-      });
+      spawnSync(
+        `${runner} next-globe-gen --plugin --config ${configPath}${format === "cjs" ? " --cjs" : ""}`,
+        {
+          cwd: process.cwd(),
+          stdio: "inherit",
+          shell: true,
+        },
+      );
     }
     if (phase === "phase-development-server") {
       const abortController = new AbortController();
@@ -80,7 +95,7 @@ async function useGenerator(configPath: string, phase: Phase) {
         process.exit();
       });
       spawn(
-        `${runner} next-globe-gen --plugin --watch --config ${configPath}`,
+        `${runner} next-globe-gen --plugin --watch --config ${configPath}${format === "cjs" ? " --cjs" : ""}`,
         {
           cwd: process.cwd(),
           stdio: "inherit",

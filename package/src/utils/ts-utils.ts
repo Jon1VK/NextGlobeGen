@@ -6,7 +6,10 @@ import { isFile } from "~/utils/fs-utils";
 
 const requireFrom = createRequire(import.meta.url);
 
-export async function compile<T>(filePath: string): Promise<T> {
+export async function compile<T>(
+  filePath: string,
+  format: "esm" | "cjs",
+): Promise<T> {
   const { build } = await import("tsdown");
   const tmpDir = mkdtempSync("next-globe-gen");
   const version = Math.random();
@@ -17,7 +20,7 @@ export async function compile<T>(filePath: string): Promise<T> {
     clean: false,
     config: false,
     outDir: tmpDir,
-    format: "cjs",
+    format,
     target: "node20",
     outputOptions: { codeSplitting: false },
     entry: { [`${outputFileName}`]: filePath },
@@ -25,6 +28,9 @@ export async function compile<T>(filePath: string): Promise<T> {
     shims: true,
   });
   const compiledPath = path.resolve(tmpDir, outputFileName);
+  if (isFile(`${compiledPath}.mjs`)) {
+    return importContents<T>(`${compiledPath}.mjs`);
+  }
   if (isFile(`${compiledPath}.cjs`)) {
     return importContents<T>(`${compiledPath}.cjs`);
   }

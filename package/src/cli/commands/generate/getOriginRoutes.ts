@@ -14,6 +14,7 @@ export type OriginRoute = {
 
 type GetOriginRoutesParams = {
   config: ResolvedConfig;
+  format: "esm" | "cjs";
   directory?: string;
   parentRoute?: OriginRoute;
   locales_?: Locale[];
@@ -21,6 +22,7 @@ type GetOriginRoutesParams = {
 
 export async function getOriginRoutes({
   config,
+  format,
   directory,
   parentRoute,
   locales_,
@@ -35,7 +37,7 @@ export async function getOriginRoutes({
     const isDir = file.type === "dir";
     if (isDir && file.name.startsWith("_")) continue;
     const routeTranslations = isDir
-      ? await getRouteTranslations(filePath)
+      ? await getRouteTranslations(filePath, config, format)
       : undefined;
     const localizedPathEntries = locales
       .map((locale) => {
@@ -66,6 +68,7 @@ export async function getOriginRoutes({
     }
     const childRoutes = await getOriginRoutes({
       config,
+      format,
       directory: filePath,
       parentRoute: originRoute,
       locales_: locales,
@@ -116,11 +119,15 @@ function getAppRouterFiles(directory: string) {
 const I18N_FILE_NAMES = ["i18n.js", "i18n.ts"];
 type I18N = Record<string, string> | (() => Promise<Record<string, string>>);
 
-async function getRouteTranslations(directory: string) {
+async function getRouteTranslations(
+  directory: string,
+  config: ResolvedConfig,
+  format: "esm" | "cjs",
+) {
   for (const file of I18N_FILE_NAMES) {
     const filePath = path.join(directory, file);
     if (!isFile(filePath)) continue;
-    const i18n = await compile<I18N>(filePath);
+    const i18n = await compile<I18N>(filePath, format);
     if (typeof i18n === "function") return await i18n();
     return i18n;
   }
