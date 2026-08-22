@@ -13,6 +13,10 @@ export function proxy(request: NextRequest) {
      */
     // skipAlternateLinkHeader: request.nextUrl.pathname.startsWith("/api"),
     /**
+     * Base URL for the alternate link headers (uses `request.url` by default)
+     */
+    // baseURL: process.env.BASE_URL,
+    /**
      * Customize locale negotiation behavior (optional)
      * "default" - normal behavior (negotiate on first visit)
      * "force" - always negotiate locale (useful for testing)

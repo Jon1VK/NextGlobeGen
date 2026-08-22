@@ -114,7 +114,7 @@ describe("proxy", () => {
     const response = proxy(request);
     expect(response.status).toBe(200);
     expect(response.headers.get("Link")).toBe(
-      '<http://example.com/en>; rel="alternate"; hreflang="en", <http://example.com/en>; rel="alternate"; hreflang="x-default", <http://example.com/fi>; rel="alternate"; hreflang="fi"',
+      '<http://example.com/en>; rel="canonical", <http://example.com/en>; rel="alternate"; hreflang="x-default", <http://example.com/en>; rel="alternate"; hreflang="en", <http://example.com/fi>; rel="alternate"; hreflang="fi"',
     );
   });
 
@@ -123,7 +123,7 @@ describe("proxy", () => {
     const response = proxy(request);
     expect(response.status).toBe(200);
     expect(response.headers.get("Link")).toBe(
-      '<http://example.com/en/profile/1>; rel="alternate"; hreflang="en", <http://example.com/en/profile/1>; rel="alternate"; hreflang="x-default", <http://example.com/fi/profiili/1>; rel="alternate"; hreflang="fi"',
+      '<http://example.com/en/profile/1>; rel="canonical", <http://example.com/en/profile/1>; rel="alternate"; hreflang="x-default", <http://example.com/en/profile/1>; rel="alternate"; hreflang="en", <http://example.com/fi/profiili/1>; rel="alternate"; hreflang="fi"',
     );
   });
 
@@ -192,7 +192,7 @@ describe("proxy", () => {
     const response = proxy(request);
     expect(response.status).toBe(200);
     expect(response.headers.get("Link")).toBe(
-      '<http://en.example.com/en-US>; rel="alternate"; hreflang="en-US", <http://en.example.com/>; rel="alternate"; hreflang="en", <http://fi.example.com/>; rel="alternate"; hreflang="fi"',
+      '<http://en.example.com/en-US>; rel="alternate"; hreflang="en-US", <http://en.example.com/>; rel="alternate"; hreflang="en", <http://fi.example.com/>; rel="canonical", <http://fi.example.com/>; rel="alternate"; hreflang="fi"',
     );
   });
 
@@ -202,7 +202,7 @@ describe("proxy", () => {
     const response = proxy(request);
     expect(response.status).toBe(200);
     expect(response.headers.get("Link")).toBe(
-      '<http://en.example.com/en-US/profile/1>; rel="alternate"; hreflang="en-US", <http://en.example.com/profile/1>; rel="alternate"; hreflang="en", <http://fi.example.com/profiili/1>; rel="alternate"; hreflang="fi"',
+      '<http://en.example.com/en-US/profile/1>; rel="alternate"; hreflang="en-US", <http://en.example.com/profile/1>; rel="alternate"; hreflang="en", <http://fi.example.com/profiili/1>; rel="canonical", <http://fi.example.com/profiili/1>; rel="alternate"; hreflang="fi"',
     );
   });
 

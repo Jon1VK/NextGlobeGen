@@ -6,9 +6,15 @@ import { compile } from "path-to-regexp";
 import { matchRouteFactory } from "~/utils/matchRouteFactory";
 
 export type ProxyOptions = {
+  /** Whether to skip adding alternate link headers to the response. */
   skipAlternateLinkHeader?: boolean;
+  /** The base site URL to use for alternate link headers. */
+  baseURL?: string | URL;
+  /** How to handle locale negotiation. */
   localeNegotiation?: "default" | "skip" | "force";
+  /** The name of the cookie to use for storing the user's preferred locale. */
   localeCookieName?: string;
+  /** The options to use for the locale cookie. */
   localeCookieOpts?: Partial<ResponseCookie>;
 };
 
@@ -33,6 +39,7 @@ export default function proxy(
   request: NextRequest,
   {
     skipAlternateLinkHeader = false,
+    baseURL,
     localeNegotiation = "default",
     localeCookieName = "NEXTGLOBEGEN_LOCALE",
     localeCookieOpts = {},
@@ -109,7 +116,7 @@ export default function proxy(
   if (skipAlternateLinkHeader) return response;
 
   // Apply alternative localized links
-  const alternativeLinks = getAlternativeLinks(locale, request);
+  const alternativeLinks = getAlternativeLinks(locale, baseURL, request);
   if (!alternativeLinks) return response;
   response.headers.set("Link", alternativeLinks);
   return response;
@@ -132,8 +139,12 @@ function localeMatcher(
   return negotiator.language(locales) ?? defaultLocale;
 }
 
-function getAlternativeLinks(locale: Locale, request: NextRequest) {
-  const routeMatch = matchRoute(locale, request.nextUrl.pathname);
+function getAlternativeLinks(
+  currentLocale: Locale,
+  baseURL: string | URL | undefined,
+  request: NextRequest,
+) {
+  const routeMatch = matchRoute(currentLocale, request.nextUrl.pathname);
   if (!routeMatch) return undefined;
   const { localizedPaths, params } = routeMatch;
   return schema.locales
@@ -141,17 +152,20 @@ function getAlternativeLinks(locale: Locale, request: NextRequest) {
       const localizedPath = localizedPaths[locale];
       if (!localizedPath) return;
       const alternatePath = compile(localizedPath)(params);
-      const alternateURL = new URL(alternatePath, request.url);
+      const alternateURL = new URL(alternatePath, baseURL || request.url);
       const domainConfig = schema.domains?.find(({ locales }) =>
         locales.includes(locale),
       );
       if (domainConfig) alternateURL.host = domainConfig.domain;
       alternateURL.search = "";
+      const canonical =
+        locale === currentLocale ? `<${alternateURL}>; rel="canonical", ` : "";
       const xDefault =
         locale === schema.defaultLocale
-          ? `, <${alternateURL}>; rel="alternate"; hreflang="x-default"`
+          ? `<${alternateURL}>; rel="alternate"; hreflang="x-default", `
           : "";
-      return `<${alternateURL}>; rel="alternate"; hreflang="${locale}"${xDefault}`;
+      const alternate = `<${alternateURL}>; rel="alternate"; hreflang="${locale}"`;
+      return `${canonical}${xDefault}${alternate}`;
     })
     .filter((v) => !!v)
     .join(", ");

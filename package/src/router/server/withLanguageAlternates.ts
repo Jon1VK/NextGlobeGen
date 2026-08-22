@@ -5,7 +5,7 @@ import {
   type RouteParams,
   type StaticRoute,
 } from "next-globe-gen/schema";
-import { createHref } from ".";
+import { createHref, getLocale } from ".";
 
 type WithLanguageAlternatesArgs<R extends Route> = R extends StaticRoute
   ? [route: R, _?: undefined]
@@ -27,18 +27,21 @@ export function withLanguageAlternates<R extends Route>(
   ...args: WithLanguageAlternatesArgs<R>
 ) {
   const [pathname, params] = args;
+  const currentLocale = getLocale();
+  const defaultLocale = schema.defaultLocale;
+  const canonical = createHref({ pathname, params, locale: currentLocale });
+  const xDefault = createHref({ pathname, params, locale: defaultLocale });
   const languages = Object.fromEntries(
     schema.locales
       .map((locale) => [locale, createHref({ pathname, params, locale })])
-      .concat([
-        [
-          "x-default",
-          createHref({ pathname, params, locale: schema.defaultLocale }),
-        ],
-      ]),
+      .concat([["x-default", xDefault]]),
   );
   return function injectLanguageAlternates(metadata: Metadata) {
+    metadata.metadataBase ??= process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : undefined;
     metadata.alternates ??= {};
+    metadata.alternates.canonical ??= canonical;
     metadata.alternates.languages = {
       ...languages,
       ...metadata.alternates.languages,
